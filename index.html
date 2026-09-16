@@ -416,14 +416,59 @@
         0 8px 24px  rgba(0,0,0,.12);
     }
 
-    /* — green header — */
+    /* — dynamic status header — */
     .c-head {
       position: relative;
       overflow: hidden;
-      padding: 38px 34px 30px;
-      background: linear-gradient(142deg, #04382a 0%, #047857 55%, #10b981 100%);
+      padding: 34px 30px 26px;
       text-align: center;
       color: #fff;
+      transition: background 0.4s ease;
+    }
+    .c-head.status-pending {
+      background: linear-gradient(142deg, #78350f 0%, #b45309 50%, #d97706 100%);
+    }
+    .c-head.status-claimed {
+      background: linear-gradient(142deg, #04382a 0%, #047857 55%, #10b981 100%);
+    }
+
+    .c-status-pill {
+      position: relative;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      backdrop-filter: blur(8px);
+    }
+    .c-status-pill.pending {
+      background: rgba(254, 243, 199, 0.22);
+      border: 1px solid rgba(254, 243, 199, 0.45);
+      color: #fef3c7;
+    }
+    .c-status-pill.claimed {
+      background: rgba(209, 250, 229, 0.22);
+      border: 1px solid rgba(209, 250, 229, 0.45);
+      color: #d1fae5;
+    }
+
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #fbbf24;
+      box-shadow: 0 0 8px #fbbf24;
+      animation: pulseAnim 1.4s infinite ease-in-out;
+    }
+    @keyframes pulseAnim {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.4); opacity: 0.5; }
     }
     .c-head::before {
       content: '';
@@ -559,16 +604,51 @@
     .c-val { font-size: 13px; font-weight: 700; color: var(--text); text-align: right; word-break: break-all; }
 
     .c-notice {
-      margin-top: 18px;
-      padding: 13px 15px;
+      margin-top: 16px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 11.5px;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+    .c-notice.pending {
       background: #fffbeb;
       border: 1.5px solid #fcd34d;
-      border-radius: 13px;
-      text-align: center;
-      font-size: 12px;
-      font-weight: 600;
       color: #92400e;
-      line-height: 1.55;
+    }
+    .c-notice.claimed {
+      background: #ecfdf5;
+      border: 1.5px solid #6ee7b7;
+      color: #065f46;
+    }
+
+    .btn-sync {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 10px;
+      width: 100%;
+      height: 40px;
+      background: #f9fafb;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 11px;
+      color: #4b5563;
+      font-family: var(--font);
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s ease;
+    }
+    .btn-sync:hover {
+      background: #f3f4f6;
+      border-color: #d1d5db;
+      color: #111827;
+    }
+    .btn-sync:disabled {
+      opacity: .6;
+      cursor: not-allowed;
     }
 
     /* — ticket footer — */
@@ -1013,16 +1093,20 @@
 
 
   <!-- ══════════════════════════════════════════
-       CLAIM CARD (tiket event)
+       CLAIM CARD (tiket event realtime)
   ══════════════════════════════════════════ -->
   <div id="claimCard" style="display:none">
     <div class="c-ticket">
 
-      <!-- Green header -->
-      <div class="c-head">
-        <div class="c-tick">✓</div>
-        <h2>SAMPLE TELAH DIKLAIM</h2>
-        <p>Registrasi berhasil. Tunjukkan kartu ini kepada kru booth.</p>
+      <!-- Dynamic Header (pending vs claimed) -->
+      <div class="c-head status-pending" id="cc-head">
+        <div class="c-status-pill pending" id="cc-status-pill">
+          <span class="pulse-dot" id="cc-status-dot"></span>
+          <span id="cc-status-text">MENUNGGU PENYERAHAN KRU</span>
+        </div>
+        <div class="c-tick" id="cc-icon">⏳</div>
+        <h2 id="cc-title">TIKET PENGAMBILAN SAMPLE</h2>
+        <p id="cc-subtitle">Tunjukkan layar ini kepada kru booth NEZHAMAINAN.</p>
         <div class="code-box">
           <div class="code-lbl">Kode Klaim</div>
           <div class="code-val" id="cc-kode">NZH-0000</div>
@@ -1066,15 +1150,18 @@
           </div>
         </div>
 
-        <div class="c-notice">
-          ⚠️ Tunjukkan layar ini kepada kru booth NEZHAMAINAN<br>
-          untuk mengambil sample produk kamu.
+        <div class="c-notice pending" id="cc-notice">
+          ⚠️ <b>Menunggu Penyerahan:</b> Tunjukkan layar ini ke kru booth saat mengambil produk sample fisik.
         </div>
+
+        <button type="button" class="btn-sync" id="btnSyncStatus">
+          🔄 Cek Status Penyerahan Realtime
+        </button>
 
       </div><!-- /.c-body -->
 
       <div class="c-foot">
-        NEZHAMAINAN &bull; Shopee Super Summit 2026 &bull; 1 orang 1 sample
+        NEZHAMAINAN &bull; Shopee Super Summit 2026 &bull; Status Terkoneksi Realtime ke Sheet
       </div>
 
     </div><!-- /.c-ticket -->
@@ -1088,10 +1175,12 @@
 
 <script>
   /* ============================================================
-     KONFIGURASI — ganti SCRIPT_URL setelah update deployment
+     KONFIGURASI — deployment Google Apps Script
   ============================================================ */
   var SCRIPT_URL  = 'https://script.google.com/macros/s/AKfycbwW5H1x-19m0c6JkMEh4fBl_XLWfOuh2HV05uhBJ4tww7sY29pNfLEXAeKusvEIgap3/exec';
   var STORAGE_KEY = 'nzh_klaim_sss2026';
+  var pollingTimer = null;
+  var currentClaimData = null;
 
   /* ============================================================
      LAPIS 1 — Cek localStorage saat halaman dibuka
@@ -1101,7 +1190,12 @@
       var raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
         var klaim = JSON.parse(raw);
-        if (klaim && klaim.kodeKlaim) { tampilKartu(klaim); return; }
+        if (klaim && klaim.kodeKlaim) {
+          tampilKartu(klaim);
+          /* Langsung cek status terkini ke Google Sheet */
+          cekStatusRealtime(klaim.kodeKlaim, false);
+          return;
+        }
       }
     } catch (_) { localStorage.removeItem(STORAGE_KEY); }
   });
@@ -1137,19 +1231,22 @@
         tombol.innerHTML = 'KIRIM DATA';
 
         if (res.success) {
-          /* LAPIS 3 — Kunci perangkat */
+          /* LAPIS 3 — Simpan & kunci perangkat */
+          var dataSimpan = {
+            kodeKlaim: res.kodeKlaim,
+            status:    res.status || 'BELUM DIAMBIL',
+            nama:      res.nama,
+            username:  res.username,
+            phone:     res.phone,
+            produk:    res.produk,
+            waktu:     res.waktu
+          };
+
           try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify({
-              kodeKlaim: res.kodeKlaim,
-              nama:      res.nama,
-              username:  res.username,
-              phone:     res.phone,
-              produk:    res.produk,
-              waktu:     res.waktu
-            }));
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(dataSimpan));
           } catch (_) {}
 
-          tampilKartu(res);
+          tampilKartu(dataSimpan);
           launchConfetti();
 
         } else {
@@ -1172,42 +1269,43 @@
   });
 
   /* ============================================================
-     JSONP — paling andal untuk semua browser & in-app browser
+     JSONP REQUEST (Bebas CORS di semua browser HP)
   ============================================================ */
   function panggilAPI(data, onOk, onErr) {
     var cb = '_nzh_' + Date.now() + '_' + Math.floor(Math.random() * 99999);
 
     var t = setTimeout(function () {
       bersih();
-      onErr('Timeout — koneksi lambat atau server sibuk. Coba lagi.');
-    }, 20000);
+      if (onErr) onErr('Timeout — koneksi lambat atau server sibuk. Coba lagi.');
+    }, 18000);
 
     function bersih() {
       clearTimeout(t);
       delete window[cb];
-      var el = document.getElementById('_nzhs');
+      var el = document.getElementById('_nzhs_' + cb);
       if (el) el.remove();
     }
 
     window[cb] = function (res) { bersih(); onOk(res); };
 
-    var p = new URLSearchParams({
-      callback: cb,
-      nama: data.nama, username: data.username,
-      phone: data.phone, produk: data.produk || ''
-    });
+    var params = { callback: cb };
+    for (var key in data) {
+      if (data.hasOwnProperty(key)) params[key] = data[key] || '';
+    }
+    var p = new URLSearchParams(params);
 
     var s = document.createElement('script');
-    s.id = '_nzhs';
-    s.onerror = function () { bersih(); onErr('Gagal terhubung. Periksa koneksi internet.'); };
+    s.id = '_nzhs_' + cb;
+    s.onerror = function () { bersih(); if (onErr) onErr('Gagal terhubung ke server.'); };
     s.src = SCRIPT_URL + '?' + p.toString();
     document.head.appendChild(s);
   }
 
   /* ============================================================
-     TAMPILKAN KARTU KLAIM
+     TAMPILKAN KARTU KLAIM (STATUS DINAMIS: BELUM vs SUDAH DIAMBIL)
   ============================================================ */
   function tampilKartu(d) {
+    currentClaimData = d;
     document.getElementById('cc-kode').textContent     = d.kodeKlaim || '—';
     document.getElementById('cc-nama').textContent     = d.nama      || '—';
     document.getElementById('cc-username').textContent = d.username  || '—';
@@ -1215,10 +1313,115 @@
     document.getElementById('cc-produk').textContent   = d.produk    || '—';
     document.getElementById('cc-waktu').textContent    = d.waktu     || '—';
 
+    var statusStr = String(d.status || '').trim().toUpperCase();
+    var isClaimed = (statusStr === 'SUDAH DIAMBIL');
+
+    var headEl    = document.getElementById('cc-head');
+    var pillEl    = document.getElementById('cc-status-pill');
+    var dotEl     = document.getElementById('cc-status-dot');
+    var textEl    = document.getElementById('cc-status-text');
+    var iconEl    = document.getElementById('cc-icon');
+    var titleEl   = document.getElementById('cc-title');
+    var subEl     = document.getElementById('cc-subtitle');
+    var noticeEl  = document.getElementById('cc-notice');
+    var syncBtn   = document.getElementById('btnSyncStatus');
+
+    if (isClaimed) {
+      /* Status SUDAH DIAMBIL (Kru sudah update di Sheet) */
+      headEl.className    = 'c-head status-claimed';
+      pillEl.className    = 'c-status-pill claimed';
+      dotEl.style.display = 'none';
+      textEl.textContent  = '✓ RESMI TELAH DIAMBIL';
+      iconEl.textContent   = '✓';
+      titleEl.textContent  = 'SAMPLE TELAH DITERIMA';
+      subEl.textContent    = 'Produk sample fisik telah diserahkan oleh kru booth.';
+      noticeEl.className  = 'c-notice claimed';
+      noticeEl.innerHTML  = '🎉 <b>Sample Telah Diterima!</b> Terima kasih telah mampir ke booth NEZHAMAINAN. Tiket ini telah resmi digunakan.';
+      if (syncBtn) syncBtn.style.display = 'none';
+      berhentiPolling();
+
+    } else {
+      /* Status BELUM DIAMBIL (Pengunjung baru daftar, menunggu kru) */
+      headEl.className    = 'c-head status-pending';
+      pillEl.className    = 'c-status-pill pending';
+      dotEl.style.display = 'inline-block';
+      textEl.textContent  = 'MENUNGGU PENYERAHAN KRU';
+      iconEl.textContent   = '⏳';
+      titleEl.textContent  = 'TIKET PENGAMBILAN SAMPLE';
+      subEl.textContent    = 'Tunjukkan layar ini kepada kru booth NEZHAMAINAN.';
+      noticeEl.className  = 'c-notice pending';
+      noticeEl.innerHTML  = '⚠️ <b>Tunjukkan ke Kru:</b> Kru akan menyerahkan sample fisik lalu mengubah status menjadi selesai di sistem.';
+      if (syncBtn) {
+        syncBtn.style.display = 'inline-flex';
+        syncBtn.disabled = false;
+        syncBtn.innerHTML = '🔄 Cek Status Penyerahan Realtime';
+      }
+      /* Mulai polling otomatis ke Google Sheet */
+      mulaiPollingStatus(d.kodeKlaim);
+    }
+
     document.getElementById('formCard').style.display  = 'none';
     document.getElementById('claimCard').style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+  /* ============================================================
+     CEK STATUS REALTIME KE GOOGLE SHEET
+  ============================================================ */
+  function cekStatusRealtime(kodeKlaim, isManual) {
+    if (!kodeKlaim) return;
+    var btn = document.getElementById('btnSyncStatus');
+    if (isManual && btn) {
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner" style="border-color:#9ca3af;border-top-color:#111;width:12px;height:12px;"></span> MEMERIKSA SPREADSHEET...';
+    }
+
+    panggilAPI({ action: 'cekStatus', kodeKlaim: kodeKlaim }, function (res) {
+      if (isManual && btn) {
+        btn.disabled = false;
+        btn.innerHTML = '🔄 Cek Status Penyerahan Realtime';
+      }
+
+      if (res && res.success && res.status) {
+        var statusBaru = String(res.status).trim().toUpperCase();
+        if (currentClaimData && currentClaimData.status !== statusBaru) {
+          currentClaimData.status = statusBaru;
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(currentClaimData));
+          } catch (_) {}
+          tampilKartu(currentClaimData);
+          if (statusBaru === 'SUDAH DIAMBIL') {
+            launchConfetti();
+          }
+        }
+      }
+    }, function () {
+      if (isManual && btn) {
+        btn.disabled = false;
+        btn.innerHTML = '🔄 Cek Status Penyerahan Realtime';
+      }
+    });
+  }
+
+  function mulaiPollingStatus(kodeKlaim) {
+    berhentiPolling();
+    pollingTimer = setInterval(function () {
+      cekStatusRealtime(kodeKlaim, false);
+    }, 5000);
+  }
+
+  function berhentiPolling() {
+    if (pollingTimer) {
+      clearInterval(pollingTimer);
+      pollingTimer = null;
+    }
+  }
+
+  document.getElementById('btnSyncStatus').addEventListener('click', function () {
+    if (currentClaimData && currentClaimData.kodeKlaim) {
+      cekStatusRealtime(currentClaimData.kodeKlaim, true);
+    }
+  });
 
   /* ============================================================
      CONFETTI
