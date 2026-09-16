@@ -81,7 +81,7 @@
     /* ─────────────────────────────────────────────────────────
        FORM CARD
     ───────────────────────────────────────────────────────── */
-    #formCard {
+    #formCard, #claimCard {
       width: 100%;
       max-width: 960px;
       display: grid;
@@ -412,38 +412,47 @@
     .panel-foot b { color: var(--red-dark); letter-spacing: .5px; }
 
     /* ─────────────────────────────────────────────────────────
-       CLAIM CARD (TIKET)
+       CLAIM / STATUS CARD (BERSERAGAM DENGAN FORM CARD)
     ───────────────────────────────────────────────────────── */
-    #claimCard {
-      width: min(466px, 100%);
-      animation: riseUp .55s cubic-bezier(.22,1,.36,1) both;
-    }
-
-    .c-ticket {
-      border-radius: 28px;
-      overflow: hidden;
-      box-shadow:
-        0 40px 100px rgba(0,0,0,.24),
-        0 8px 24px  rgba(0,0,0,.12);
-    }
-
-    /* — dynamic status header — */
-    .c-head {
+    .status-brand-panel {
       position: relative;
       overflow: hidden;
-      padding: 34px 30px 26px;
-      text-align: center;
+      padding: 40px 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       color: #fff;
       transition: background 0.4s ease;
     }
-    .c-head.status-pending {
-      background: linear-gradient(142deg, #78350f 0%, #b45309 50%, #d97706 100%);
+    .status-brand-panel.status-pending {
+      background:
+        radial-gradient(ellipse at 80% 5%,  rgba(245,158,11,.32) 0%, transparent 55%),
+        radial-gradient(ellipse at 15% 95%, rgba(180,83,9,.25)  0%, transparent 50%),
+        linear-gradient(158deg, #180901 0%, #3e1604 45%, #6d2c07 100%);
     }
-    .c-head.status-claimed {
-      background: linear-gradient(142deg, #04382a 0%, #047857 55%, #10b981 100%);
+    .status-brand-panel.status-claimed {
+      background:
+        radial-gradient(ellipse at 80% 5%,  rgba(16,185,129,.35) 0%, transparent 55%),
+        radial-gradient(ellipse at 15% 95%, rgba(4,120,87,.25)   0%, transparent 50%),
+        linear-gradient(158deg, #01150e 0%, #064e3b 45%, #047857 100%);
     }
-    .c-head.status-rejected {
-      background: linear-gradient(142deg, #3f0d12 0%, #7f1d1d 55%, #a82020 100%);
+    .status-brand-panel.status-rejected {
+      background:
+        radial-gradient(ellipse at 80% 5%,  rgba(239,68,68,.35) 0%, transparent 55%),
+        radial-gradient(ellipse at 15% 95%, rgba(127,29,29,.25) 0%, transparent 50%),
+        linear-gradient(158deg, #160205 0%, #4c0519 45%, #7f1d1d 100%);
+    }
+
+    /* Orb color customization by status */
+    .status-brand-panel.status-pending .orb-1 { background: rgba(245,158,11,.3); }
+    .status-brand-panel.status-pending .orb-2 { background: rgba(217,119,6,.22); }
+    .status-brand-panel.status-claimed .orb-1 { background: rgba(16,185,129,.3); }
+    .status-brand-panel.status-claimed .orb-2 { background: rgba(5,150,105,.22); }
+    .status-brand-panel.status-rejected .orb-1 { background: rgba(239,68,68,.3); }
+    .status-brand-panel.status-rejected .orb-2 { background: rgba(185,28,28,.22); }
+
+    .status-hero {
+      margin-top: 24px;
     }
 
     .c-status-pill {
@@ -452,13 +461,13 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 5px 14px;
+      padding: 6px 14px;
       border-radius: 999px;
       font-size: 10px;
       font-weight: 800;
       letter-spacing: .8px;
       text-transform: uppercase;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       backdrop-filter: blur(8px);
     }
     .c-status-pill.pending {
@@ -489,36 +498,21 @@
       0%, 100% { transform: scale(1); opacity: 1; }
       50% { transform: scale(1.4); opacity: 0.5; }
     }
-    .c-head::before {
-      content: '';
-      position: absolute;
-      width: 200px; height: 200px;
-      border-radius: 50%;
-      background: rgba(255,255,255,.07);
-      top: -65px; right: -55px;
-    }
-    .c-head::after {
-      content: '';
-      position: absolute;
-      width: 145px; height: 145px;
-      border-radius: 50%;
-      background: rgba(255,255,255,.05);
-      bottom: -45px; left: -35px;
-    }
 
     .c-tick {
       position: relative;
       z-index: 2;
-      width: 72px; height: 72px;
+      width: 58px; height: 58px;
       border-radius: 50%;
-      background: rgba(255,255,255,.18);
-      border: 2.5px solid rgba(255,255,255,.4);
+      background: rgba(255,255,255,.16);
+      border: 2px solid rgba(255,255,255,.35);
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 18px;
-      font-size: 30px;
+      margin-bottom: 12px;
+      font-size: 26px;
       font-weight: 900;
+      backdrop-filter: blur(8px);
       animation: tickPop .65s .15s cubic-bezier(.68,-.55,.265,1.55) both;
     }
     @keyframes tickPop {
@@ -526,110 +520,89 @@
       to   { transform: scale(1) rotate(0deg);   opacity: 1; }
     }
 
-    .c-head h2 {
+    .status-title {
       position: relative;
       z-index: 2;
-      font-size: 20px;
+      font-size: 24px;
       font-weight: 900;
-      letter-spacing: .5px;
-      margin-bottom: 5px;
+      letter-spacing: -.5px;
+      line-height: 1.15;
+      margin-bottom: 8px;
+      color: #fff;
     }
-    .c-head p {
+    .status-subtitle {
       position: relative;
       z-index: 2;
-      font-size: 12px;
+      font-size: 12.5px;
       opacity: .8;
-      margin-bottom: 22px;
-      line-height: 1.45;
+      line-height: 1.5;
+      max-width: 330px;
     }
 
     .code-box {
       position: relative;
       z-index: 2;
-      display: inline-block;
-      padding: 11px 28px;
-      background: rgba(255,255,255,.14);
-      border: 2px solid rgba(255,255,255,.28);
+      display: block;
+      width: 100%;
+      max-width: 340px;
+      padding: 13px 20px;
+      background: rgba(255,255,255,.12);
+      border: 1.5px solid rgba(255,255,255,.24);
       border-radius: 16px;
-      backdrop-filter: blur(6px);
+      backdrop-filter: blur(8px);
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,.15);
     }
     .code-lbl {
-      font-size: 8px;
+      font-size: 8.5px;
       font-weight: 800;
-      letter-spacing: 2.5px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      opacity: .7;
-      margin-bottom: 3px;
+      opacity: .75;
+      margin-bottom: 4px;
     }
     .code-val {
       font-family: 'Courier New', 'Lucida Console', monospace;
-      font-size: 36px;
+      font-size: 32px;
       font-weight: 900;
-      letter-spacing: 7px;
+      letter-spacing: 6px;
       line-height: 1.1;
+      color: #fff;
+      text-shadow: 0 2px 10px rgba(0,0,0,.3);
     }
 
-    /* — perforated tear line — */
-    .c-perf {
-      position: relative;
-      height: 1px;
-      background: var(--line);
-      margin: 0 28px;
-    }
-    .c-perf::before,
-    .c-perf::after {
-      content: '';
-      position: absolute;
-      width: 26px; height: 26px;
-      border-radius: 50%;
+    /* ── STATUS DETAIL PANEL (RIGHT / WHITE) ── */
+    .status-detail-panel {
+      padding: 34px 38px;
       background: #fff;
-      border: 1px solid var(--line);
-      top: -14px;
-    }
-    .c-perf::before { left:  -37px; }
-    .c-perf::after  { right: -37px; }
-
-    /* — ticket body — */
-    .c-body {
-      padding: 24px 30px 22px;
-      background: #fff;
-    }
-
-    .c-brand-row {
       display: flex;
-      align-items: center;
-      gap: 13px;
-      padding-bottom: 18px;
-      margin-bottom: 18px;
-      border-bottom: 1px solid #f3f4f6;
+      flex-direction: column;
+      justify-content: space-between;
     }
-    .c-brand-row img { width: 84px; height: auto; }
-    .c-ev-sub  { font-size: 9px; color: #9ca3af; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px; }
-    .c-ev-name { font-size: 14px; font-weight: 900; color: var(--red-dark); letter-spacing: .5px; }
 
-    .c-rows { display: flex; flex-direction: column; gap: 8px; }
+    .c-rows { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
     .c-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 12px;
-      padding: 10px 13px;
+      padding: 10px 14px;
       background: #f9fafb;
-      border-radius: 11px;
-      transition: background .15s;
+      border: 1px solid #f3f4f6;
+      border-radius: 12px;
+      transition: background .15s, border-color .15s;
     }
-    .c-row:hover { background: #f3f4f6; }
-    .c-lbl { font-size: 11px; font-weight: 700; color: #9ca3af; white-space: nowrap; }
+    .c-row:hover { background: #f3f4f6; border-color: #e5e7eb; }
+    .c-lbl { font-size: 12px; font-weight: 700; color: #9ca3af; white-space: nowrap; }
     .c-val { font-size: 13px; font-weight: 700; color: var(--text); text-align: right; word-break: break-all; }
 
     .c-notice {
-      margin-top: 16px;
-      padding: 12px 14px;
+      margin-bottom: 14px;
+      padding: 13px 15px;
       border-radius: 12px;
-      text-align: center;
-      font-size: 11.5px;
-      font-weight: 600;
-      line-height: 1.5;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.55;
     }
     .c-notice.pending {
       background: #fffbeb;
@@ -645,46 +618,36 @@
       background: #fef2f2;
       border: 1.5px solid #fca5a5;
       color: #991b1b;
-      text-align: left;
     }
 
     .btn-sync {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      margin-top: 10px;
+      gap: 7px;
       width: 100%;
-      height: 40px;
+      height: 44px;
       background: #f9fafb;
       border: 1.5px solid #e5e7eb;
-      border-radius: 11px;
-      color: #4b5563;
+      border-radius: 12px;
+      color: #374151;
       font-family: var(--font);
-      font-size: 11.5px;
+      font-size: 12.5px;
       font-weight: 700;
       cursor: pointer;
       transition: all .2s ease;
+      margin-bottom: 14px;
     }
     .btn-sync:hover {
       background: #f3f4f6;
       border-color: #d1d5db;
       color: #111827;
+      transform: translateY(-1px);
     }
     .btn-sync:disabled {
       opacity: .6;
       cursor: not-allowed;
-    }
-
-    /* — ticket footer — */
-    .c-foot {
-      padding: 14px 30px 20px;
-      background: #fff;
-      border-top: 1px solid #f3f4f6;
-      text-align: center;
-      font-size: 9.5px;
-      color: #d1d5db;
-      letter-spacing: .4px;
+      transform: none;
     }
 
     /* ─────────────────────────────────────────────────────────
@@ -714,23 +677,23 @@
 
     /* 1. Medium Laptops / Split Screen PC (881px - 1040px) */
     @media (max-width: 1040px) and (min-width: 881px) {
-      #formCard {
+      #formCard, #claimCard {
         max-width: 890px;
         grid-template-columns: 46% 54%;
       }
-      .brand-panel {
+      .brand-panel, .status-brand-panel {
         padding: 34px 28px;
       }
-      .brand-panel h1 {
-        font-size: 28px;
+      .brand-panel h1, .status-title {
+        font-size: 26px;
       }
       .brand-logo {
         width: 145px;
       }
-      .brand-copy {
+      .brand-copy, .status-subtitle {
         font-size: 12px;
       }
-      .form-panel {
+      .form-panel, .status-detail-panel {
         padding: 30px 32px;
       }
       .form-head h2 {
@@ -744,28 +707,28 @@
         padding: 20px 14px;
         align-items: flex-start;
       }
-      #formCard {
+      #formCard, #claimCard {
         grid-template-columns: 1fr;
         max-width: 580px;
         border-radius: 24px;
       }
-      .brand-panel {
+      .brand-panel, .status-brand-panel {
         padding: 26px 28px 22px;
       }
       .brand-logo {
         width: 145px;
       }
-      .brand-panel h1 {
-        font-size: 26px;
+      .brand-panel h1, .status-title {
+        font-size: 24px;
         margin: 10px 0 6px;
       }
-      .brand-copy {
+      .brand-copy, .status-subtitle {
         font-size: 12px;
       }
       .brand-bottom {
         margin-top: 14px;
       }
-      .form-panel {
+      .form-panel, .status-detail-panel {
         padding: 28px 28px;
       }
       .form-head h2 {
@@ -779,14 +742,14 @@
         padding: 10px 10px 24px;
         align-items: flex-start;
       }
-      #formCard {
+      #formCard, #claimCard {
         grid-template-columns: 1fr;
         max-width: 100%;
         border-radius: 20px;
       }
 
       /* Compact, sleek mobile header */
-      .brand-panel {
+      .brand-panel, .status-brand-panel {
         padding: 20px 18px 16px;
       }
       .brand-logo {
@@ -835,8 +798,48 @@
         flex: 0 0 18px;
       }
 
-      /* Compact mobile form body */
-      .form-panel {
+      /* Status card specific mobile styles */
+      .status-brand-panel {
+        text-align: center;
+      }
+      .status-brand-panel .brand-top {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .status-brand-panel .status-hero {
+        margin-top: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .status-brand-panel .c-tick {
+        width: 48px;
+        height: 48px;
+        font-size: 20px;
+        margin: 0 auto 10px;
+      }
+      .status-brand-panel .status-title {
+        font-size: 18px;
+        margin-bottom: 4px;
+      }
+      .status-brand-panel .status-subtitle {
+        font-size: 11.5px;
+        max-width: 100%;
+      }
+      .status-brand-panel .code-box {
+        margin: 12px auto 0;
+        max-width: 280px;
+        padding: 9px 14px;
+        border-radius: 12px;
+      }
+      .status-brand-panel .code-val {
+        font-size: 26px;
+        letter-spacing: 4px;
+      }
+
+      /* Compact mobile form & details body */
+      .form-panel, .status-detail-panel {
         padding: 18px 18px 22px;
       }
       .form-head {
@@ -879,86 +882,31 @@
         border-radius: 12px;
         margin-top: 6px;
       }
-      .panel-foot {
-        margin-top: 12px;
-        font-size: 9.5px;
-      }
-
-      /* claim card mobile */
-      #claimCard {
-        width: 100%;
-        max-width: 400px;
-      }
-      .c-ticket {
-        border-radius: 20px;
-      }
-      .c-head {
-        padding: 22px 18px 18px;
-      }
-      .c-tick {
-        width: 52px;
-        height: 52px;
-        font-size: 22px;
-        margin-bottom: 10px;
-      }
-      .c-head h2 {
-        font-size: 16px;
-        margin-bottom: 3px;
-      }
-      .c-head p {
-        font-size: 11px;
-        margin-bottom: 14px;
-      }
-      .code-box {
-        padding: 8px 20px;
-        border-radius: 12px;
-      }
-      .code-val {
-        font-size: 26px;
-        letter-spacing: 4px;
-      }
-      .c-perf {
-        margin: 0 16px;
-      }
-      .c-perf::before {
-        left: -28px;
-      }
-      .c-perf::after {
-        right: -28px;
-      }
-      .c-body {
-        padding: 16px 16px;
-      }
-      .c-brand-row {
-        padding-bottom: 10px;
-        margin-bottom: 12px;
-      }
-      .c-brand-row img {
-        width: 64px;
-      }
-      .c-ev-name {
-        font-size: 12px;
-      }
       .c-rows {
         gap: 6px;
+        margin-bottom: 12px;
       }
       .c-row {
-        padding: 7px 10px;
+        padding: 8px 11px;
       }
       .c-lbl {
-        font-size: 10px;
+        font-size: 10.5px;
       }
       .c-val {
         font-size: 12px;
       }
       .c-notice {
-        margin-top: 12px;
-        padding: 9px 11px;
         font-size: 11px;
+        padding: 10px 12px;
+        margin-bottom: 12px;
       }
-      .c-foot {
-        padding: 10px 16px 14px;
-        font-size: 9px;
+      .btn-sync {
+        height: 42px;
+        font-size: 12px;
+      }
+      .panel-foot {
+        margin-top: 12px;
+        font-size: 9.5px;
       }
     }
 
@@ -1117,78 +1065,85 @@
 
 
   <!-- ══════════════════════════════════════════
-       CLAIM CARD (tiket event realtime)
+       CLAIM / STATUS CARD (STATUS REALTIME — BERSERAGAM)
   ══════════════════════════════════════════ -->
   <div id="claimCard" style="display:none">
-    <div class="c-ticket">
 
-      <!-- Dynamic Header (pending vs claimed) -->
-      <div class="c-head status-pending" id="cc-head">
-        <div class="c-status-pill pending" id="cc-status-pill">
-          <span class="pulse-dot" id="cc-status-dot"></span>
-          <span id="cc-status-text">MENUNGGU ACC SELLER</span>
+    <!-- STATUS BRAND PANEL (kiri di PC, atas di Mobile) -->
+    <div class="brand-panel status-brand-panel status-pending" id="cc-head">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+
+      <div class="brand-top">
+        <div class="brand-logo-wrap">
+          <img class="brand-logo" src="logo-transparent.png" alt="NEZHAMAINAN">
         </div>
-        <div class="c-tick" id="cc-icon">⏳</div>
-        <h2 id="cc-title">PENGAJUAN PRIORITAS TERCATAT</h2>
-        <p id="cc-subtitle">Data akunmu sudah masuk antrean prioritas seller NEZHAMAINAN.</p>
+        <div class="brand-eyebrow">NEZHAMAINAN</div>
+        <div class="brand-badge">✦ Shopee Super Summit 2026</div>
+
+        <div class="status-hero">
+          <div class="c-status-pill pending" id="cc-status-pill">
+            <span class="pulse-dot" id="cc-status-dot"></span>
+            <span id="cc-status-text">MENUNGGU ACC SELLER</span>
+          </div>
+
+          <div class="c-tick" id="cc-icon">⏳</div>
+          <h2 id="cc-title" class="status-title">PENGAJUAN PRIORITAS TERCATAT</h2>
+          <p id="cc-subtitle" class="status-subtitle">Data akunmu sudah masuk antrean prioritas seller NEZHAMAINAN.</p>
+        </div>
+      </div>
+
+      <div class="brand-bottom">
         <div class="code-box">
           <div class="code-lbl">Kode Prioritas ACC</div>
           <div class="code-val" id="cc-kode">NZH-0000</div>
         </div>
       </div>
+    </div><!-- /#cc-head -->
 
-      <!-- Perforated tear line -->
-      <div class="c-perf"></div>
-
-      <!-- Body -->
-      <div class="c-body">
-
-        <div class="c-brand-row">
-          <img src="logo-transparent.png" alt="NEZHAMAINAN" style="width: 88px; height: auto;">
-          <div>
-            <div class="c-ev-sub">Shopee Super Summit 2026</div>
-            <div class="c-ev-name">NEZHAMAINAN</div>
-          </div>
-        </div>
-
-        <div class="c-rows">
-          <div class="c-row">
-            <span class="c-lbl">👤 Nama</span>
-            <span class="c-val" id="cc-nama">—</span>
-          </div>
-          <div class="c-row">
-            <span class="c-lbl">🛒 Akun Shopee</span>
-            <span class="c-val" id="cc-username">—</span>
-          </div>
-          <div class="c-row">
-            <span class="c-lbl">📱 WhatsApp</span>
-            <span class="c-val" id="cc-phone">—</span>
-          </div>
-          <div class="c-row">
-            <span class="c-lbl">📦 Produk</span>
-            <span class="c-val" id="cc-produk">—</span>
-          </div>
-          <div class="c-row">
-            <span class="c-lbl">⏰ Waktu</span>
-            <span class="c-val" id="cc-waktu">—</span>
-          </div>
-        </div>
-
-        <div class="c-notice pending" id="cc-notice">
-          📌 <b>Langkah Selanjutnya:</b> Pastikan kamu sudah klik <b>"Minta Sample Gratis"</b> di aplikasi Shopee pada produk toko NEZHAMAINAN. Tim seller kami akan segera meng-ACC pengajuanmu!
-        </div>
-
-        <button type="button" class="btn-sync" id="btnSyncStatus">
-          🔄 Cek Status ACC Realtime
-        </button>
-
-      </div><!-- /.c-body -->
-
-      <div class="c-foot">
-        NEZHAMAINAN &bull; Shopee Super Summit 2026 &bull; Jalur Prioritas ACC Creator
+    <!-- DETAILS PANEL (kanan di PC, bawah di Mobile — putih) -->
+    <div class="form-panel status-detail-panel">
+      <div class="form-head">
+        <h2>Detail Pengajuan Prioritas</h2>
+        <p>Data akun Shopee kamu terdaftar di Booth NEZHAMAINAN</p>
       </div>
 
-    </div><!-- /.c-ticket -->
+      <div class="c-rows">
+        <div class="c-row">
+          <span class="c-lbl">👤 Nama Lengkap</span>
+          <span class="c-val" id="cc-nama">—</span>
+        </div>
+        <div class="c-row">
+          <span class="c-lbl">🛒 Akun Shopee</span>
+          <span class="c-val" id="cc-username">—</span>
+        </div>
+        <div class="c-row">
+          <span class="c-lbl">📱 No. WhatsApp</span>
+          <span class="c-val" id="cc-phone">—</span>
+        </div>
+        <div class="c-row">
+          <span class="c-lbl">📦 Produk Sample</span>
+          <span class="c-val" id="cc-produk">—</span>
+        </div>
+        <div class="c-row">
+          <span class="c-lbl">⏰ Waktu Pendaftaran</span>
+          <span class="c-val" id="cc-waktu">—</span>
+        </div>
+      </div>
+
+      <div class="c-notice pending" id="cc-notice">
+        📌 <b>Langkah Selanjutnya:</b> Pastikan kamu sudah klik <b>"Minta Sample Gratis"</b> di aplikasi Shopee pada produk toko NEZHAMAINAN. Tim seller kami akan segera meng-ACC pengajuanmu!
+      </div>
+
+      <button type="button" class="btn-sync" id="btnSyncStatus">
+        🔄 Cek Status ACC Realtime
+      </button>
+
+      <div class="panel-foot">
+        <b>NEZHAMAINAN</b> &bull; Shopee Super Summit 2026 &bull; Jalur Prioritas ACC Creator
+      </div>
+    </div><!-- /.status-detail-panel -->
+
   </div><!-- /#claimCard -->
 
 </div><!-- /.page -->
@@ -1353,7 +1308,7 @@
 
     if (isApproved) {
       /* Status SUDAH DI-ACC (Seller sudah approve di Shopee) */
-      headEl.className    = 'c-head status-claimed';
+      headEl.className    = 'brand-panel status-brand-panel status-claimed';
       pillEl.className    = 'c-status-pill claimed';
       dotEl.style.display = 'none';
       textEl.textContent  = '✓ RESMI DI-ACC SELLER';
@@ -1367,7 +1322,7 @@
 
     } else if (isRejected) {
       /* Status DITOLAK (Belum memenuhi kriteria program sample) */
-      headEl.className    = 'c-head status-rejected';
+      headEl.className    = 'brand-panel status-brand-panel status-rejected';
       pillEl.className    = 'c-status-pill rejected';
       dotEl.style.display = 'none';
       textEl.textContent  = '✕ BELUM DAPAT DISETUJUI';
@@ -1381,7 +1336,7 @@
 
     } else {
       /* Status MENUNGGU ACC (Pengunjung baru daftar antrean prioritas) */
-      headEl.className    = 'c-head status-pending';
+      headEl.className    = 'brand-panel status-brand-panel status-pending';
       pillEl.className    = 'c-status-pill pending';
       dotEl.style.display = 'inline-block';
       textEl.textContent  = 'MENUNGGU ACC SELLER';
@@ -1400,7 +1355,7 @@
     }
 
     document.getElementById('formCard').style.display  = 'none';
-    document.getElementById('claimCard').style.display = 'block';
+    document.getElementById('claimCard').style.display = 'grid';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
