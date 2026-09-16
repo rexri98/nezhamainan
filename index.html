@@ -75,11 +75,12 @@
       justify-content: center;
       min-height: 100vh;
       min-height: 100dvh;
-      padding: 20px;
+      padding: 24px 16px;
+      box-sizing: border-box;
     }
 
     /* ─────────────────────────────────────────────────────────
-       FORM CARD
+       SHARED CONTAINER (FORM & STATUS CARD)
     ───────────────────────────────────────────────────────── */
     #formCard, #claimCard {
       width: 100%;
@@ -93,6 +94,7 @@
         0 30px 90px rgba(0,0,0,.15),
         0 6px 20px  rgba(0,0,0,.08);
       animation: riseUp .5s cubic-bezier(.22,1,.36,1) both;
+      margin: auto 0;
     }
 
     @keyframes riseUp {
@@ -359,7 +361,7 @@
       cursor: pointer;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 10px 28px rgba(239,43,28,.36);
+      box-shadow: 0 4px 14px rgba(239,43,28,.28);
       transition: transform .15s ease, box-shadow .15s ease;
     }
     /* shine sweep on hover */
@@ -373,8 +375,8 @@
       transition: left .55s ease;
     }
     .btn-go:hover::after  { left: 160%; }
-    .btn-go:hover  { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(239,43,28,.44); }
-    .btn-go:active { transform: translateY(1px);  box-shadow: 0 5px 14px  rgba(239,43,28,.32); }
+    .btn-go:hover  { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(239,43,28,.36); }
+    .btn-go:active { transform: translateY(1px);  box-shadow: 0 4px 10px rgba(239,43,28,.28); }
     .btn-go:disabled { opacity: .6; cursor: not-allowed; transform: none; }
 
     .spinner {
@@ -397,6 +399,8 @@
       border-radius: 12px;
       font-size: 12.5px;
       line-height: 1.5;
+      position: relative;
+      z-index: 5;
     }
     .msg-ok  { display: block !important; color: #065f46; background: #ecfdf5; border: 1.5px solid #6ee7b7; }
     .msg-err { display: block !important; color: #991b1b; background: #fef2f2; border: 1.5px solid #fca5a5; }
@@ -675,7 +679,14 @@
        RESPONSIVE DESIGN (PC, LAPTOP, TABLET & MOBILE)
     ───────────────────────────────────────────────────────── */
 
-    /* 1. Medium Laptops / Split Screen PC (881px - 1040px) */
+    /* 1. Laptops with short screen height (< 720px) */
+    @media (max-height: 720px) {
+      .page {
+        align-items: flex-start;
+      }
+    }
+
+    /* 2. Medium Laptops / Split Screen PC (881px - 1040px) */
     @media (max-width: 1040px) and (min-width: 881px) {
       #formCard, #claimCard {
         max-width: 890px;
@@ -701,7 +712,7 @@
       }
     }
 
-    /* 2. Tablet / Half-Screen Windows PC (601px - 880px) */
+    /* 3. Tablet / Half-Screen Windows PC (601px - 880px) */
     @media (max-width: 880px) and (min-width: 601px) {
       .page {
         padding: 20px 14px;
@@ -709,14 +720,14 @@
       }
       #formCard, #claimCard {
         grid-template-columns: 1fr;
-        max-width: 580px;
+        max-width: 560px;
         border-radius: 24px;
       }
       .brand-panel, .status-brand-panel {
-        padding: 26px 28px 22px;
+        padding: 24px 26px 20px;
       }
       .brand-logo {
-        width: 145px;
+        width: 140px;
       }
       .brand-panel h1, .status-title {
         font-size: 24px;
@@ -726,80 +737,83 @@
         font-size: 12px;
       }
       .brand-bottom {
-        margin-top: 14px;
+        margin-top: 12px;
       }
       .form-panel, .status-detail-panel {
-        padding: 28px 28px;
+        padding: 26px 26px;
       }
       .form-head h2 {
         font-size: 22px;
       }
     }
 
-    /* 3. Mobile Screens (max-width: 600px) - Sesuai tampilan HP di booth */
+    /* 4. Mobile Screens (max-width: 600px) - Sesuai tampilan HP di booth */
     @media (max-width: 600px) {
       .page {
-        padding: 10px 10px 24px;
+        padding: 12px 10px 24px;
         align-items: flex-start;
       }
       #formCard, #claimCard {
         grid-template-columns: 1fr;
-        max-width: 100%;
+        width: 100%;
+        max-width: 460px;
         border-radius: 20px;
+        margin: 0 auto;
       }
 
-      /* Compact, sleek mobile header */
-      .brand-panel, .status-brand-panel {
-        padding: 20px 18px 16px;
+      /* Compact, sleek mobile brand header (agar form langsung terlihat tanpa banyak scroll) */
+      .brand-panel {
+        padding: 18px 16px 14px;
       }
       .brand-logo {
-        width: 120px;
+        width: 112px;
       }
       .brand-eyebrow {
-        font-size: 9px;
+        font-size: 8.5px;
         letter-spacing: 2px;
-        margin-top: 5px;
+        margin-top: 4px;
       }
       .brand-badge {
-        margin-top: 10px;
-        font-size: 8.5px;
-        padding: 4px 10px;
-        box-shadow: 0 3px 10px rgba(245,158,11,.4);
+        margin-top: 8px;
+        font-size: 8px;
+        padding: 3px 9px;
+        box-shadow: 0 3px 10px rgba(245,158,11,.35);
       }
       .brand-panel h1 {
-        font-size: 21px;
-        line-height: 1.15;
-        margin: 10px 0 4px;
-        letter-spacing: -.5px;
+        font-size: 19px;
+        line-height: 1.2;
+        margin: 8px 0 4px;
+        letter-spacing: -.4px;
       }
       .brand-panel h1 br {
         display: none;
       }
       .brand-copy {
-        font-size: 11.5px;
-        line-height: 1.45;
-        color: rgba(255,255,255,.65);
+        font-size: 11px;
+        line-height: 1.4;
+        color: rgba(255,255,255,.7);
       }
       .brand-bottom {
         display: block;
-        margin-top: 12px;
+        margin-top: 8px;
       }
       .brand-note {
-        padding: 9px 12px;
-        font-size: 11px;
-        line-height: 1.4;
+        padding: 8px 11px;
+        font-size: 10.5px;
+        line-height: 1.35;
         gap: 8px;
-        border-radius: 11px;
+        border-radius: 10px;
       }
       .note-dot {
-        width: 18px;
-        height: 18px;
-        font-size: 10px;
-        flex: 0 0 18px;
+        width: 16px;
+        height: 16px;
+        font-size: 9px;
+        flex: 0 0 16px;
       }
 
-      /* Status card specific mobile styles */
+      /* Status card mobile styles */
       .status-brand-panel {
+        padding: 18px 16px 16px;
         text-align: center;
       }
       .status-brand-panel .brand-top {
@@ -808,119 +822,123 @@
         align-items: center;
       }
       .status-brand-panel .status-hero {
-        margin-top: 12px;
+        margin-top: 8px;
         display: flex;
         flex-direction: column;
         align-items: center;
       }
       .status-brand-panel .c-tick {
-        width: 48px;
-        height: 48px;
+        width: 44px;
+        height: 44px;
         font-size: 20px;
-        margin: 0 auto 10px;
+        margin: 0 auto 8px;
       }
       .status-brand-panel .status-title {
-        font-size: 18px;
-        margin-bottom: 4px;
+        font-size: 17px;
+        margin-bottom: 3px;
       }
       .status-brand-panel .status-subtitle {
-        font-size: 11.5px;
+        font-size: 11px;
         max-width: 100%;
       }
       .status-brand-panel .code-box {
-        margin: 12px auto 0;
-        max-width: 280px;
-        padding: 9px 14px;
+        margin: 10px auto 0;
+        max-width: 270px;
+        padding: 8px 12px;
         border-radius: 12px;
       }
       .status-brand-panel .code-val {
-        font-size: 26px;
-        letter-spacing: 4px;
+        font-size: 24px;
+        letter-spacing: 3px;
       }
 
       /* Compact mobile form & details body */
       .form-panel, .status-detail-panel {
-        padding: 18px 18px 22px;
+        padding: 16px 16px 20px;
       }
       .form-head {
-        margin-bottom: 14px;
+        margin-bottom: 12px;
       }
       .form-head h2 {
-        font-size: 19px;
+        font-size: 18px;
       }
       .form-head p {
-        font-size: 11.5px;
-        margin-top: 3px;
+        font-size: 11px;
+        margin-top: 2px;
       }
       .field {
-        margin-bottom: 11px;
+        margin-bottom: 10px;
       }
       .field-row {
-        margin-bottom: 5px;
+        margin-bottom: 4px;
       }
       .f-label {
-        font-size: 12px;
+        font-size: 11.5px;
       }
       .f-input {
-        height: 46px;
+        height: 44px;
         font-size: 16px; /* 16px mencegah auto-zoom di iPhone Safari */
-        border-radius: 11px;
-        padding: 0 12px 0 40px;
+        border-radius: 10px;
+        padding: 0 12px 0 38px;
       }
       .f-ico {
-        left: 13px;
-        width: 16px;
-        height: 16px;
+        left: 12px;
+        width: 15px;
+        height: 15px;
       }
       .f-hint {
-        font-size: 9.5px;
-        margin-top: 3px;
+        font-size: 9px;
+        margin-top: 2px;
       }
       .btn-go {
-        height: 48px;
-        font-size: 14px;
+        height: 46px;
+        font-size: 13.5px;
         border-radius: 12px;
-        margin-top: 6px;
+        margin-top: 4px;
       }
       .c-rows {
         gap: 6px;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
       }
       .c-row {
-        padding: 8px 11px;
+        padding: 8px 10px;
+        border-radius: 10px;
       }
       .c-lbl {
         font-size: 10.5px;
       }
       .c-val {
-        font-size: 12px;
+        font-size: 11.5px;
       }
       .c-notice {
         font-size: 11px;
-        padding: 10px 12px;
-        margin-bottom: 12px;
+        padding: 9px 11px;
+        margin-bottom: 10px;
+        border-radius: 10px;
       }
       .btn-sync {
-        height: 42px;
-        font-size: 12px;
+        height: 40px;
+        font-size: 11.5px;
+        margin-bottom: 10px;
+        border-radius: 10px;
       }
       .panel-foot {
-        margin-top: 12px;
-        font-size: 9.5px;
+        margin-top: 10px;
+        font-size: 9px;
       }
     }
 
-    /* 4. Ultra Small Phones (< 360px) */
+    /* 5. Ultra Small Phones (< 360px) */
     @media (max-width: 360px) {
-      .brand-panel, .form-panel {
-        padding-left: 13px;
-        padding-right: 13px;
+      .brand-panel, .form-panel, .status-brand-panel, .status-detail-panel {
+        padding-left: 12px;
+        padding-right: 12px;
       }
       .brand-panel h1 {
-        font-size: 19px;
+        font-size: 17px;
       }
       .brand-logo {
-        width: 110px;
+        width: 100px;
       }
     }
 
@@ -1248,15 +1266,84 @@
   });
 
   /* ============================================================
-     JSONP REQUEST (Bebas CORS di semua browser HP)
+     HYBRID RESILIENT API ENGINE
+     1. Direct fetch() dengan credentials: 'omit' (Aman dari Google Cookie / Multi-Account conflict di HP Android)
+     2. Otomatis fallback ke JSONP jika fetch diblokir oleh browser
+     3. Deteksi status offline / sinyal lemah
   ============================================================ */
   function panggilAPI(data, onOk, onErr) {
+    var isDone = false;
+
+    function finishOk(res) {
+      if (isDone) return;
+      isDone = true;
+      if (onOk) onOk(res);
+    }
+
+    function finishErr(msg) {
+      if (isDone) return;
+      isDone = true;
+      if (onErr) onErr(msg);
+    }
+
+    // Cek koneksi offline
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+      finishErr('Koneksi internet HP kamu terputus (offline). Periksa kuota data atau WiFi.');
+      return;
+    }
+
+    // Strategi 1: Direct FETCH dengan credentials: 'omit'
+    // Membawa credentials: 'omit' agar Android tidak mengirim cookie login Google yang memicu conflict/403
+    var params = {};
+    for (var key in data) {
+      if (data.hasOwnProperty(key)) params[key] = data[key] || '';
+    }
+    var qStr = new URLSearchParams(params).toString();
+    var fetchUrl = SCRIPT_URL + '?' + qStr;
+
+    var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    var fetchTimer = setTimeout(function () {
+      if (controller) controller.abort();
+    }, 14000);
+
+    fetch(fetchUrl, {
+      method: 'GET',
+      mode: 'cors',
+      credentials: 'omit',
+      cache: 'no-store',
+      signal: controller ? controller.signal : undefined
+    })
+    .then(function (res) {
+      clearTimeout(fetchTimer);
+      if (!res.ok && res.status !== 302) {
+        throw new Error('HTTP ' + res.status);
+      }
+      return res.json();
+    })
+    .then(function (json) {
+      finishOk(json);
+    })
+    .catch(function (fetchError) {
+      clearTimeout(fetchTimer);
+      if (isDone) return;
+      console.warn('Fetch fallback to JSONP:', fetchError);
+
+      // Strategi 2: Fallback otomatis ke JSONP jika Fetch gagal di browser tertentu
+      panggilJSONP(data, finishOk, function (jsonpError) {
+        finishErr(
+          'Tidak dapat terhubung ke server. Periksa koneksi internet / WiFi di HP kamu lalu coba lagi.'
+        );
+      });
+    });
+  }
+
+  function panggilJSONP(data, onOk, onErr) {
     var cb = '_nzh_' + Date.now() + '_' + Math.floor(Math.random() * 99999);
 
     var t = setTimeout(function () {
       bersih();
-      if (onErr) onErr('Timeout — koneksi lambat atau server sibuk. Coba lagi.');
-    }, 18000);
+      if (onErr) onErr('Koneksi timeout. Silakan coba lagi.');
+    }, 16000);
 
     function bersih() {
       clearTimeout(t);
@@ -1265,7 +1352,10 @@
       if (el) el.remove();
     }
 
-    window[cb] = function (res) { bersih(); onOk(res); };
+    window[cb] = function (res) {
+      bersih();
+      onOk(res);
+    };
 
     var params = { callback: cb };
     for (var key in data) {
@@ -1275,7 +1365,10 @@
 
     var s = document.createElement('script');
     s.id = '_nzhs_' + cb;
-    s.onerror = function () { bersih(); if (onErr) onErr('Gagal terhubung ke server.'); };
+    s.onerror = function () {
+      bersih();
+      if (onErr) onErr('Gagal memuat skrip server.');
+    };
     s.src = SCRIPT_URL + '?' + p.toString();
     document.head.appendChild(s);
   }
