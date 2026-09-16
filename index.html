@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>NEZHAMAINAN | Shopee Super Summit 2026</title>
+  <meta name="description" content="Registrasi Affiliate & Pengambilan Sample Produk NEZHAMAINAN di Shopee Super Summit 2026.">
+
+  <!-- Open Graph -->
+  <meta property="og:type"             content="website">
+  <meta property="og:site_name"        content="NEZHAMAINAN">
+  <meta property="og:title"            content="NEZHAMAINAN | Shopee Super Summit 2026">
+  <meta property="og:description"      content="Registrasi Affiliate & Pengambilan Sample Produk NEZHAMAINAN">
+  <meta property="og:url"              content="https://nezhamainan.pages.dev/">
+  <meta property="og:image"            content="https://nezhamainan.pages.dev/logo.jpg">
+  <meta property="og:image:secure_url" content="https://nezhamainan.pages.dev/logo.jpg">
+  <meta property="og:image:type"       content="image/jpeg">
+  <meta property="og:image:alt"        content="Logo NEZHAMAINAN">
+  <meta name="twitter:card"            content="summary_large_image">
+  <meta name="twitter:title"           content="NEZHAMAINAN | Shopee Super Summit 2026">
+  <meta name="twitter:description"     content="Registrasi Affiliate & Pengambilan Sample Produk NEZHAMAINAN">
+  <meta name="twitter:image"           content="https://nezhamainan.pages.dev/logo.jpg">
+  <link rel="icon" href="/logo.jpg">
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* ─── RESET ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ─── TOKENS ─── */
+    :root {
+      --red:      #ef2b1c;
+      --red-dark: #b01e12;
+      --gold:     #f59e0b;
+      --text:     #111827;
+      --muted:    #6b7280;
+      --line:     #e5e7eb;
+      --bg:       #f1f2f4;
+      --font:     'Inter', Arial, Helvetica, sans-serif;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      font-family: var(--font);
+      color: var(--text);
+    }
+
+    body {
+      background:
+        radial-gradient(ellipse at 5% 5%,   rgba(239,43,28,.07) 0%, transparent 40%),
+        radial-gradient(ellipse at 95% 95%,  rgba(239,43,28,.05) 0%, transparent 40%),
+        var(--bg);
+    }
+
+    /* ─── PAGE WRAPPER ─── */
+    .page {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: 20px;
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       FORM CARD
+    ───────────────────────────────────────────────────────── */
+    #formCard {
+      width: min(1060px, 100%);
+      display: grid;
+      grid-template-columns: 1fr 1.12fr;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow:
+        0 40px 100px rgba(0,0,0,.18),
+        0 8px 24px  rgba(0,0,0,.10);
+      animation: riseUp .55s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    @keyframes riseUp {
+      from { opacity: 0; transform: translateY(32px); }
+      to   { opacity: 1; transform: translateY(0);    }
+    }
+
+    /* ── BRAND PANEL (left, dark red) ── */
+    .brand-panel {
+      position: relative;
+      overflow: hidden;
+      min-height: 650px;
+      padding: 48px 44px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background:
+        radial-gradient(ellipse at 80% 5%,  rgba(239,43,28,.35) 0%, transparent 55%),
+        radial-gradient(ellipse at 15% 95%, rgba(180,20,10,.25) 0%, transparent 50%),
+        linear-gradient(158deg, #130205 0%, #3a0c09 45%, #68140f 100%);
+    }
+
+    /* animated glow orbs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(72px);
+      pointer-events: none;
+    }
+    .orb-1 {
+      width: 320px; height: 320px;
+      background: rgba(239,43,28,.28);
+      top: -90px; right: -70px;
+      animation: orbDrift 7s ease-in-out infinite alternate;
+    }
+    .orb-2 {
+      width: 230px; height: 230px;
+      background: rgba(255,80,30,.18);
+      bottom: -70px; left: -50px;
+      animation: orbDrift 9.5s ease-in-out infinite alternate-reverse;
+    }
+    @keyframes orbDrift {
+      from { transform: scale(1)   translate(0,0);      }
+      to   { transform: scale(1.25) translate(18px,-14px); }
+    }
+
+    .brand-top    { position: relative; z-index: 2; }
+    .brand-bottom { position: relative; z-index: 2; }
+
+    /* logo white card */
+    .brand-logo-box {
+      display: inline-block;
+      padding: 14px 20px;
+      background: rgba(255,255,255,.97);
+      border-radius: 18px;
+      box-shadow: 0 10px 36px rgba(0,0,0,.35);
+      backdrop-filter: blur(12px);
+      line-height: 0;
+    }
+    .brand-logo-box img {
+      display: block;
+      width: 180px;
+      max-width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .brand-eyebrow {
+      margin-top: 14px;
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 2.2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.38);
+    }
+
+    /* gold badge */
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 34px;
+      padding: 7px 15px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #d97706, #fbbf24);
+      color: #1c0900;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .9px;
+      text-transform: uppercase;
+      box-shadow: 0 5px 18px rgba(245,158,11,.5);
+    }
+
+    .brand-panel h1 {
+      margin: 18px 0 12px;
+      font-size: 42px;
+      font-weight: 900;
+      line-height: 1.04;
+      letter-spacing: -1.5px;
+      color: #fff;
+    }
+    .brand-panel h1 .accent {
+      background: linear-gradient(135deg, #ff7a6b, #ffb8b0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .brand-copy {
+      font-size: 13.5px;
+      font-weight: 400;
+      line-height: 1.68;
+      color: rgba(255,255,255,.5);
+      max-width: 340px;
+    }
+
+    /* glassmorphism note */
+    .brand-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      padding: 15px 16px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 15px;
+      color: rgba(255,255,255,.68);
+      font-size: 12.5px;
+      font-weight: 500;
+      line-height: 1.55;
+      max-width: 380px;
+      backdrop-filter: blur(10px);
+    }
+    .brand-note b { color: rgba(255,255,255,.9); font-weight: 800; }
+    .note-dot {
+      flex: 0 0 22px;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--red);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 900;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    /* ── FORM PANEL (right, white) ── */
+    .form-panel {
+      min-height: 650px;
+      padding: 38px 48px 34px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .form-head { margin-bottom: 24px; }
+    .form-head h2 {
+      font-size: 27px;
+      font-weight: 900;
+      letter-spacing: -.6px;
+      color: var(--text);
+    }
+    .form-head p {
+      margin-top: 6px;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* field */
+    .field { margin-bottom: 15px; }
+    .field-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 7px;
+    }
+    .f-label {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .f-req { color: var(--red); }
+    .f-opt {
+      padding: 3px 9px;
+      border-radius: 99px;
+      background: #f3f4f6;
+      color: #9ca3af;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    /* input wrap + icon */
+    .f-wrap { position: relative; }
+    .f-ico {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 17px; height: 17px;
+      color: #cbd5e1;
+      pointer-events: none;
+      transition: color .18s ease;
+    }
+    .f-wrap:focus-within .f-ico { color: var(--red); }
+
+    .f-input {
+      width: 100%;
+      height: 49px;
+      padding: 0 14px 0 44px;
+      border: 1.5px solid var(--line);
+      border-radius: 13px;
+      background: #f9fafb;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      outline: none;
+      transition: border-color .18s ease, background .18s ease, box-shadow .18s ease;
+    }
+    .f-input::placeholder { color: #c9cdd6; font-weight: 400; }
+    .f-input:focus {
+      border-color: var(--red);
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(239,43,28,.08);
+    }
+
+    .f-hint {
+      margin-top: 5px;
+      font-size: 10.5px;
+      color: #9ca3af;
+      line-height: 1.4;
+    }
+
+    /* submit button */
+    .btn-go {
+      width: 100%;
+      height: 52px;
+      margin-top: 6px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #a81b10 0%, #ef2b1c 55%, #ff5647 100%);
+      color: #fff;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: .6px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 28px rgba(239,43,28,.36);
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    /* shine sweep on hover */
+    .btn-go::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      left: -110%;
+      width: 55%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
+      transition: left .55s ease;
+    }
+    .btn-go:hover::after  { left: 160%; }
+    .btn-go:hover  { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(239,43,28,.44); }
+    .btn-go:active { transform: translateY(1px);  box-shadow: 0 5px 14px  rgba(239,43,28,.32); }
+    .btn-go:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+    .spinner {
+      display: inline-block;
+      width: 15px; height: 15px;
+      margin-right: 8px;
+      vertical-align: middle;
+      border-radius: 50%;
+      border: 2.5px solid rgba(255,255,255,.38);
+      border-top-color: #fff;
+      animation: spin .75s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* alerts */
+    #pesan {
+      display: none;
+      margin-top: 14px;
+      padding: 13px 14px;
+      border-radius: 12px;
+      font-size: 12.5px;
+      line-height: 1.5;
+    }
+    .msg-ok  { display: block !important; color: #065f46; background: #ecfdf5; border: 1.5px solid #6ee7b7; }
+    .msg-err { display: block !important; color: #991b1b; background: #fef2f2; border: 1.5px solid #fca5a5; }
+    .msg-t   { font-weight: 800; font-size: 13px; }
+
+    .panel-foot {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 10px;
+      color: #d1d5db;
+      letter-spacing: .3px;
+    }
+    .panel-foot b { color: var(--red-dark); letter-spacing: .5px; }
+
+    /* ─────────────────────────────────────────────────────────
+       CLAIM CARD (TIKET)
+    ───────────────────────────────────────────────────────── */
+    #claimCard {
+      width: min(466px, 100%);
+      animation: riseUp .55s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    .c-ticket {
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow:
+        0 40px 100px rgba(0,0,0,.24),
+        0 8px 24px  rgba(0,0,0,.12);
+    }
+
+    /* — green header — */
+    .c-head {
+      position: relative;
+      overflow: hidden;
+      padding: 38px 34px 30px;
+      background: linear-gradient(142deg, #04382a 0%, #047857 55%, #10b981 100%);
+      text-align: center;
+      color: #fff;
+    }
+    .c-head::before {
+      content: '';
+      position: absolute;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.07);
+      top: -65px; right: -55px;
+    }
+    .c-head::after {
+      content: '';
+      position: absolute;
+      width: 145px; height: 145px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.05);
+      bottom: -45px; left: -35px;
+    }
+
+    .c-tick {
+      position: relative;
+      z-index: 2;
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.18);
+      border: 2.5px solid rgba(255,255,255,.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 18px;
+      font-size: 30px;
+      font-weight: 900;
+      animation: tickPop .65s .15s cubic-bezier(.68,-.55,.265,1.55) both;
+    }
+    @keyframes tickPop {
+      from { transform: scale(0) rotate(-25deg); opacity: 0; }
+      to   { transform: scale(1) rotate(0deg);   opacity: 1; }
+    }
+
+    .c-head h2 {
+      position: relative;
+      z-index: 2;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: .5px;
+      margin-bottom: 5px;
+    }
+    .c-head p {
+      position: relative;
+      z-index: 2;
+      font-size: 12px;
+      opacity: .8;
+      margin-bottom: 22px;
+      line-height: 1.45;
+    }
+
+    .code-box {
+      position: relative;
+      z-index: 2;
+      display: inline-block;
+      padding: 11px 28px;
+      background: rgba(255,255,255,.14);
+      border: 2px solid rgba(255,255,255,.28);
+      border-radius: 16px;
+      backdrop-filter: blur(6px);
+    }
+    .code-lbl {
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      opacity: .7;
+      margin-bottom: 3px;
+    }
+    .code-val {
+      font-family: 'Courier New', 'Lucida Console', monospace;
+      font-size: 36px;
+      font-weight: 900;
+      letter-spacing: 7px;
+      line-height: 1.1;
+    }
+
+    /* — perforated tear line — */
+    .c-perf {
+      position: relative;
+      height: 1px;
+      background: var(--line);
+      margin: 0 28px;
+    }
+    .c-perf::before,
+    .c-perf::after {
+      content: '';
+      position: absolute;
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: #fff;
+      border: 1px solid var(--line);
+      top: -14px;
+    }
+    .c-perf::before { left:  -37px; }
+    .c-perf::after  { right: -37px; }
+
+    /* — ticket body — */
+    .c-body {
+      padding: 24px 30px 22px;
+      background: #fff;
+    }
+
+    .c-brand-row {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding-bottom: 18px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .c-brand-row img { width: 84px; height: auto; }
+    .c-ev-sub  { font-size: 9px; color: #9ca3af; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px; }
+    .c-ev-name { font-size: 14px; font-weight: 900; color: var(--red-dark); letter-spacing: .5px; }
+
+    .c-rows { display: flex; flex-direction: column; gap: 8px; }
+    .c-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 13px;
+      background: #f9fafb;
+      border-radius: 11px;
+      transition: background .15s;
+    }
+    .c-row:hover { background: #f3f4f6; }
+    .c-lbl { font-size: 11px; font-weight: 700; color: #9ca3af; white-space: nowrap; }
+    .c-val { font-size: 13px; font-weight: 700; color: var(--text); text-align: right; word-break: break-all; }
+
+    .c-notice {
+      margin-top: 18px;
+      padding: 13px 15px;
+      background: #fffbeb;
+      border: 1.5px solid #fcd34d;
+      border-radius: 13px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: #92400e;
+      line-height: 1.55;
+    }
+
+    /* — ticket footer — */
+    .c-foot {
+      padding: 14px 30px 20px;
+      background: #fff;
+      border-top: 1px solid #f3f4f6;
+      text-align: center;
+      font-size: 9.5px;
+      color: #d1d5db;
+      letter-spacing: .4px;
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       CONFETTI
+    ───────────────────────────────────────────────────────── */
+    #cf {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      overflow: hidden;
+    }
+    .cp {
+      position: absolute;
+      top: -14px;
+      animation: cffall linear forwards;
+    }
+    @keyframes cffall {
+      0%   { transform: translateY(0)     rotate(0deg);    opacity: 1; }
+      80%  { opacity: 1; }
+      100% { transform: translateY(110vh) rotate(680deg);  opacity: 0; }
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       RESPONSIVE
+    ───────────────────────────────────────────────────────── */
+    @media (min-width: 821px) and (max-height: 700px) {
+      .brand-panel, .form-panel { min-height: 570px; }
+      .brand-panel { padding: 32px 38px; }
+      .form-panel  { padding: 26px 42px; }
+      .brand-panel h1 { font-size: 36px; }
+      .brand-badge { margin-top: 22px; }
+    }
+
+    @media (max-width: 820px) {
+      .page { padding: 16px 14px 30px; align-items: flex-start; }
+      #formCard {
+        grid-template-columns: 1fr;
+        max-width: 600px;
+        border-radius: 24px;
+      }
+      .brand-panel { min-height: auto; padding: 28px 30px 24px; }
+      .brand-bottom { display: none; }
+      .brand-logo-box img { width: 160px; }
+      .brand-panel h1  { font-size: 32px; margin: 12px 0 10px; }
+      .brand-badge { margin-top: 22px; }
+      .brand-copy  { font-size: 12.5px; }
+      .form-panel  { min-height: auto; padding: 28px 30px 26px; }
+      .form-head h2 { font-size: 23px; }
+    }
+
+    @media (max-width: 540px) {
+      .page { padding: 10px 10px 24px; }
+      #formCard { border-radius: 20px; }
+      .brand-panel { padding: 22px 20px 20px; }
+      .brand-logo-box { padding: 10px 14px; border-radius: 14px; }
+      .brand-logo-box img { width: 145px; max-width: 56vw; }
+      .brand-eyebrow { font-size: 9.5px; }
+      .brand-badge { margin-top: 16px; font-size: 9px; padding: 6px 12px; }
+      .brand-panel h1 { font-size: 27px; margin: 12px 0 9px; }
+      .brand-copy  { font-size: 12px; }
+      .form-panel  { padding: 20px 18px 22px; }
+      .form-head   { margin-bottom: 18px; }
+      .form-head h2 { font-size: 21px; }
+      .f-input  { height: 50px; font-size: 16px; border-radius: 11px; }
+      .btn-go   { height: 54px; font-size: 15px; border-radius: 13px; }
+
+      /* claim card mobile */
+      #claimCard { width: 100%; }
+      .c-head  { padding: 28px 22px 22px; }
+      .c-tick  { width: 60px; height: 60px; font-size: 26px; }
+      .c-head h2 { font-size: 17px; }
+      .code-val  { font-size: 30px; letter-spacing: 5px; }
+      .c-perf  { margin: 0 18px; }
+      .c-perf::before { left: -30px; }
+      .c-perf::after  { right: -30px; }
+      .c-body  { padding: 18px 18px; }
+      .c-brand-row img { width: 68px; }
+      .c-foot  { padding: 12px 18px 18px; }
+    }
+
+    @media (max-width: 360px) {
+      .brand-panel, .form-panel { padding-left: 15px; padding-right: 15px; }
+      .brand-panel h1 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ══════════════════════════════════════════
+       FORM CARD
+  ══════════════════════════════════════════ -->
+  <div id="formCard">
+
+    <!-- BRAND PANEL (kiri — dark red) -->
+    <div class="brand-panel">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+
+      <div class="brand-top">
+        <div class="brand-logo-box">
+          <img src="/logo.jpg" alt="NEZHAMAINAN">
+        </div>
+        <div class="brand-eyebrow">NEZHAMAINAN</div>
+
+        <div class="brand-badge">✦ Shopee Super Summit 2026</div>
+
+        <h1>
+          Affiliate <span class="accent">Sample</span><br>Registration
+        </h1>
+
+        <p class="brand-copy">
+          Pendataan kreator affiliate untuk pengambilan
+          sample produk NEZHAMAINAN di Shopee Super Summit 2026.
+        </p>
+      </div>
+
+      <div class="brand-bottom">
+        <div class="brand-note">
+          <div class="note-dot">i</div>
+          <div>
+            Satu username Shopee dan nomor WhatsApp hanya dapat digunakan
+            <b>satu kali</b>. Setiap kreator hanya berhak mengambil
+            <b>1 sample</b> produk.
+          </div>
+        </div>
+      </div>
+    </div><!-- /.brand-panel -->
+
+    <!-- FORM PANEL (kanan — putih) -->
+    <div class="form-panel">
+      <div class="form-head">
+        <h2>Data Affiliate</h2>
+        <p>Isi data dengan benar sebelum mengambil sample.</p>
+      </div>
+
+      <form id="affiliateForm" novalidate>
+
+        <!-- Nama Lengkap -->
+        <div class="field">
+          <div class="field-row">
+            <label class="f-label" for="nama">
+              Nama Lengkap <span class="f-req">*</span>
+            </label>
+          </div>
+          <div class="f-wrap">
+            <svg class="f-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+            <input class="f-input" id="nama" type="text" required
+                   autocomplete="name" placeholder="Contoh: Kamidi">
+          </div>
+        </div>
+
+        <!-- Username Shopee -->
+        <div class="field">
+          <div class="field-row">
+            <label class="f-label" for="username">
+              Username Shopee <span class="f-req">*</span>
+            </label>
+          </div>
+          <div class="f-wrap">
+            <svg class="f-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M16 8v6a2 2 0 0 0 4 0v-2a8 8 0 1 0-3 6"/>
+            </svg>
+            <input class="f-input" id="username" type="text" required
+                   autocomplete="off" spellcheck="false"
+                   placeholder="Contoh: @nezhamainan">
+          </div>
+          <div class="f-hint">Gunakan username akun Shopee Affiliate kamu.</div>
+        </div>
+
+        <!-- No. WhatsApp -->
+        <div class="field">
+          <div class="field-row">
+            <label class="f-label" for="phone">
+              No. WhatsApp <span class="f-req">*</span>
+            </label>
+          </div>
+          <div class="f-wrap">
+            <svg class="f-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.4 19.4 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7A2 2 0 0 1 22 16.9z"/>
+            </svg>
+            <input class="f-input" id="phone" type="tel" required
+                   inputmode="numeric" autocomplete="tel"
+                   placeholder="Contoh: 081234567890">
+          </div>
+          <div class="f-hint">Pastikan nomor aktif dan dapat dihubungi.</div>
+        </div>
+
+        <!-- Produk (opsional) -->
+        <div class="field">
+          <div class="field-row">
+            <label class="f-label" for="produk">Produk Sample</label>
+            <span class="f-opt">Opsional</span>
+          </div>
+          <div class="f-wrap">
+            <svg class="f-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4a2 2 0 0 0 1-1.7z"/>
+              <path d="M3.3 7L12 12l8.7-5"/>
+              <path d="M12 22V12"/>
+            </svg>
+            <input class="f-input" id="produk" type="text" autocomplete="off"
+                   placeholder="Contoh: Lampu LED Candle 12W">
+          </div>
+          <div class="f-hint">Isi sesuai sample yang kamu ambil di booth.</div>
+        </div>
+
+        <button id="tombol" class="btn-go" type="submit">KIRIM DATA</button>
+
+      </form>
+
+      <div id="pesan"></div>
+
+      <div class="panel-foot">
+        <b>NEZHAMAINAN</b> &bull; Shopee Super Summit 2026
+      </div>
+    </div><!-- /.form-panel -->
+
+  </div><!-- /#formCard -->
+
+
+  <!-- ══════════════════════════════════════════
+       CLAIM CARD (tiket event)
+  ══════════════════════════════════════════ -->
+  <div id="claimCard" style="display:none">
+    <div class="c-ticket">
+
+      <!-- Green header -->
+      <div class="c-head">
+        <div class="c-tick">✓</div>
+        <h2>SAMPLE TELAH DIKLAIM</h2>
+        <p>Registrasi berhasil. Tunjukkan kartu ini kepada kru booth.</p>
+        <div class="code-box">
+          <div class="code-lbl">Kode Klaim</div>
+          <div class="code-val" id="cc-kode">NZH-0000</div>
+        </div>
+      </div>
+
+      <!-- Perforated tear line -->
+      <div class="c-perf"></div>
+
+      <!-- Body -->
+      <div class="c-body">
+
+        <div class="c-brand-row">
+          <img src="/logo.jpg" alt="NEZHAMAINAN">
+          <div>
+            <div class="c-ev-sub">Shopee Super Summit 2026</div>
+            <div class="c-ev-name">NEZHAMAINAN</div>
+          </div>
+        </div>
+
+        <div class="c-rows">
+          <div class="c-row">
+            <span class="c-lbl">👤 Nama</span>
+            <span class="c-val" id="cc-nama">—</span>
+          </div>
+          <div class="c-row">
+            <span class="c-lbl">🛒 Akun Shopee</span>
+            <span class="c-val" id="cc-username">—</span>
+          </div>
+          <div class="c-row">
+            <span class="c-lbl">📱 WhatsApp</span>
+            <span class="c-val" id="cc-phone">—</span>
+          </div>
+          <div class="c-row">
+            <span class="c-lbl">📦 Produk</span>
+            <span class="c-val" id="cc-produk">—</span>
+          </div>
+          <div class="c-row">
+            <span class="c-lbl">⏰ Waktu</span>
+            <span class="c-val" id="cc-waktu">—</span>
+          </div>
+        </div>
+
+        <div class="c-notice">
+          ⚠️ Tunjukkan layar ini kepada kru booth NEZHAMAINAN<br>
+          untuk mengambil sample produk kamu.
+        </div>
+
+      </div><!-- /.c-body -->
+
+      <div class="c-foot">
+        NEZHAMAINAN &bull; Shopee Super Summit 2026 &bull; 1 orang 1 sample
+      </div>
+
+    </div><!-- /.c-ticket -->
+  </div><!-- /#claimCard -->
+
+</div><!-- /.page -->
+
+<!-- Confetti container -->
+<div id="cf"></div>
+
+
+<script>
+  /* ============================================================
+     KONFIGURASI — ganti SCRIPT_URL setelah update deployment
+  ============================================================ */
+  var SCRIPT_URL  = 'https://script.google.com/macros/s/AKfycbwW5H1x-19m0c6JkMEh4fBl_XLWfOuh2HV05uhBJ4tww7sY29pNfLEXAeKusvEIgap3/exec';
+  var STORAGE_KEY = 'nzh_klaim_sss2026';
+
+  /* ============================================================
+     LAPIS 1 — Cek localStorage saat halaman dibuka
+  ============================================================ */
+  document.addEventListener('DOMContentLoaded', function () {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        var klaim = JSON.parse(raw);
+        if (klaim && klaim.kodeKlaim) { tampilKartu(klaim); return; }
+      }
+    } catch (_) { localStorage.removeItem(STORAGE_KEY); }
+  });
+
+  /* ============================================================
+     FORM SUBMIT
+  ============================================================ */
+  document.getElementById('affiliateForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    var nama     = document.getElementById('nama').value.trim();
+    var username = document.getElementById('username').value.trim();
+    var phone    = document.getElementById('phone').value.trim();
+    var produk   = document.getElementById('produk').value.trim();
+    var tombol   = document.getElementById('tombol');
+
+    if (!nama)     { showMsg('err', 'Nama lengkap wajib diisi!');    return; }
+    if (!username) { showMsg('err', 'Username Shopee wajib diisi!'); return; }
+    if (!phone)    { showMsg('err', 'Nomor WhatsApp wajib diisi!');  return; }
+
+    tombol.disabled  = true;
+    tombol.innerHTML = '<span class="spinner"></span> MEMERIKSA DATA...';
+    var pesan = document.getElementById('pesan');
+    pesan.className  = '';
+    pesan.style.display = 'none';
+
+    /* LAPIS 2 — Kirim ke Apps Script (JSONP) */
+    panggilAPI(
+      { nama: nama, username: username, phone: phone, produk: produk },
+
+      function (res) {
+        tombol.disabled  = false;
+        tombol.innerHTML = 'KIRIM DATA';
+
+        if (res.success) {
+          /* LAPIS 3 — Kunci perangkat */
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({
+              kodeKlaim: res.kodeKlaim,
+              nama:      res.nama,
+              username:  res.username,
+              phone:     res.phone,
+              produk:    res.produk,
+              waktu:     res.waktu
+            }));
+          } catch (_) {}
+
+          tampilKartu(res);
+          launchConfetti();
+
+        } else {
+          showMsg('err',
+            '<span class="msg-t">⚠ DATA TIDAK DAPAT DIKIRIM</span><br>' +
+            esc(res.message || 'Terjadi kesalahan. Silakan coba lagi.')
+          );
+        }
+      },
+
+      function (err) {
+        tombol.disabled  = false;
+        tombol.innerHTML = 'KIRIM DATA';
+        showMsg('err',
+          '<span class="msg-t">⚠ GAGAL TERHUBUNG KE SERVER</span><br>' +
+          esc(err || 'Periksa koneksi internet kamu lalu coba lagi.')
+        );
+      }
+    );
+  });
+
+  /* ============================================================
+     JSONP — paling andal untuk semua browser & in-app browser
+  ============================================================ */
+  function panggilAPI(data, onOk, onErr) {
+    var cb = '_nzh_' + Date.now() + '_' + Math.floor(Math.random() * 99999);
+
+    var t = setTimeout(function () {
+      bersih();
+      onErr('Timeout — koneksi lambat atau server sibuk. Coba lagi.');
+    }, 20000);
+
+    function bersih() {
+      clearTimeout(t);
+      delete window[cb];
+      var el = document.getElementById('_nzhs');
+      if (el) el.remove();
+    }
+
+    window[cb] = function (res) { bersih(); onOk(res); };
+
+    var p = new URLSearchParams({
+      callback: cb,
+      nama: data.nama, username: data.username,
+      phone: data.phone, produk: data.produk || ''
+    });
+
+    var s = document.createElement('script');
+    s.id = '_nzhs';
+    s.onerror = function () { bersih(); onErr('Gagal terhubung. Periksa koneksi internet.'); };
+    s.src = SCRIPT_URL + '?' + p.toString();
+    document.head.appendChild(s);
+  }
+
+  /* ============================================================
+     TAMPILKAN KARTU KLAIM
+  ============================================================ */
+  function tampilKartu(d) {
+    document.getElementById('cc-kode').textContent     = d.kodeKlaim || '—';
+    document.getElementById('cc-nama').textContent     = d.nama      || '—';
+    document.getElementById('cc-username').textContent = d.username  || '—';
+    document.getElementById('cc-phone').textContent    = d.phone     || '—';
+    document.getElementById('cc-produk').textContent   = d.produk    || '—';
+    document.getElementById('cc-waktu').textContent    = d.waktu     || '—';
+
+    document.getElementById('formCard').style.display  = 'none';
+    document.getElementById('claimCard').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* ============================================================
+     CONFETTI
+  ============================================================ */
+  function launchConfetti() {
+    var wrap   = document.getElementById('cf');
+    var colors = ['#ef2b1c','#ff7a6b','#f59e0b','#fcd34d','#34d399','#60a5fa','#fff','#c084fc'];
+    var pieces = [];
+
+    for (var i = 0; i < 110; i++) {
+      var el   = document.createElement('div');
+      var size = 6 + Math.random() * 9;
+      el.className = 'cp';
+      el.style.cssText = [
+        'left:'               + (Math.random() * 100) + '%',
+        'width:'              + size + 'px',
+        'height:'             + size + 'px',
+        'background:'         + colors[Math.floor(Math.random() * colors.length)],
+        'border-radius:'      + (Math.random() > .45 ? '50%' : '3px'),
+        'animation-duration:' + (2.5 + Math.random() * 3.5) + 's',
+        'animation-delay:'    + (Math.random() * 1.8) + 's'
+      ].join(';');
+      wrap.appendChild(el);
+      pieces.push(el);
+    }
+
+    setTimeout(function () {
+      pieces.forEach(function (el) { if (el.parentNode) el.parentNode.removeChild(el); });
+    }, 7000);
+  }
+
+  /* ============================================================
+     HELPERS
+  ============================================================ */
+  function showMsg(type, html) {
+    var el = document.getElementById('pesan');
+    el.className = type === 'err' ? 'msg-err' : 'msg-ok';
+    el.innerHTML = html;
+    setTimeout(function () { el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 80);
+  }
+
+  function esc(s) {
+    return String(s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/\n/g,'<br>');
+  }
+</script>
+
+</body>
+</html>
