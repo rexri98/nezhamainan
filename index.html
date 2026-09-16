@@ -431,6 +431,9 @@
     .c-head.status-claimed {
       background: linear-gradient(142deg, #04382a 0%, #047857 55%, #10b981 100%);
     }
+    .c-head.status-rejected {
+      background: linear-gradient(142deg, #3f0d12 0%, #7f1d1d 55%, #a82020 100%);
+    }
 
     .c-status-pill {
       position: relative;
@@ -456,6 +459,11 @@
       background: rgba(209, 250, 229, 0.22);
       border: 1px solid rgba(209, 250, 229, 0.45);
       color: #d1fae5;
+    }
+    .c-status-pill.rejected {
+      background: rgba(254, 202, 202, 0.22);
+      border: 1px solid rgba(254, 202, 202, 0.45);
+      color: #fecaca;
     }
 
     .pulse-dot {
@@ -621,6 +629,12 @@
       background: #ecfdf5;
       border: 1.5px solid #6ee7b7;
       color: #065f46;
+    }
+    .c-notice.rejected {
+      background: #fef2f2;
+      border: 1.5px solid #fca5a5;
+      color: #991b1b;
+      text-align: left;
     }
 
     .btn-sync {
@@ -1314,6 +1328,7 @@
 
     var statusStr = String(d.status || '').trim().toUpperCase();
     var isApproved = (statusStr === 'SUDAH DI-ACC' || statusStr === 'SUDAH DIAMBIL' || statusStr === 'DISETUJUI');
+    var isRejected = (statusStr === 'DITOLAK' || statusStr === 'TIDAK DI-ACC' || statusStr === 'REJECTED' || statusStr === 'BELUM MEMENUHI SYARAT');
 
     var headEl    = document.getElementById('cc-head');
     var pillEl    = document.getElementById('cc-status-pill');
@@ -1336,6 +1351,20 @@
       subEl.textContent    = 'Sample gratis kamu telah disetujui seller NEZHAMAINAN di Shopee.';
       noticeEl.className  = 'c-notice claimed';
       noticeEl.innerHTML  = '🎉 <b>Selamat! Pengajuan kamu sudah di-ACC!</b> Sample gratis produk NEZHAMAINAN akan segera diproses & dikirimkan ke alamat kamu via sistem Shopee.';
+      if (syncBtn) syncBtn.style.display = 'none';
+      berhentiPolling();
+
+    } else if (isRejected) {
+      /* Status DITOLAK (Belum memenuhi kriteria program sample) */
+      headEl.className    = 'c-head status-rejected';
+      pillEl.className    = 'c-status-pill rejected';
+      dotEl.style.display = 'none';
+      textEl.textContent  = '✕ BELUM DAPAT DISETUJUI';
+      iconEl.textContent   = '✕';
+      titleEl.textContent  = 'MOHON MAAF, BELUM DAPAT DI-ACC';
+      subEl.textContent    = 'Pengajuan sample kamu saat ini belum memenuhi kriteria program sample.';
+      noticeEl.className  = 'c-notice rejected';
+      noticeEl.innerHTML  = '📋 <b>Informasi Seleksi:</b> Terima kasih atas antusiasmemu mendaftar di booth NEZHAMAINAN. Karena kuota terbatas & pertimbangan kriteria affiliate, pengajuan sample kamu saat ini belum dapat disetujui.<br><br>💡 <i>Jangan berkecil hati! Kamu tetap bisa mempromosikan produk NEZHAMAINAN dengan komisi menarik melalui link Shopee Affiliate kamu.</i>';
       if (syncBtn) syncBtn.style.display = 'none';
       berhentiPolling();
 
