@@ -129,22 +129,36 @@
     .brand-top    { position: relative; z-index: 2; }
     .brand-bottom { position: relative; z-index: 2; }
 
-    /* logo white card */
-    .brand-logo-box {
-      display: inline-block;
-      padding: 14px 20px;
-      background: rgba(255,255,255,.97);
-      border-radius: 18px;
-      box-shadow: 0 10px 36px rgba(0,0,0,.35);
-      backdrop-filter: blur(12px);
-      line-height: 0;
+    /* seamless logo without rigid box */
+    .brand-logo-wrap {
+      display: inline-flex;
+      align-items: center;
+      position: relative;
+      padding: 4px 0;
+      margin-bottom: 2px;
     }
-    .brand-logo-box img {
+    .brand-logo-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -14px -24px;
+      background: radial-gradient(ellipse at center, rgba(255,80,60,.28) 0%, rgba(239,43,28,.14) 48%, transparent 75%);
+      filter: blur(16px);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .brand-logo {
+      position: relative;
+      z-index: 2;
       display: block;
-      width: 180px;
+      width: 185px;
       max-width: 100%;
       height: auto;
-      object-fit: contain;
+      filter: drop-shadow(0 0 1px rgba(255,255,255,.35)) drop-shadow(0 0 14px rgba(239,43,28,.6)) drop-shadow(0 6px 16px rgba(0,0,0,.65));
+      transition: transform .25s ease, filter .25s ease;
+    }
+    .brand-logo:hover {
+      transform: translateY(-2px) scale(1.02);
+      filter: drop-shadow(0 0 2px rgba(255,255,255,.5)) drop-shadow(0 0 20px rgba(255,70,50,.8)) drop-shadow(0 8px 20px rgba(0,0,0,.75));
     }
 
     .brand-eyebrow {
@@ -608,7 +622,7 @@
       }
       .brand-panel { min-height: auto; padding: 28px 30px 24px; }
       .brand-bottom { display: none; }
-      .brand-logo-box img { width: 160px; }
+      .brand-logo { width: 165px; }
       .brand-panel h1  { font-size: 32px; margin: 12px 0 10px; }
       .brand-badge { margin-top: 22px; }
       .brand-copy  { font-size: 12.5px; }
@@ -620,8 +634,7 @@
       .page { padding: 10px 10px 24px; }
       #formCard { border-radius: 20px; }
       .brand-panel { padding: 22px 20px 20px; }
-      .brand-logo-box { padding: 10px 14px; border-radius: 14px; }
-      .brand-logo-box img { width: 145px; max-width: 56vw; }
+      .brand-logo { width: 150px; max-width: 56vw; }
       .brand-eyebrow { font-size: 9.5px; }
       .brand-badge { margin-top: 16px; font-size: 9px; padding: 6px 12px; }
       .brand-panel h1 { font-size: 27px; margin: 12px 0 9px; }
@@ -667,8 +680,8 @@
       <div class="orb orb-2"></div>
 
       <div class="brand-top">
-        <div class="brand-logo-box">
-          <img src="/logo.jpg" alt="NEZHAMAINAN">
+        <div class="brand-logo-wrap">
+          <img class="brand-logo" src="logo-transparent.png" alt="NEZHAMAINAN">
         </div>
         <div class="brand-eyebrow">NEZHAMAINAN</div>
 
@@ -815,7 +828,7 @@
       <div class="c-body">
 
         <div class="c-brand-row">
-          <img src="/logo.jpg" alt="NEZHAMAINAN">
+          <img src="logo-transparent.png" alt="NEZHAMAINAN" style="width: 88px; height: auto;">
           <div>
             <div class="c-ev-sub">Shopee Super Summit 2026</div>
             <div class="c-ev-name">NEZHAMAINAN</div>
