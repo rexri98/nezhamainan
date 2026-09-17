@@ -657,6 +657,291 @@
       transform: none;
     }
 
+    /* ── Product Chips Selector ── */
+    .prod-chips-wrap {
+      margin-top: 8px;
+    }
+    .prod-chips-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #6b7280;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .prod-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .chip-btn {
+      appearance: none;
+      border: 1.5px solid #e5e7eb;
+      background: #f9fafb;
+      color: #374151;
+      padding: 6px 11px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all .2s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      font-family: inherit;
+    }
+    .chip-btn:hover {
+      border-color: #fca5a5;
+      background: #fff5f5;
+      color: var(--red);
+      transform: translateY(-1px);
+    }
+    .chip-btn.active {
+      border-color: var(--red);
+      background: #fef2f2;
+      color: var(--red);
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(239,43,28,.18);
+    }
+
+    /* ── Shopee Direct Link Button ── */
+    .btn-shopee {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      width: 100%;
+      height: 48px;
+      background: linear-gradient(135deg, #ff5722, #ee4d2d);
+      color: #fff !important;
+      text-decoration: none;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 800;
+      letter-spacing: .3px;
+      box-shadow: 0 5px 16px rgba(238,77,45,.35);
+      transition: all .22s ease;
+      margin-bottom: 12px;
+      box-sizing: border-box;
+    }
+    .btn-shopee:hover {
+      background: linear-gradient(135deg, #f4511e, #e64a19);
+      transform: translateY(-1.5px);
+      box-shadow: 0 8px 22px rgba(238,77,45,.45);
+    }
+    .btn-shopee:active {
+      transform: translateY(0);
+    }
+    .btn-shopee svg {
+      flex-shrink: 0;
+    }
+
+    .claim-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .btn-back-form {
+      appearance: none;
+      background: transparent;
+      border: 1.5px solid #e5e7eb;
+      color: #4b5563;
+      height: 40px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all .2s ease;
+      width: 100%;
+      font-family: inherit;
+    }
+    .btn-back-form:hover {
+      background: #f9fafb;
+      border-color: #d1d5db;
+      color: #111827;
+    }
+
+    /* ── Lookup Trigger Link ── */
+    .lookup-trigger-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      margin-top: 14px;
+      font-size: 12px;
+      color: #6b7280;
+    }
+    .btn-text-lookup {
+      appearance: none;
+      background: none;
+      border: none;
+      color: var(--red);
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: underline;
+      cursor: pointer;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-family: inherit;
+      transition: color .2s ease;
+    }
+    .btn-text-lookup:hover {
+      color: var(--red-dark);
+    }
+
+    /* ── Modal Dialog Cek Status ── */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.65);
+      backdrop-filter: blur(4px);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity .25s ease, visibility .25s ease;
+    }
+    .modal-backdrop.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal-box {
+      background: #fff;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 20px 45px rgba(0,0,0,.35);
+      overflow: hidden;
+      transform: translateY(12px) scale(.97);
+      transition: transform .25s cubic-bezier(.16,1,.3,1);
+    }
+    .modal-backdrop.open .modal-box {
+      transform: translateY(0) scale(1);
+    }
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .modal-head h3 {
+      font-size: 16px;
+      font-weight: 800;
+      color: #111827;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .modal-close {
+      appearance: none;
+      background: #f3f4f6;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 18px;
+      line-height: 1;
+      color: #4b5563;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .2s, color .2s;
+    }
+    .modal-close:hover {
+      background: #e5e7eb;
+      color: #111827;
+    }
+    .modal-body {
+      padding: 18px 20px;
+    }
+    .modal-desc {
+      font-size: 12px;
+      line-height: 1.55;
+      color: #4b5563;
+      margin-bottom: 14px;
+    }
+    .modal-desc b {
+      color: #111827;
+    }
+    .modal-input-wrap {
+      margin-bottom: 4px;
+    }
+    .modal-foot {
+      display: flex;
+      gap: 10px;
+      padding: 14px 20px 18px;
+      background: #f9fafb;
+      border-top: 1px solid #f3f4f6;
+    }
+    .btn-modal-cancel {
+      flex: 1;
+      height: 42px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      background: #fff;
+      color: #374151;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-modal-cancel:hover {
+      background: #f3f4f6;
+    }
+    .btn-modal-search {
+      flex: 1.5;
+      height: 42px;
+      border-radius: 10px;
+      border: none;
+      background: var(--red);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 3px 10px rgba(239,43,28,.3);
+      font-family: inherit;
+    }
+    .btn-modal-search:hover {
+      background: var(--red-dark);
+    }
+    .btn-modal-search:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+    .modal-msg {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 11.5px;
+      line-height: 1.4;
+    }
+    .modal-msg.err {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+    }
+    .modal-msg.ok {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+    }
+
     /* ─────────────────────────────────────────────────────────
        CONFETTI
     ───────────────────────────────────────────────────────── */
@@ -925,6 +1210,26 @@
         margin-bottom: 10px;
         border-radius: 10px;
       }
+      .btn-shopee {
+        height: 44px;
+        font-size: 12.5px;
+        margin-bottom: 8px;
+      }
+      .btn-back-form {
+        height: 38px;
+        font-size: 11.5px;
+      }
+      .chip-btn {
+        padding: 4px 9px;
+        font-size: 10.5px;
+      }
+      .lookup-trigger-wrap {
+        font-size: 11px;
+        margin-top: 10px;
+      }
+      .btn-text-lookup {
+        font-size: 11px;
+      }
       .panel-foot {
         margin-top: 10px;
         font-size: 9px;
@@ -1067,12 +1372,30 @@
               <path d="M12 22V12"/>
             </svg>
             <input class="f-input" id="produk" type="text" autocomplete="off"
-                   placeholder="Contoh: Lampu LED Candle 12W">
+                   placeholder="Contoh: Mobil Remot RC / Robot / Edukasi">
           </div>
-          <div class="f-hint">Ketik nama produk sample yang kamu ajukan di Shopee.</div>
+
+          <!-- Interactive Chips -->
+          <div class="prod-chips-wrap">
+            <div class="prod-chips-title">⚡ Pilih Cepat Produk Rekomendasi:</div>
+            <div class="prod-chips" id="prodChips">
+              <button type="button" class="chip-btn" data-val="Mobil Remot RC">🏎️ Mobil Remot RC</button>
+              <button type="button" class="chip-btn" data-val="Robot Action Figure">🤖 Robot Figure</button>
+              <button type="button" class="chip-btn" data-val="Puzzle Edukasi Kayu">🧩 Puzzle Edukasi</button>
+              <button type="button" class="chip-btn" data-val="Water / Bubble Gun">🔫 Water Gun</button>
+              <button type="button" class="chip-btn" data-val="Board Game Anak">🎲 Board Game</button>
+            </div>
+          </div>
+
+          <div class="f-hint">Pilih rekomendasi di atas atau ketik nama mainan yang kamu ajukan di Shopee.</div>
         </div>
 
         <button id="tombol" class="btn-go" type="submit">DAFTARKAN PRIORITAS ACC</button>
+
+        <div class="lookup-trigger-wrap">
+          <span>Sudah pernah daftar di booth?</span>
+          <button type="button" class="btn-text-lookup" id="btnOpenLookup">Cek Status Antrean 🔍</button>
+        </div>
 
       </form>
 
@@ -1157,9 +1480,22 @@
         📌 <b>Langkah Selanjutnya:</b> Pastikan kamu sudah klik <b>"Minta Sample Gratis"</b> di aplikasi Shopee pada produk toko NEZHAMAINAN. Tim seller kami akan segera meng-ACC pengajuanmu!
       </div>
 
-      <button type="button" class="btn-sync" id="btnSyncStatus">
-        🔄 Cek Status ACC Realtime
-      </button>
+      <!-- Tombol Langsung Buka Shopee -->
+      <a href="https://shopee.co.id/nezhamainan" target="_blank" rel="noopener noreferrer" class="btn-shopee" id="btnShopeeStore">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <path d="M19 6h-2c0-2.8-2.2-5-5-5S7 3.2 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.7 0 3 1.3 3 3H9c0-1.7 1.3-3 3-3zm7 17H5V8h2v2c0 .6.4 1 1 1s1-.4 1-1V8h6v2c0 .6.4 1 1 1s1-.4 1-1V8h2v12z"/>
+        </svg>
+        <span>Buka Toko NEZHAMAINAN di Shopee</span>
+      </a>
+
+      <div class="claim-actions">
+        <button type="button" class="btn-sync" id="btnSyncStatus">
+          🔄 Cek Status ACC Realtime
+        </button>
+        <button type="button" class="btn-back-form" id="btnBackToForm">
+          ← Kembali / Cek Akun Lain
+        </button>
+      </div>
 
       <div class="panel-foot">
         <b>NEZHAMAINAN</b> &bull; Shopee Super Summit 2026 &bull; Jalur Prioritas ACC Creator
@@ -1170,17 +1506,42 @@
 
 </div><!-- /.page -->
 
+<!-- Modal Cek Status Antrean Manual -->
+<div id="lookupModal" class="modal-backdrop" style="display:none;">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3><span>🔍</span> Cek Status Pengajuan</h3>
+      <button type="button" class="modal-close" id="btnCloseLookup">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-desc">
+        Masukkan <b>Kode Prioritas (NZH-xxxx)</b>, <b>Nomor WhatsApp</b>, atau <b>Username Shopee</b> yang kamu gunakan saat mendaftar di booth.
+      </p>
+      <div class="f-wrap modal-input-wrap">
+        <svg class="f-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="M21 21l-4.35-4.35"/>
+        </svg>
+        <input class="f-input" id="lookupQuery" type="text" placeholder="Contoh: NZH-2668 / 0812... / @username" autocomplete="off">
+      </div>
+      <div id="lookupMsg" style="display:none;"></div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn-modal-cancel" id="btnCancelLookup">Batal</button>
+      <button type="button" class="btn-modal-search" id="btnDoLookup">Cari Status</button>
+    </div>
+  </div>
+</div>
+
 <!-- Confetti container -->
 <div id="cf"></div>
 
 
 <script>
-  /* ============================================================
-     KONFIGURASI — deployment Google Apps Script
-  ============================================================ */
-  var SCRIPT_URL  = 'https://script.google.com/macros/s/AKfycbwW5H1x-19m0c6JkMEh4fBl_XLWfOuh2HV05uhBJ4tww7sY29pNfLEXAeKusvEIgap3/exec';
-  var STORAGE_KEY = 'nzh_klaim_sss2026';
-  var pollingTimer = null;
+  var SCRIPT_URL       = 'https://script.google.com/macros/s/AKfycbwW5H1x-19m0c6JkMEh4fBl_XLWfOuh2HV05uhBJ4tww7sY29pNfLEXAeKusvEIgap3/exec';
+  var SHOPEE_STORE_URL = 'https://shopee.co.id/nezhamainan';
+  var STORAGE_KEY      = 'nzh_klaim_sss2026';
+  var pollingTimer     = null;
   var currentClaimData = null;
 
   /* ============================================================
@@ -1199,6 +1560,9 @@
         }
       }
     } catch (_) { localStorage.removeItem(STORAGE_KEY); }
+
+    /* Muat Pengaturan Dinamis dari Admin Panel */
+    muatPengaturanPublik();
   });
 
   /* ============================================================
@@ -1558,6 +1922,203 @@
     return String(s)
       .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
       .replace(/\n/g,'<br>');
+  }
+
+  /* ============================================================
+     INTERAKTIF: PRODUCT CHIPS & SETTINGS DINAMIS
+  ============================================================ */
+  function pasangEventChips() {
+    var chipButtons = document.querySelectorAll('.chip-btn');
+    var inputProduk = document.getElementById('produk');
+
+    chipButtons.forEach(function (btn) {
+      btn.onclick = function () {
+        var val = this.getAttribute('data-val');
+        if (this.classList.contains('active')) {
+          this.classList.remove('active');
+          inputProduk.value = '';
+        } else {
+          chipButtons.forEach(function (b) { b.classList.remove('active'); });
+          this.classList.add('active');
+          inputProduk.value = val;
+        }
+      };
+    });
+
+    if (inputProduk) {
+      inputProduk.oninput = function () {
+        var v = this.value.trim().toLowerCase();
+        chipButtons.forEach(function (b) {
+          if (b.getAttribute('data-val').toLowerCase() === v) {
+            b.classList.add('active');
+          } else {
+            b.classList.remove('active');
+          }
+        });
+      };
+    }
+  }
+
+  pasangEventChips();
+
+  function muatPengaturanPublik() {
+    panggilAPI({ action: 'getSettings' }, function (res) {
+      if (res && res.success) {
+        if (res.shopeeUrl) {
+          SHOPEE_STORE_URL = res.shopeeUrl;
+          var btn = document.getElementById('btnShopeeStore');
+          if (btn) btn.href = res.shopeeUrl;
+        }
+
+        if (res.isOpen === false) {
+          var tombol = document.getElementById('tombol');
+          if (tombol) {
+            tombol.disabled = true;
+            tombol.style.background = '#4b5563';
+            tombol.textContent = 'PENDAFTARAN SEDANG DIJEDA';
+          }
+          showMsg('err', '⏸ <b>Pendaftaran Ditutup Sementara:</b> Antrean sample gratis sedang dijeda oleh seller di booth. Silakan hubungi kru booth.');
+        }
+
+        if (Array.isArray(res.chips) && res.chips.length > 0) {
+          var wrap = document.getElementById('prodChips');
+          if (wrap) {
+            var html = '';
+            res.chips.forEach(function (c) {
+              html += '<button type="button" class="chip-btn" data-val="' + esc(c) + '">' + esc(c) + '</button>';
+            });
+            wrap.innerHTML = html;
+            pasangEventChips();
+          }
+        }
+      }
+    });
+  }
+
+  /* ============================================================
+     INTERAKTIF: SHOPEE STORE LINK & KEMBALI KE FORM
+  ============================================================ */
+  var btnShopeeStore = document.getElementById('btnShopeeStore');
+  if (btnShopeeStore && SHOPEE_STORE_URL) {
+    btnShopeeStore.href = SHOPEE_STORE_URL;
+  }
+
+  var btnBackToForm = document.getElementById('btnBackToForm');
+  if (btnBackToForm) {
+    btnBackToForm.addEventListener('click', function () {
+      berhentiPolling();
+      document.getElementById('claimCard').style.display = 'none';
+      document.getElementById('formCard').style.display  = 'grid';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  /* ============================================================
+     INTERAKTIF: CEK STATUS MANUAL (LOOKUP MODAL)
+  ============================================================ */
+  var lookupModal     = document.getElementById('lookupModal');
+  var btnOpenLookup   = document.getElementById('btnOpenLookup');
+  var btnCloseLookup  = document.getElementById('btnCloseLookup');
+  var btnCancelLookup = document.getElementById('btnCancelLookup');
+  var btnDoLookup     = document.getElementById('btnDoLookup');
+  var lookupInput     = document.getElementById('lookupQuery');
+  var lookupMsg       = document.getElementById('lookupMsg');
+
+  function bukaModalLookup() {
+    if (!lookupModal) return;
+    lookupMsg.style.display = 'none';
+    lookupMsg.className = 'modal-msg';
+    lookupMsg.innerHTML = '';
+    lookupInput.value = '';
+    lookupModal.style.display = 'flex';
+    setTimeout(function () {
+      lookupModal.classList.add('open');
+      lookupInput.focus();
+    }, 10);
+  }
+
+  function tutupModalLookup() {
+    if (!lookupModal) return;
+    lookupModal.classList.remove('open');
+    setTimeout(function () {
+      lookupModal.style.display = 'none';
+    }, 250);
+  }
+
+  if (btnOpenLookup)   btnOpenLookup.addEventListener('click', bukaModalLookup);
+  if (btnCloseLookup)  btnCloseLookup.addEventListener('click', tutupModalLookup);
+  if (btnCancelLookup) btnCancelLookup.addEventListener('click', tutupModalLookup);
+
+  if (lookupModal) {
+    lookupModal.addEventListener('click', function (e) {
+      if (e.target === lookupModal) tutupModalLookup();
+    });
+  }
+
+  function prosesLookup() {
+    var q = lookupInput.value.trim();
+    if (!q) {
+      lookupMsg.style.display = 'block';
+      lookupMsg.className = 'modal-msg err';
+      lookupMsg.textContent = 'Harap ketik Kode Prioritas, No. WA, atau Username Shopee.';
+      lookupInput.focus();
+      return;
+    }
+
+    btnDoLookup.disabled = true;
+    btnDoLookup.innerHTML = '<span class="spinner" style="border-color:#fff;border-top-color:transparent;width:13px;height:13px;"></span> Mencari...';
+    lookupMsg.style.display = 'none';
+
+    panggilAPI({ action: 'cekStatus', kodeKlaim: q }, function (res) {
+      btnDoLookup.disabled = false;
+      btnDoLookup.innerHTML = 'Cari Status';
+
+      if (res && res.success && res.kodeKlaim) {
+        lookupMsg.style.display = 'block';
+        lookupMsg.className = 'modal-msg ok';
+        lookupMsg.textContent = '✓ Data ditemukan! Menampilkan kartu antrean...';
+
+        var dataSimpan = {
+          kodeKlaim: res.kodeKlaim,
+          status:    res.status || 'MENUNGGU ACC',
+          nama:      res.nama || '—',
+          username:  res.username || '—',
+          phone:     res.phone || '—',
+          produk:    res.produk || '—',
+          waktu:     res.waktu || '—'
+        };
+
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(dataSimpan));
+        } catch (_) {}
+
+        setTimeout(function () {
+          tutupModalLookup();
+          tampilKartu(dataSimpan);
+        }, 700);
+
+      } else {
+        lookupMsg.style.display = 'block';
+        lookupMsg.className = 'modal-msg err';
+        lookupMsg.textContent = (res && res.message) ? res.message : 'Data pendaftaran tidak ditemukan. Pastikan nomor WA / Username / Kode yang kamu masukkan benar.';
+      }
+    }, function (err) {
+      btnDoLookup.disabled = false;
+      btnDoLookup.innerHTML = 'Cari Status';
+      lookupMsg.style.display = 'block';
+      lookupMsg.className = 'modal-msg err';
+      lookupMsg.textContent = err || 'Gagal terhubung ke server. Periksa koneksi internet lalu coba lagi.';
+    });
+  }
+
+  if (btnDoLookup) btnDoLookup.addEventListener('click', prosesLookup);
+  if (lookupInput) {
+    lookupInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        prosesLookup();
+      }
+    });
   }
 </script>
 
