@@ -283,6 +283,126 @@
       line-height: 1.45;
     }
 
+    /* ─── CLOSED / BELUM DIBUKA STATE ─── */
+    .closed-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 36px 16px 28px;
+      animation: fadeIn .35s ease;
+    }
+    .closed-icon-wrap {
+      width: 76px;
+      height: 76px;
+      background: rgba(239, 43, 28, 0.1);
+      border: 2px solid rgba(239, 43, 28, 0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 30px rgba(239, 43, 28, 0.18);
+      animation: pulseLock 2.4s infinite ease-in-out;
+    }
+    @keyframes pulseLock {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(239, 43, 28, 0.18); }
+      50% { transform: scale(1.06); box-shadow: 0 0 36px rgba(239, 43, 28, 0.38); }
+    }
+    .closed-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      padding: 5px 14px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+    .closed-title {
+      font-size: 23px;
+      font-weight: 900;
+      color: var(--text);
+      margin-bottom: 10px;
+      line-height: 1.3;
+      letter-spacing: -.4px;
+    }
+    .closed-desc {
+      font-size: 13.5px;
+      color: #6b7280;
+      line-height: 1.6;
+      max-width: 380px;
+      margin-bottom: 22px;
+    }
+    .closed-announcement {
+      background: #fffbeb;
+      border: 1.5px solid #fde68a;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 13px;
+      color: #92400e;
+      line-height: 1.55;
+      margin-bottom: 22px;
+      max-width: 380px;
+      width: 100%;
+      text-align: left;
+    }
+    .closed-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      max-width: 380px;
+    }
+    .btn-closed-shopee {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 14px 20px;
+      background: linear-gradient(135deg, #ee4d2d, #d73211);
+      color: #fff !important;
+      font-size: 14px;
+      font-weight: 800;
+      border-radius: 14px;
+      text-decoration: none;
+      box-shadow: 0 6px 20px rgba(238, 77, 45, 0.35);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-closed-shopee:hover {
+      transform: translateY(-1.5px);
+      box-shadow: 0 8px 25px rgba(238, 77, 45, 0.5);
+    }
+    .btn-closed-lookup {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 12px 18px;
+      background: #f3f4f6;
+      border: 1.5px solid #e5e7eb;
+      color: #374151;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .btn-closed-lookup:hover {
+      background: #e5e7eb;
+      color: #111;
+    }
+
     /* field */
     .field { margin-bottom: 15px; }
     .field-row {
@@ -1298,7 +1418,7 @@
 
     <!-- FORM PANEL (kanan — putih) -->
     <div class="form-panel">
-      <div class="form-head">
+      <div class="form-head" id="formHead">
         <h2>Pengajuan Sample Prioritas</h2>
         <p>Isi data akun Shopee kamu untuk diprioritaskan persetujuannya.</p>
       </div>
@@ -1398,6 +1518,31 @@
         </div>
 
       </form>
+
+      <!-- ─── CLOSED PANEL (Tampil jika pendaftaran dimatikan dari Admin) ─── -->
+      <div id="closedPanel" class="closed-panel" style="display:none;">
+        <div class="closed-icon-wrap">
+          <span class="closed-icon">🔒</span>
+        </div>
+        <div class="closed-badge">⏸️ PENDAFTARAN BELUM DIBUKA</div>
+        <h2 class="closed-title">Pendaftaran Belum Dibuka</h2>
+        <p class="closed-desc">
+          Jalur antrean <b>Prioritas ACC Sample Gratis</b> Shopee Affiliate saat ini belum dibuka atau sedang dijeda sementara oleh booth NEZHAMAINAN.
+        </p>
+
+        <div id="closedAnnouncement" class="closed-announcement" style="display:none;">
+          📢 <span id="closedAnnouncementText"></span>
+        </div>
+
+        <div class="closed-actions">
+          <a id="closedShopeeBtn" href="https://shopee.co.id/nezhamainan" target="_blank" rel="noopener noreferrer" class="btn-closed-shopee">
+            🛍️ Buka Toko NEZHAMAINAN di Shopee
+          </a>
+          <button type="button" id="btnClosedLookup" class="btn-closed-lookup">
+            🔍 Sudah Pernah Daftar? Cek Status Kamu
+          </button>
+        </div>
+      </div>
 
       <div id="pesan"></div>
 
@@ -1589,6 +1734,14 @@
      LAPIS 1 — Cek localStorage saat halaman dibuka
   ============================================================ */
   document.addEventListener('DOMContentLoaded', function () {
+    /* Jika URL mengandung ?reset atau ?baru, hapus riwayat tiket lokal untuk pengujian */
+    if (window.location.search.indexOf('reset') !== -1 || window.location.search.indexOf('baru') !== -1) {
+      try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
+    }
+
+    /* Selalu muat Pengaturan Dinamis dari Admin Panel (Buka/Tutup & Chips) */
+    muatPengaturanPublik();
+
     try {
       var raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
@@ -1601,9 +1754,6 @@
         }
       }
     } catch (_) { localStorage.removeItem(STORAGE_KEY); }
-
-    /* Muat Pengaturan Dinamis dari Admin Panel */
-    muatPengaturanPublik();
   });
 
   /* ============================================================
@@ -2002,6 +2152,8 @@
 
   pasangEventChips();
 
+  var isRegistrationOpen = true;
+
   function muatPengaturanPublik() {
     panggilAPI({ action: 'getSettings' }, function (res) {
       if (res && res.success) {
@@ -2009,17 +2161,12 @@
           SHOPEE_STORE_URL = res.shopeeUrl;
           var btn = document.getElementById('btnShopeeStore');
           if (btn) btn.href = res.shopeeUrl;
+          var btnClosedShop = document.getElementById('closedShopeeBtn');
+          if (btnClosedShop) btnClosedShop.href = res.shopeeUrl;
         }
 
-        if (res.isOpen === false) {
-          var tombol = document.getElementById('tombol');
-          if (tombol) {
-            tombol.disabled = true;
-            tombol.style.background = '#4b5563';
-            tombol.textContent = 'PENDAFTARAN SEDANG DIJEDA';
-          }
-          showMsg('err', '⏸ <b>Pendaftaran Ditutup Sementara:</b> Antrean sample gratis sedang dijeda oleh seller di booth. Silakan hubungi kru booth.');
-        }
+        isRegistrationOpen = (res.isOpen !== false);
+        terapkanStatusPendaftaran(isRegistrationOpen, res.announcement);
 
         if (Array.isArray(res.chips) && res.chips.length > 0) {
           var wrap = document.getElementById('prodChips');
@@ -2036,6 +2183,48 @@
     });
   }
 
+  function terapkanStatusPendaftaran(buka, pengumuman) {
+    var fHead   = document.getElementById('formHead');
+    var fForm   = document.getElementById('affiliateForm');
+    var fClosed = document.getElementById('closedPanel');
+    var badge   = document.querySelector('.brand-badge');
+
+    if (!buka) {
+      if (fHead)   fHead.style.display   = 'none';
+      if (fForm)   fForm.style.display   = 'none';
+      if (fClosed) fClosed.style.display = 'flex';
+
+      if (badge) {
+        badge.textContent = '✦ Shopee Super Summit 2026 • Belum Dibuka';
+        badge.style.background = 'rgba(239,68,68,.16)';
+        badge.style.color = '#fca5a5';
+        badge.style.borderColor = 'rgba(239,68,68,.35)';
+      }
+
+      var annEl   = document.getElementById('closedAnnouncement');
+      var annText = document.getElementById('closedAnnouncementText');
+      if (annEl && annText) {
+        if (pengumuman && pengumuman.trim()) {
+          annText.textContent = pengumuman.trim();
+          annEl.style.display = 'block';
+        } else {
+          annEl.style.display = 'none';
+        }
+      }
+    } else {
+      if (fHead)   fHead.style.display   = 'block';
+      if (fForm)   fForm.style.display   = 'block';
+      if (fClosed) fClosed.style.display = 'none';
+
+      if (badge) {
+        badge.textContent = '✦ Shopee Super Summit 2026';
+        badge.style.background = 'rgba(245,158,11,.14)';
+        badge.style.color = 'var(--gold)';
+        badge.style.borderColor = 'rgba(245,158,11,.3)';
+      }
+    }
+  }
+
   /* ============================================================
      INTERAKTIF: SHOPEE STORE LINK & KEMBALI KE FORM
   ============================================================ */
@@ -2048,8 +2237,10 @@
   if (btnBackToForm) {
     btnBackToForm.addEventListener('click', function () {
       berhentiPolling();
+      try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
       document.getElementById('claimCard').style.display = 'none';
       document.getElementById('formCard').style.display  = 'grid';
+      terapkanStatusPendaftaran(isRegistrationOpen);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
@@ -2087,6 +2278,8 @@
   }
 
   if (btnOpenLookup)   btnOpenLookup.addEventListener('click', bukaModalLookup);
+  var btnClosedLookup = document.getElementById('btnClosedLookup');
+  if (btnClosedLookup) btnClosedLookup.addEventListener('click', bukaModalLookup);
   if (btnCloseLookup)  btnCloseLookup.addEventListener('click', tutupModalLookup);
   if (btnCancelLookup) btnCancelLookup.addEventListener('click', tutupModalLookup);
 

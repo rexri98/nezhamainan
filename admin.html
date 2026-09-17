@@ -1003,8 +1003,10 @@
         <div class="set-group">
           <div class="toggle-row">
             <div>
-              <div class="set-title">🟢 Status Pendaftaran di Booth</div>
-              <div class="set-desc">Jika dimatikan, formulir pendaftaran di web pengunjung akan ditutup sementara.</div>
+              <div class="set-title" id="statusTitle">
+                <span id="statusIcon">🟢</span> Status Pendaftaran di Booth: <span id="statusBadge" style="font-weight:800;color:var(--green)">DIBUKA</span>
+              </div>
+              <div class="set-desc" id="statusDesc">Formulir pendaftaran aktif dan dapat diakses pengunjung booth.</div>
             </div>
             <label class="switch">
               <input type="checkbox" id="setIsOpen" checked>
@@ -1544,16 +1546,40 @@
   /* ============================================================
      TAB 2: PENGATURAN WEB & EVENT
   ============================================================ */
+  function updateToggleUI(isOpen) {
+    var icon  = document.getElementById('statusIcon');
+    var badge = document.getElementById('statusBadge');
+    var desc  = document.getElementById('statusDesc');
+    if (isOpen) {
+      if (icon)  icon.textContent = '🟢';
+      if (badge) {
+        badge.textContent = 'DIBUKA';
+        badge.style.color = 'var(--green)';
+      }
+      if (desc)  desc.textContent = 'Formulir pendaftaran aktif dan dapat diakses pengunjung booth.';
+    } else {
+      if (icon)  icon.textContent = '🔴';
+      if (badge) {
+        badge.textContent = 'DITUTUP SEMENTARA';
+        badge.style.color = '#ef4444';
+      }
+      if (desc)  desc.textContent = 'Formulir di web pengunjung ditutup, menampilkan layar "Pendaftaran Belum Dibuka".';
+    }
+  }
+
   function muatPengaturan() {
     callApi({ action: 'adminGetSettings', pin: currentPin }, function (res) {
       if (res && res.success) {
-        document.getElementById('setIsOpen').checked     = (res.isOpen !== false);
+        var isOpen = (res.isOpen !== false);
+        document.getElementById('setIsOpen').checked     = isOpen;
+        updateToggleUI(isOpen);
         document.getElementById('setShopeeUrl').value    = res.shopeeUrl || 'https://shopee.co.id/nezhamainan';
         document.getElementById('setAnnouncement').value = res.announcement || '';
         currentChips = res.chips || [];
         renderChipsManager();
       } else {
         document.getElementById('setIsOpen').checked     = true;
+        updateToggleUI(true);
         document.getElementById('setShopeeUrl').value    = 'https://shopee.co.id/nezhamainan';
         document.getElementById('setAnnouncement').value = '';
         if (!currentChips || currentChips.length === 0) {
@@ -1563,6 +1589,7 @@
       }
     }, function () {
       document.getElementById('setIsOpen').checked     = true;
+      updateToggleUI(true);
       document.getElementById('setShopeeUrl').value    = 'https://shopee.co.id/nezhamainan';
       document.getElementById('setAnnouncement').value = '';
       if (!currentChips || currentChips.length === 0) {
@@ -1571,6 +1598,40 @@
       renderChipsManager();
     });
   }
+
+  /* Auto-save instant saat tombol toggle pendaftaran di-klik */
+  document.getElementById('setIsOpen').addEventListener('change', function () {
+    var toggleEl = this;
+    var isChecked = toggleEl.checked;
+    updateToggleUI(isChecked);
+    toggleEl.disabled = true;
+    showToast(isChecked ? '⏳ Mengaktifkan formulir...' : '⏳ Menutup formulir pendaftaran...');
+
+    var payload = {
+      action:       'adminSaveSettings',
+      pin:          currentPin,
+      isOpen:       isChecked,
+      shopeeUrl:    document.getElementById('setShopeeUrl').value.trim(),
+      announcement: document.getElementById('setAnnouncement').value.trim(),
+      chips:        JSON.stringify(currentChips)
+    };
+
+    callApi(payload, function (res) {
+      toggleEl.disabled = false;
+      if (res && res.success) {
+        showToast(isChecked ? '🟢 Pendaftaran DIBUKA' : '🔴 Pendaftaran DITUTUP SEMENTARA');
+      } else {
+        toggleEl.checked = !isChecked;
+        updateToggleUI(!isChecked);
+        alert('Gagal memperbarui status: ' + ((res && res.message) || 'Terjadi kesalahan'));
+      }
+    }, function (err) {
+      toggleEl.disabled = false;
+      toggleEl.checked = !isChecked;
+      updateToggleUI(!isChecked);
+      alert('Koneksi gagal: ' + err);
+    });
+  });
 
   function renderChipsManager() {
     var listEl = document.getElementById('chipsManageList');
