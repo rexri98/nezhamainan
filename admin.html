@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>NEZHAMAINAN Admin | Manajemen Prioritas Sample Shopee Super Summit 2026</title>
-  <link rel="icon" href="/logo.jpg">
+  <link rel="icon" href="logo.jpg">
 
   <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,19 +15,20 @@
     /* ─── RESET & VARS ─── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --red:        #ef2b1c;
-      --red-dark:   #b01e12;
-      --gold:       #f59e0b;
-      --shopee:     #ee4d2d;
-      --shopee-dark:#d73211;
-      --green:      #10b981;
-      --green-dark: #059669;
-      --bg:         #0d0403;
-      --card-bg:    #180806;
-      --border:     rgba(255,255,255,.1);
-      --text:       #f3f4f6;
-      --text-muted: #9ca3af;
-      --font:       'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --red:         #ef2b1c;
+      --red-dark:    #b01e12;
+      --gold:        #f59e0b;
+      --shopee:      #ee4d2d;
+      --green:       #10b981;
+      --green-dark:  #059669;
+      --bg:          #0a0302;
+      --card-bg:     #160705;
+      --card-hover:  #200a08;
+      --border:      rgba(255,255,255,.11);
+      --border-glow: rgba(239,43,28,.35);
+      --text:        #f3f4f6;
+      --text-muted:  #9ca3af;
+      --font:        'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
     body {
@@ -36,6 +37,8 @@
       color: var(--text);
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
+      user-select: none;
+      overflow-x: hidden;
     }
 
     /* ─── LOGIN SCREEN ─── */
@@ -44,101 +47,148 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
-      background: radial-gradient(circle at top center, #2e0804 0%, #0d0403 70%);
+      padding: 24px;
+      background: radial-gradient(circle at top center, #350905 0%, #0a0302 70%);
+      transition: opacity .4s ease, transform .4s ease;
     }
     .login-card {
-      background: rgba(26, 8, 6, .92);
-      border: 1px solid rgba(255,255,255,.14);
-      border-radius: 24px;
+      background: rgba(24, 7, 5, .94);
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 26px;
       width: 100%;
-      max-width: 400px;
-      padding: 34px 28px;
+      max-width: 420px;
+      padding: 38px 30px;
       text-align: center;
-      box-shadow: 0 25px 50px -12px rgba(0,0,0,.7), 0 0 40px rgba(239,43,28,.15);
-      backdrop-filter: blur(14px);
+      box-shadow: 0 30px 60px -15px rgba(0,0,0,.8), 0 0 50px rgba(239,43,28,.18);
+      backdrop-filter: blur(16px);
+      transition: transform .25s ease, border-color .25s ease;
     }
     .login-logo {
-      width: 140px;
+      width: 145px;
       height: auto;
-      margin-bottom: 14px;
-      filter: drop-shadow(0 0 14px rgba(239,43,28,.5));
+      margin-bottom: 16px;
+      filter: drop-shadow(0 0 16px rgba(239,43,28,.55));
     }
     .login-badge {
       display: inline-block;
-      font-size: 10px;
+      font-size: 10.5px;
       font-weight: 900;
-      letter-spacing: 1px;
+      letter-spacing: 1.2px;
       text-transform: uppercase;
       color: var(--gold);
       background: rgba(245,158,11,.14);
-      border: 1px solid rgba(245,158,11,.3);
-      padding: 4px 10px;
+      border: 1px solid rgba(245,158,11,.32);
+      padding: 5px 12px;
       border-radius: 999px;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
     .login-title {
-      font-size: 20px;
+      font-size: 21px;
       font-weight: 800;
       color: #fff;
       margin-bottom: 6px;
+      letter-spacing: -.3px;
     }
     .login-sub {
-      font-size: 12px;
+      font-size: 12.5px;
       color: var(--text-muted);
-      margin-bottom: 24px;
-      line-height: 1.5;
+      margin-bottom: 26px;
+      line-height: 1.55;
     }
     .pin-input {
       width: 100%;
-      height: 52px;
+      height: 54px;
       background: rgba(255,255,255,.07);
       border: 1.5px solid rgba(255,255,255,.18);
       border-radius: 14px;
       font-family: inherit;
-      font-size: 24px;
+      font-size: 26px;
       font-weight: 800;
-      letter-spacing: 6px;
+      letter-spacing: 8px;
       color: #fff;
       text-align: center;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
       outline: none;
-      transition: border-color .2s, box-shadow .2s;
+      transition: all .25s ease;
     }
     .pin-input:focus {
       border-color: var(--red);
-      box-shadow: 0 0 0 3px rgba(239,43,28,.25);
+      box-shadow: 0 0 0 4px rgba(239,43,28,.28);
+      background: rgba(255,255,255,.1);
     }
+    .pin-input.shake {
+      animation: shakeInput .4s ease;
+      border-color: #ef4444;
+    }
+    @keyframes shakeInput {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+
     .btn-login {
       width: 100%;
-      height: 48px;
+      height: 50px;
       background: linear-gradient(135deg, var(--red), var(--red-dark));
       border: none;
       border-radius: 14px;
       color: #fff;
       font-family: inherit;
-      font-size: 14px;
+      font-size: 14.5px;
       font-weight: 800;
       cursor: pointer;
-      box-shadow: 0 6px 18px rgba(239,43,28,.4);
-      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 8px 22px rgba(239,43,28,.42);
+      transition: transform .2s, box-shadow .2s, background .3s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
-    .btn-login:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 24px rgba(239,43,28,.55);
+    .btn-login:hover:not(:disabled) {
+      transform: translateY(-1.5px);
+      box-shadow: 0 10px 28px rgba(239,43,28,.58);
     }
+    .btn-login:disabled {
+      opacity: .75;
+      cursor: not-allowed;
+    }
+    .btn-login.success {
+      background: linear-gradient(135deg, #10b981, #059669);
+      box-shadow: 0 8px 22px rgba(16,185,129,.42);
+    }
+
+    /* Login Feedback Message */
     .login-msg {
-      margin-top: 14px;
+      margin-top: 16px;
       font-size: 12px;
-      padding: 10px;
-      border-radius: 10px;
+      padding: 12px 14px;
+      border-radius: 12px;
       display: none;
+      line-height: 1.5;
+      text-align: left;
+      animation: fadeInMsg .3s ease;
+    }
+    @keyframes fadeInMsg {
+      from { opacity: 0; transform: translateY(-4px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
     .login-msg.err {
       display: block;
-      background: rgba(239,68,68,.15);
-      border: 1px solid rgba(239,68,68,.3);
+      background: rgba(239,68,68,.14);
+      border: 1px solid rgba(239,68,68,.35);
       color: #fca5a5;
+    }
+    .login-msg.ok {
+      display: block;
+      background: rgba(16,185,129,.14);
+      border: 1px solid rgba(16,185,129,.35);
+      color: #a7f3d0;
+    }
+    .login-msg.info {
+      display: block;
+      background: rgba(245,158,11,.14);
+      border: 1px solid rgba(245,158,11,.35);
+      color: #fde68a;
     }
 
     /* ─── DASHBOARD SHELL ─── */
@@ -146,20 +196,22 @@
       display: none;
       min-height: 100vh;
       flex-direction: column;
+      opacity: 0;
+      transition: opacity .4s ease;
     }
 
     /* Header / Navbar */
     .admin-nav {
-      background: rgba(24,8,6,.95);
+      background: rgba(20, 6, 5, .96);
       border-bottom: 1px solid var(--border);
-      padding: 12px 20px;
+      padding: 14px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       position: sticky;
       top: 0;
       z-index: 100;
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(12px);
     }
     .nav-left {
       display: flex;
@@ -167,11 +219,11 @@
       gap: 14px;
     }
     .nav-logo {
-      height: 28px;
+      height: 30px;
       width: auto;
     }
     .nav-title {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 800;
       color: #fff;
       display: flex;
@@ -180,121 +232,130 @@
     }
     .nav-pill {
       font-size: 10px;
-      font-weight: 800;
-      background: rgba(245,158,11,.2);
+      font-weight: 900;
+      letter-spacing: .8px;
+      background: rgba(245,158,11,.18);
       color: var(--gold);
       border: 1px solid rgba(245,158,11,.35);
-      padding: 2px 7px;
+      padding: 3px 8px;
       border-radius: 999px;
     }
     .nav-right {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
     .btn-nav {
       appearance: none;
       background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.15);
       color: #fff;
-      padding: 7px 12px;
+      padding: 8px 14px;
       border-radius: 10px;
-      font-size: 12px;
+      font-family: inherit;
+      font-size: 12.5px;
       font-weight: 700;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: background .2s;
+      transition: all .2s ease;
     }
     .btn-nav:hover {
-      background: rgba(255,255,255,.15);
+      background: rgba(255,255,255,.16);
+      transform: translateY(-1px);
     }
     .btn-logout {
-      background: rgba(239,68,68,.15);
+      background: rgba(239,68,68,.14);
       border-color: rgba(239,68,68,.3);
       color: #fca5a5;
     }
     .btn-logout:hover {
-      background: rgba(239,68,68,.3);
+      background: rgba(239,68,68,.28);
+      color: #fff;
     }
 
-    /* Tab bar */
+    /* Tabs Bar */
     .tabs-bar {
       display: flex;
       gap: 8px;
-      padding: 12px 20px 0;
-      background: #110504;
+      padding: 12px 24px 0;
+      background: rgba(14, 4, 3, .8);
       border-bottom: 1px solid var(--border);
     }
     .tab-btn {
       appearance: none;
       background: transparent;
       border: none;
+      border-bottom: 3px solid transparent;
+      padding: 10px 18px;
       color: var(--text-muted);
-      padding: 10px 16px;
-      font-size: 13px;
+      font-family: inherit;
+      font-size: 13.5px;
       font-weight: 700;
       cursor: pointer;
-      border-bottom: 2px solid transparent;
-      display: flex;
-      align-items: center;
-      gap: 7px;
       transition: all .2s;
+      border-radius: 8px 8px 0 0;
     }
     .tab-btn:hover {
       color: #fff;
+      background: rgba(255,255,255,.04);
     }
     .tab-btn.active {
       color: #fff;
       border-bottom-color: var(--red);
+      background: rgba(239,43,28,.08);
     }
 
-    /* Container */
+    /* Main Container */
     .admin-content {
       flex: 1;
-      padding: 20px;
+      padding: 24px;
       max-width: 1200px;
       width: 100%;
       margin: 0 auto;
     }
 
-    /* ─── METRIC STAT CARDS ─── */
+    /* ─── STAT CARDS ─── */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
+      gap: 14px;
       margin-bottom: 20px;
     }
     .stat-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px;
+      border-radius: 18px;
+      padding: 16px 20px;
       cursor: pointer;
-      transition: transform .2s, border-color .2s;
+      transition: all .2s ease;
+      position: relative;
+      overflow: hidden;
     }
     .stat-card:hover {
+      border-color: var(--border-glow);
       transform: translateY(-2px);
-      border-color: rgba(255,255,255,.25);
+      box-shadow: 0 8px 24px rgba(0,0,0,.4);
     }
     .stat-card.active {
       border-color: var(--gold);
-      box-shadow: 0 0 16px rgba(245,158,11,.2);
+      background: rgba(36, 12, 9, .95);
+      box-shadow: 0 0 20px rgba(245,158,11,.2);
     }
     .stat-lbl {
       font-size: 11px;
-      font-weight: 700;
+      font-weight: 800;
+      letter-spacing: .7px;
       text-transform: uppercase;
-      letter-spacing: .5px;
       color: var(--text-muted);
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 6px;
     }
     .stat-val {
-      font-size: 28px;
+      font-size: 32px;
       font-weight: 900;
       line-height: 1;
       color: #fff;
@@ -307,47 +368,50 @@
     .filter-bar {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 12px;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
+      margin-bottom: 18px;
       background: var(--card-bg);
       border: 1px solid var(--border);
-      padding: 12px 16px;
+      padding: 12px 18px;
       border-radius: 16px;
     }
     .search-box {
       flex: 1;
-      min-width: 240px;
+      min-width: 260px;
       position: relative;
     }
     .search-box svg {
       position: absolute;
-      left: 12px;
+      left: 14px;
       top: 50%;
       transform: translateY(-50%);
-      width: 16px;
-      height: 16px;
+      width: 17px;
+      height: 17px;
       stroke: var(--text-muted);
+      pointer-events: none;
     }
     .search-input {
       width: 100%;
-      height: 40px;
+      height: 42px;
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.14);
-      border-radius: 10px;
-      padding: 0 12px 0 36px;
+      border-radius: 12px;
+      padding: 0 14px 0 40px;
       color: #fff;
       font-family: inherit;
       font-size: 13px;
       outline: none;
+      transition: border-color .2s;
     }
     .search-input:focus {
       border-color: var(--red);
+      background: rgba(255,255,255,.09);
     }
     .filter-pills {
       display: flex;
-      gap: 6px;
+      gap: 8px;
       flex-wrap: wrap;
     }
     .fpill {
@@ -355,229 +419,277 @@
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.12);
       color: var(--text-muted);
-      padding: 6px 12px;
+      padding: 7px 14px;
       border-radius: 999px;
-      font-size: 11.5px;
+      font-size: 12px;
       font-weight: 700;
       cursor: pointer;
       transition: all .2s;
     }
     .fpill:hover {
       color: #fff;
-      background: rgba(255,255,255,.12);
+      background: rgba(255,255,255,.14);
     }
     .fpill.active {
       background: var(--red);
       border-color: var(--red);
       color: #fff;
+      box-shadow: 0 4px 12px rgba(239,43,28,.35);
     }
 
-    /* ─── APPLICANT CARDS ─── */
+    /* ─── APPLICANT CARDS (PERFECTED DESIGN) ─── */
     .app-list {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 14px;
     }
     .app-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px 18px;
+      background: rgba(26, 8, 6, .92);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 20px;
+      padding: 20px 24px;
       display: grid;
-      grid-template-columns: 1.2fr 2fr 1.6fr;
-      gap: 16px;
+      grid-template-columns: 210px 1fr 220px;
+      gap: 22px;
       align-items: center;
-      transition: border-color .2s;
+      transition: all .25s ease;
+      backdrop-filter: blur(8px);
     }
     .app-card:hover {
-      border-color: rgba(255,255,255,.2);
+      border-color: rgba(239,43,28,.45);
+      background: rgba(34, 11, 8, .96);
+      box-shadow: 0 10px 30px rgba(0,0,0,.5), 0 0 25px rgba(239,43,28,.1);
+      transform: translateY(-1.5px);
     }
 
-    /* Card col 1: Info kode & status */
+    /* Card col 1: Kode & Status */
     .app-head {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
     }
     .app-code {
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 900;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
       color: #fff;
+      font-family: 'Inter', monospace;
     }
     .app-status-badge {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      font-size: 10.5px;
+      gap: 6px;
+      font-size: 11px;
       font-weight: 800;
-      padding: 3px 8px;
-      border-radius: 6px;
+      letter-spacing: .5px;
+      padding: 4px 12px;
+      border-radius: 999px;
       width: fit-content;
       text-transform: uppercase;
     }
     .app-status-badge.pending {
-      background: rgba(245,158,11,.18);
-      color: var(--gold);
-      border: 1px solid rgba(245,158,11,.35);
+      background: rgba(245,158,11,.16);
+      color: #fbbf24;
+      border: 1.5px solid rgba(245,158,11,.4);
+      box-shadow: 0 0 12px rgba(245,158,11,.15);
     }
     .app-status-badge.approved {
-      background: rgba(16,185,129,.18);
-      color: var(--green);
-      border: 1px solid rgba(16,185,129,.35);
+      background: rgba(16,185,129,.16);
+      color: #34d399;
+      border: 1.5px solid rgba(16,185,129,.4);
+      box-shadow: 0 0 12px rgba(16,185,129,.15);
     }
     .app-status-badge.rejected {
-      background: rgba(239,68,68,.18);
+      background: rgba(239,68,68,.16);
       color: #f87171;
-      border: 1px solid rgba(239,68,68,.35);
+      border: 1.5px solid rgba(239,68,68,.4);
     }
     .app-time {
-      font-size: 11px;
+      font-size: 11.5px;
       color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
 
-    /* Card col 2: Kreator details */
+    /* Card col 2: Detail Pendaftar */
     .app-details {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
     }
     .app-name {
-      font-size: 15px;
+      font-size: 17px;
       font-weight: 800;
       color: #fff;
+      letter-spacing: -.2px;
     }
     .app-sub-info {
-      font-size: 12px;
-      color: var(--text-muted);
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 8px;
+      font-size: 12.5px;
     }
-    .app-sub-info span {
+    .meta-tag {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      padding: 4px 10px;
+      border-radius: 8px;
+      color: #e5e7eb;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
+    }
+    .meta-tag b {
+      color: #fff;
     }
     .app-prod {
-      font-size: 12px;
+      font-size: 13px;
       color: #fcd34d;
-      margin-top: 2px;
       font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 2px;
+    }
+    .app-prod span {
+      background: rgba(245,158,11,.12);
+      border: 1px solid rgba(245,158,11,.28);
+      padding: 3px 9px;
+      border-radius: 6px;
+      color: #fef08a;
     }
 
-    /* Card col 3: Actions */
+    /* Card col 3: Actions (Buttons) */
     .app-actions {
       display: flex;
       flex-direction: column;
+      gap: 8px;
+      align-items: stretch;
+      width: 100%;
+    }
+    .btn-wa {
+      background: linear-gradient(135deg, #25d366, #128c7e);
+      color: #ffffff !important;
+      text-decoration: none;
+      padding: 9px 14px;
+      border-radius: 12px;
+      font-size: 12.5px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       gap: 6px;
-      align-items: flex-end;
+      box-shadow: 0 4px 14px rgba(37,211,102,.28);
+      transition: all .2s ease;
+      width: 100%;
+    }
+    .btn-wa:hover {
+      transform: translateY(-1.5px);
+      box-shadow: 0 6px 18px rgba(37,211,102,.45);
+      filter: brightness(1.08);
     }
     .btn-row {
       display: flex;
-      gap: 6px;
+      gap: 8px;
       width: 100%;
-      justify-content: flex-end;
     }
     .btn-action {
+      flex: 1;
       appearance: none;
       border: none;
-      border-radius: 9px;
-      padding: 7px 12px;
+      border-radius: 11px;
+      padding: 9px 12px;
       font-family: inherit;
-      font-size: 11.5px;
+      font-size: 12px;
       font-weight: 800;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 5px;
-      transition: all .2s;
+      transition: all .2s ease;
+      white-space: nowrap;
     }
     .btn-acc {
-      background: linear-gradient(135deg, var(--green), var(--green-dark));
+      background: linear-gradient(135deg, #10b981, #059669);
       color: #fff;
+      box-shadow: 0 4px 14px rgba(16,185,129,.3);
     }
     .btn-acc:hover {
-      background: var(--green-dark);
-      transform: translateY(-1px);
+      transform: translateY(-1.5px);
+      box-shadow: 0 6px 18px rgba(16,185,129,.48);
+      filter: brightness(1.1);
     }
     .btn-reject {
       background: rgba(239,68,68,.18);
-      border: 1px solid rgba(239,68,68,.3);
+      border: 1.5px solid rgba(239,68,68,.4);
       color: #fca5a5;
     }
     .btn-reject:hover {
-      background: rgba(239,68,68,.3);
+      background: #ef4444;
+      color: #fff;
+      transform: translateY(-1.5px);
+      box-shadow: 0 4px 14px rgba(239,68,68,.4);
     }
     .btn-pending {
-      background: rgba(245,158,11,.15);
-      border: 1px solid rgba(245,158,11,.3);
-      color: var(--gold);
+      background: rgba(245,158,11,.16);
+      border: 1.5px solid rgba(245,158,11,.4);
+      color: #fde68a;
     }
     .btn-pending:hover {
-      background: rgba(245,158,11,.25);
-    }
-    .btn-wa {
-      background: #25d366;
-      color: #0d2e14;
-      text-decoration: none;
-      padding: 7px 12px;
-      border-radius: 9px;
-      font-size: 11.5px;
-      font-weight: 800;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      transition: transform .2s;
-    }
-    .btn-wa:hover {
-      transform: translateY(-1px);
-      background: #22bf5b;
+      background: #f59e0b;
+      color: #000;
+      transform: translateY(-1.5px);
+      box-shadow: 0 4px 14px rgba(245,158,11,.4);
     }
 
     /* ─── SETTINGS TAB ─── */
     .settings-panel {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 24px 28px;
-      max-width: 760px;
+      border-radius: 22px;
+      padding: 28px 32px;
+      max-width: 780px;
       margin: 0 auto;
+      box-shadow: 0 15px 40px rgba(0,0,0,.5);
     }
     .set-group {
       margin-bottom: 24px;
-      padding-bottom: 20px;
+      padding-bottom: 22px;
       border-bottom: 1px solid var(--border);
     }
     .set-title {
-      font-size: 15px;
+      font-size: 15.5px;
       font-weight: 800;
       color: #fff;
       margin-bottom: 6px;
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 8px;
     }
     .set-desc {
-      font-size: 12px;
+      font-size: 12.5px;
       color: var(--text-muted);
-      margin-bottom: 12px;
-      line-height: 1.5;
+      margin-bottom: 14px;
+      line-height: 1.55;
     }
     .set-input {
       width: 100%;
-      height: 44px;
+      height: 46px;
       background: rgba(255,255,255,.06);
       border: 1.5px solid rgba(255,255,255,.14);
       border-radius: 12px;
-      padding: 0 14px;
+      padding: 0 16px;
       color: #fff;
       font-family: inherit;
-      font-size: 13.5px;
+      font-size: 14px;
       outline: none;
+      transition: border-color .2s;
     }
     .set-input:focus {
       border-color: var(--red);
+      background: rgba(255,255,255,.09);
     }
 
     /* Toggle switch */
@@ -590,8 +702,8 @@
     .switch {
       position: relative;
       display: inline-block;
-      width: 50px;
-      height: 28px;
+      width: 52px;
+      height: 30px;
       flex-shrink: 0;
     }
     .switch input { opacity: 0; width: 0; height: 0; }
@@ -601,13 +713,13 @@
       inset: 0;
       background-color: #374151;
       transition: .3s;
-      border-radius: 28px;
+      border-radius: 30px;
     }
     .slider:before {
       position: absolute;
       content: "";
-      height: 20px;
-      width: 20px;
+      height: 22px;
+      width: 22px;
       left: 4px;
       bottom: 4px;
       background-color: white;
@@ -626,29 +738,31 @@
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
     .chip-tag {
       background: rgba(255,255,255,.08);
       border: 1px solid rgba(255,255,255,.16);
       border-radius: 999px;
-      padding: 6px 12px;
-      font-size: 12px;
-      font-weight: 600;
+      padding: 6px 14px;
+      font-size: 12.5px;
+      font-weight: 700;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
     .chip-tag .chip-del {
       cursor: pointer;
       color: #f87171;
-      font-size: 14px;
+      font-size: 16px;
       line-height: 1;
       border-radius: 50%;
-      padding: 2px;
+      padding: 1px 4px;
+      transition: background .2s;
     }
     .chip-tag .chip-del:hover {
-      background: rgba(239,68,68,.2);
+      background: rgba(239,68,68,.3);
+      color: #fff;
     }
     .add-chip-row {
       display: flex;
@@ -659,115 +773,121 @@
       background: rgba(255,255,255,.12);
       border: 1px solid rgba(255,255,255,.2);
       color: #fff;
-      padding: 0 16px;
-      height: 44px;
+      padding: 0 18px;
+      height: 46px;
       border-radius: 12px;
-      font-weight: 700;
-      font-size: 12.5px;
+      font-weight: 800;
+      font-size: 13px;
       cursor: pointer;
       white-space: nowrap;
+      transition: background .2s;
     }
     .btn-add-chip:hover {
-      background: rgba(255,255,255,.2);
+      background: rgba(255,255,255,.22);
     }
 
     .btn-save-settings {
       width: 100%;
-      height: 48px;
+      height: 50px;
       background: linear-gradient(135deg, var(--red), var(--red-dark));
       border: none;
-      border-radius: 12px;
+      border-radius: 14px;
       color: #fff;
       font-family: inherit;
-      font-size: 14px;
+      font-size: 14.5px;
       font-weight: 800;
       cursor: pointer;
-      box-shadow: 0 6px 18px rgba(239,43,28,.35);
-      transition: transform .2s;
+      box-shadow: 0 6px 20px rgba(239,43,28,.38);
+      transition: transform .2s, box-shadow .2s;
     }
-    .btn-save-settings:hover {
-      transform: translateY(-1px);
+    .btn-save-settings:hover:not(:disabled) {
+      transform: translateY(-1.5px);
+      box-shadow: 0 8px 25px rgba(239,43,28,.55);
     }
 
     /* Toast */
     .toast {
       position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: #111827;
-      border: 1px solid rgba(255,255,255,.2);
+      bottom: 28px;
+      right: 28px;
+      background: #180a08;
+      border: 1px solid rgba(255,255,255,.25);
       color: #fff;
-      padding: 12px 18px;
-      border-radius: 12px;
+      padding: 14px 22px;
+      border-radius: 14px;
       font-size: 13px;
       font-weight: 700;
-      box-shadow: 0 10px 25px rgba(0,0,0,.5);
+      box-shadow: 0 15px 35px rgba(0,0,0,.6), 0 0 25px rgba(239,43,28,.2);
       z-index: 99999;
       display: none;
     }
     .toast.show {
       display: flex;
       align-items: center;
-      gap: 8px;
-      animation: fadeIn .25s ease;
+      gap: 10px;
+      animation: fadeInToast .25s ease;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+    @keyframes fadeInToast {
+      from { opacity: 0; transform: translateY(12px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
     /* Empty state & Spinner */
     .empty-state {
       text-align: center;
-      padding: 50px 20px;
+      padding: 60px 20px;
       color: var(--text-muted);
-      font-size: 13px;
+      font-size: 13.5px;
     }
     .spinner-bar {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      padding: 40px;
+      gap: 10px;
+      padding: 50px;
       color: var(--text-muted);
-      font-size: 13px;
+      font-size: 13.5px;
     }
     .spin {
-      width: 18px; height: 18px;
-      border: 2px solid rgba(255,255,255,.2);
+      width: 20px; height: 20px;
+      border: 2.5px solid rgba(255,255,255,.2);
       border-top-color: var(--red);
       border-radius: 50%;
-      animation: spin .6s linear infinite;
+      animation: spinAnim .6s linear infinite;
+      display: inline-block;
+      vertical-align: middle;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes spinAnim { to { transform: rotate(360deg); } }
 
     /* ─── RESPONSIVE (MOBILE) ─── */
-    @media (max-width: 768px) {
+    @media (max-width: 860px) {
       .stats-grid {
         grid-template-columns: repeat(2, 1fr);
       }
       .app-card {
         grid-template-columns: 1fr;
-        gap: 12px;
+        gap: 16px;
+        padding: 18px;
       }
       .app-actions {
-        align-items: flex-start;
+        align-items: stretch;
       }
       .btn-row {
-        justify-content: flex-start;
+        justify-content: stretch;
       }
       .admin-nav {
-        padding: 10px 14px;
+        padding: 12px 16px;
       }
       .admin-content {
-        padding: 14px 10px;
+        padding: 16px 12px;
       }
       .filter-bar {
-        padding: 10px 12px;
+        padding: 12px 14px;
       }
       .settings-panel {
-        padding: 18px 16px;
+        padding: 20px 18px;
       }
+      .d-pc { display: none; }
     }
   </style>
 </head>
@@ -777,14 +897,16 @@
      1. LOGIN SCREEN
 ══════════════════════════════════════════ -->
 <div id="loginScreen">
-  <div class="login-card">
+  <div class="login-card" id="loginCard">
     <img src="logo-transparent.png" alt="NEZHAMAINAN" class="login-logo">
     <div><span class="login-badge">✦ Shopee Super Summit 2026</span></div>
     <h1 class="login-title">Portal Kru & Admin</h1>
-    <p class="login-sub">Masukkan PIN keamanan admin untuk mengelola pengajuan sample affiliate.</p>
+    <p class="login-sub">Masukkan PIN otorisasi kru untuk mengelola pengajuan sample affiliate.</p>
 
-    <input type="password" id="pinInput" class="pin-input" placeholder="••••" maxlength="8" autocomplete="current-password" inputmode="numeric">
-    <button type="button" id="btnLogin" class="btn-login">Masuk ke Dashboard</button>
+    <input type="password" id="pinInput" class="pin-input" placeholder="••••" maxlength="10" autocomplete="off" inputmode="numeric">
+    <button type="button" id="btnLogin" class="btn-login">
+      <span>Masuk ke Dashboard</span>
+    </button>
     <div id="loginMsg" class="login-msg"></div>
   </div>
 </div>
@@ -801,14 +923,14 @@
       <img src="logo-transparent.png" alt="NEZHAMAINAN" class="nav-logo">
       <div class="nav-title">
         <span>Admin Panel</span>
-        <span class="nav-pill" id="liveBadge">LIVE EVENT</span>
+        <span class="nav-pill">LIVE EVENT</span>
       </div>
     </div>
     <div class="nav-right">
-      <button type="button" class="btn-nav" id="btnRefreshData">
+      <button type="button" class="btn-nav" id="btnRefreshData" title="Sinkronkan data dari Google Sheet">
         <span>🔄</span> <span class="d-pc">Muat Ulang</span>
       </button>
-      <button type="button" class="btn-nav btn-logout" id="btnLogout">
+      <button type="button" class="btn-nav btn-logout" id="btnLogout" title="Keluar sesi Admin">
         <span>🚪</span> <span class="d-pc">Keluar</span>
       </button>
     </div>
@@ -921,7 +1043,7 @@
         <!-- 5. Ganti PIN Admin -->
         <div class="set-group">
           <div class="set-title">🔒 Ganti PIN Keamanan Admin</div>
-          <div class="set-desc">Masukkan PIN baru jika ingin mengganti kode akses masuk (minimal 4 karakter).</div>
+          <div class="set-desc">Masukkan PIN baru jika ingin mengganti kode akses masuk (minimal 4 digit).</div>
           <input type="password" id="setNewPin" class="set-input" placeholder="Kosongkan jika tidak ingin mengubah PIN">
         </div>
 
@@ -941,23 +1063,61 @@
 
 <script>
   /* ============================================================
-     KONFIGURASI & VARIABEL STATE
+     KEAMANAN ANTI-INSPECT & PROTEKSI KODE
   ============================================================ */
-  var SCRIPT_URL    = 'https://script.google.com/macros/s/AKfycbwW5H1x-19m0c6JkMEh4fBl_XLWfOuh2HV05uhBJ4tww7sY29pNfLEXAeKusvEIgap3/exec';
-  var STORAGE_ADMIN = 'nzh_admin_pin_session';
-  
-  var currentPin       = '';
-  var allApplicants    = [];
-  var currentFilter    = 'all';
-  var currentSearch    = '';
-  var currentChips     = [];
+  // 1. Blokir Klik Kanan (Context Menu)
+  document.addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+    return false;
+  });
+
+  // 2. Blokir Shortcut Inspect (F12, Ctrl+U, Ctrl+Shift+I/J/C, Ctrl+S)
+  document.addEventListener('keydown', function (e) {
+    if (
+      e.key === 'F12' || e.keyCode === 123 ||
+      (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.keyCode === 85)) ||
+      (e.ctrlKey && (e.key === 's' || e.key === 'S' || e.keyCode === 83)) ||
+      (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.keyCode === 73)) ||
+      (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j' || e.keyCode === 74)) ||
+      (e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c' || e.keyCode === 67))
+    ) {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }
+  });
+
+  // 3. Matikan output console di public
+  (function () {
+    var _n = function () {};
+    try {
+      console.log = _n;
+      console.warn = _n;
+      console.info = _n;
+      console.error = _n;
+    } catch (_) {}
+  })();
 
   /* ============================================================
-     HYBRID API CALLER (JSONP & FAST FETCH)
+     DECODE SCRIPT URL (XOR PROTECTED — TIDAK TERBACA CTRL+U)
+  ============================================================ */
+  var _xKey = 42;
+  var _xEnc = [66,94,94,90,89,16,5,5,89,73,88,67,90,94,4,77,69,69,77,70,79,4,73,69,71,5,71,75,73,88,69,89,5,89,5,107,97,76,83,73,72,93,125,31,98,27,82,7,27,19,71,26,73,28,96,65,103,111,66,30,76,104,70,117,114,102,125,76,101,95,66,24,98,124,26,31,95,66,104,96,30,94,93,93,29,89,115,24,19,90,100,76,102,111,114,107,79,97,95,89,92,111,99,77,75,90,25,5,79,82,79,73];
+  var SCRIPT_URL = _xEnc.map(function (c) { return String.fromCharCode(c ^ _xKey); }).join('');
+
+  var STORAGE_ADMIN = 'nzh_admin_pin_session';
+  var currentPin    = '';
+  var allApplicants = [];
+  var currentFilter = 'all';
+  var currentSearch = '';
+  var currentChips  = [];
+
+  /* ============================================================
+     FAST HYBRID CALLER (JSONP & FAST FETCH)
   ============================================================ */
   function callApi(data, onOk, onErr) {
     var isDone = false;
-    function finishOk(res) { if (!isDone) { isDone = true; if (onOk) onOk(res); } }
+    function finishOk(res)  { if (!isDone) { isDone = true; if (onOk) onOk(res); } }
     function finishErr(msg) { if (!isDone) { isDone = true; if (onErr) onErr(msg); } }
 
     var params = {};
@@ -970,7 +1130,7 @@
     var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
     var timer = setTimeout(function () {
       if (controller) controller.abort();
-    }, 3500);
+    }, 3200);
 
     fetch(fetchUrl, {
       method: 'GET',
@@ -1017,7 +1177,7 @@
   }
 
   /* ============================================================
-     AUTORISASI & SESI
+     LOGIN EXPERIENCE & TRANSISI HALUS (SOPAN & ELEGAN)
   ============================================================ */
   document.addEventListener('DOMContentLoaded', function () {
     var savedPin = localStorage.getItem(STORAGE_ADMIN);
@@ -1039,93 +1199,130 @@
     });
 
     document.getElementById('btnLogout').addEventListener('click', function () {
-      localStorage.removeItem(STORAGE_ADMIN);
-      currentPin = '';
-      document.getElementById('dashboardScreen').style.display = 'none';
-      document.getElementById('loginScreen').style.display = 'flex';
-      document.getElementById('pinInput').value = '';
-      var msg = document.getElementById('loginMsg');
-      if (msg) { msg.style.display = 'none'; msg.innerHTML = ''; }
+      if (confirm('Apakah Anda yakin ingin keluar dari Admin Panel?')) {
+        localStorage.removeItem(STORAGE_ADMIN);
+        currentPin = '';
+        
+        var dash = document.getElementById('dashboardScreen');
+        var logn = document.getElementById('loginScreen');
+        
+        dash.style.opacity = '0';
+        setTimeout(function () {
+          dash.style.display = 'none';
+          logn.style.display = 'flex';
+          logn.style.opacity = '1';
+          document.getElementById('pinInput').value = '';
+          var msg = document.getElementById('loginMsg');
+          if (msg) {
+            msg.className = 'login-msg info';
+            msg.style.display = 'block';
+            msg.innerHTML = 'ℹ️ Anda telah keluar dari sesi Admin.';
+          }
+        }, 300);
+      }
     });
   });
 
   function verifikasiDanMasuk(pin, isManual) {
-    var btn = document.getElementById('btnLogin');
-    var msg = document.getElementById('loginMsg');
+    var btn   = document.getElementById('btnLogin');
+    var msg   = document.getElementById('loginMsg');
+    var input = document.getElementById('pinInput');
 
     if (!pin) {
       if (msg) {
         msg.className = 'login-msg err';
         msg.style.display = 'block';
-        msg.textContent = 'Harap masukkan PIN Admin.';
+        msg.innerHTML = '⚠️ <b>Harap masukkan PIN Admin</b> terlebih dahulu.';
+      }
+      if (input) {
+        input.classList.add('shake');
+        setTimeout(function () { input.classList.remove('shake'); }, 450);
+        input.focus();
       }
       return;
     }
 
     if (isManual && btn) {
       btn.disabled = true;
-      btn.textContent = 'Memverifikasi...';
+      btn.innerHTML = '<span class="spin"></span> Memverifikasi PIN...';
     }
     if (msg) {
-      msg.style.display = 'none';
-      msg.innerHTML = '';
+      msg.className = 'login-msg info';
+      msg.style.display = 'block';
+      msg.innerHTML = '🔍 Memverifikasi keamanan akses...';
     }
 
     callApi({ action: 'adminLogin', pin: pin }, function (res) {
-      if (btn) { btn.disabled = false; btn.textContent = 'Masuk ke Dashboard'; }
-
       if (res && res.success) {
         currentPin = pin;
         try { localStorage.setItem(STORAGE_ADMIN, pin); } catch (_) {}
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('dashboardScreen').style.display = 'flex';
-        muatDataPendaftar();
-        muatPengaturan();
+
+        if (btn) {
+          btn.classList.add('success');
+          btn.innerHTML = '✓ Terverifikasi!';
+        }
+        if (msg) {
+          msg.className = 'login-msg ok';
+          msg.style.display = 'block';
+          msg.innerHTML = '✓ <b>Login Berhasil!</b> Selamat datang di Admin Panel NEZHAMAINAN. Menyiapkan dashboard...';
+        }
+
+        // Transisi halus ke Dashboard (tidak kaget / tidak nyablak)
+        setTimeout(function () {
+          var logn = document.getElementById('loginScreen');
+          var dash = document.getElementById('dashboardScreen');
+          
+          logn.style.opacity = '0';
+          setTimeout(function () {
+            logn.style.display = 'none';
+            dash.style.display = 'flex';
+            setTimeout(function () { dash.style.opacity = '1'; }, 50);
+
+            if (btn) {
+              btn.disabled = false;
+              btn.classList.remove('success');
+              btn.innerHTML = '<span>Masuk ke Dashboard</span>';
+            }
+            muatDataPendaftar();
+            muatPengaturan();
+          }, 350);
+        }, 600);
+
       } else {
         localStorage.removeItem(STORAGE_ADMIN);
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<span>Masuk ke Dashboard</span>';
+        }
+        if (input) {
+          input.classList.add('shake');
+          setTimeout(function () { input.classList.remove('shake'); }, 450);
+          input.focus();
+        }
         if (msg) {
           msg.style.display = 'block';
           msg.className = 'login-msg err';
-          // Deteksi jika Google Apps Script masih kode lama (belum di-deploy)
+
+          // Jika Google Sheet masih skrip lama
           if (res && res.message && (res.message.indexOf('field wajib') !== -1 || res.message.indexOf('Akses langsung') !== -1)) {
             msg.innerHTML = '⚠️ <b>Google Apps Script Belum Diperbarui!</b><br>' +
-              '<div style="margin-top:6px;font-size:11.5px;line-height:1.5;">Script di Google Sheet masih versi lama. Silakan salin isi file <code>Code.gs</code> lalu Deploy versi baru di <b>script.google.com</b>.</div>' +
-              (pin === '2026' ? '<button type="button" id="btnBypassScript" style="margin-top:10px;background:#ef2b1c;color:#fff;border:none;padding:7px 14px;border-radius:8px;font-size:11.5px;font-weight:700;cursor:pointer;width:100%;">Masuk Preview Dashboard</button>' : '');
-            
-            var bypassBtn1 = document.getElementById('btnBypassScript');
-            if (bypassBtn1) {
-              bypassBtn1.addEventListener('click', function() {
-                currentPin = pin;
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('dashboardScreen').style.display = 'flex';
-                muatDataPendaftar();
-                muatPengaturan();
-              });
-            }
+              '<div style="margin-top:6px;font-size:11.5px;line-height:1.5;">Script di Google Sheet masih versi lama yang belum mengenal akun admin.<br>👉 Buka <b>script.google.com</b>, paste file <code>Code.gs</code> terbaru, lalu klik <b>Deploy &gt; Manage Deployments &gt; New version</b>.</div>';
           } else {
-            msg.innerHTML = '❌ <b>' + ((res && res.message) ? res.message : 'PIN Admin salah.') + '</b><br><small style="color:var(--text-muted)">PIN default bawaan: <b>2026</b></small>';
+            msg.innerHTML = '❌ <b>PIN Admin Tidak Sesuai</b><br>' +
+              '<div style="margin-top:4px;font-size:11.5px;">Kombinasi angka yang Anda masukkan keliru. Silakan periksa kembali kodenya.</div>';
           }
         }
       }
     }, function (err) {
-      if (btn) { btn.disabled = false; btn.textContent = 'Masuk ke Dashboard'; }
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Masuk ke Dashboard</span>';
+      }
       if (msg) {
         msg.style.display = 'block';
         msg.className = 'login-msg err';
-        msg.innerHTML = '⚠️ <b>Gagal terhubung ke server</b> (' + (err || 'timeout') + ')<br>' +
-          '<small style="color:var(--text-muted)">Pastikan internet aktif dan Code.gs sudah di-deploy dengan akses "Anyone".</small>' +
-          (pin === '2026' ? '<br><button type="button" id="btnBypassErr" style="margin-top:10px;background:#374151;color:#fff;border:none;padding:7px 14px;border-radius:8px;font-size:11.5px;font-weight:700;cursor:pointer;width:100%;">Masuk Preview Dashboard</button>' : '');
-        
-        var bypassBtn2 = document.getElementById('btnBypassErr');
-        if (bypassBtn2) {
-          bypassBtn2.addEventListener('click', function() {
-            currentPin = pin;
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('dashboardScreen').style.display = 'flex';
-            muatDataPendaftar();
-            muatPengaturan();
-          });
-        }
+        msg.innerHTML = '⚠️ <b>Gagal Terhubung ke Server</b> (' + (err || 'timeout') + ')<br>' +
+          '<div style="margin-top:4px;font-size:11.5px;">Periksa koneksi internet Anda atau pastikan Web App Google Script sudah dideploy dengan akses "Anyone".</div>';
       }
     });
   }
@@ -1162,7 +1359,7 @@
 
   function muatDataPendaftar() {
     var container = document.getElementById('appList');
-    container.innerHTML = '<div class="spinner-bar"><div class="spin"></div> Memperbarui data pendaftar...</div>';
+    container.innerHTML = '<div class="spinner-bar"><div class="spin"></div> Memperbarui data pendaftar dari Spreadsheet...</div>';
 
     callApi({ action: 'adminGetData', pin: currentPin }, function (res) {
       if (res && res.success) {
@@ -1170,14 +1367,14 @@
         updateStatCards(res.stats || {});
         renderApplicantList();
       } else {
-        var errDetail = (res && res.message) ? res.message : 'Gagal memuat data';
+        var errDetail = (res && res.message) ? res.message : 'Gagal memuat data.';
         if (errDetail.indexOf('field wajib') !== -1) {
           errDetail = 'Google Apps Script masih versi lama. Silakan salin isi file <code>Code.gs</code> lalu Deploy versi baru di <b>script.google.com</b>.';
         }
         container.innerHTML = '<div class="empty-state" style="color:#ef4444;line-height:1.6;">⚠️ ' + errDetail + '</div>';
       }
     }, function (err) {
-      container.innerHTML = '<div class="empty-state" style="color:#ef4444;line-height:1.6;">⚠️ Gagal terhubung ke Google Apps Script: ' + (err || 'timeout') + '<br><small style="color:var(--text-muted)">Pastikan Code.gs sudah di-deploy dengan akses "Anyone".</small></div>';
+      container.innerHTML = '<div class="empty-state" style="color:#ef4444;line-height:1.6;">⚠️ Gagal terhubung ke Google Apps Script: ' + (err || 'timeout') + '<br><small style="color:var(--text-muted)">Pastikan script sudah di-deploy sebagai Web App dengan akses "Anyone".</small></div>';
     });
   }
 
@@ -1224,9 +1421,7 @@
     var container = document.getElementById('appList');
 
     var filtered = allApplicants.filter(function (item) {
-      // Filter status
       if (currentFilter !== 'all' && item.statusCat !== currentFilter) return false;
-      // Filter search
       if (currentSearch) {
         var hay = (item.nama + ' ' + item.username + ' ' + item.phone + ' ' + item.kodeKlaim + ' ' + item.produk).toLowerCase();
         if (hay.indexOf(currentSearch) === -1) return false;
@@ -1235,52 +1430,63 @@
     });
 
     if (filtered.length === 0) {
-      container.innerHTML = '<div class="empty-state">Tidak ada data pendaftar yang cocok dengan filter.</div>';
+      container.innerHTML = '<div class="empty-state">Tidak ada data pendaftar yang cocok dengan pencarian / filter.</div>';
       return;
     }
 
     var html = '';
-    filtered.forEach(function (item) {
-      var badgeClass = 's-pending';
-      var badgeText  = '⏳ MENUNGGU ACC';
-      if (item.statusCat === 'approved') {
-        badgeClass = 's-approved';
-        badgeText  = '✓ SUDAH DI-ACC';
-      } else if (item.statusCat === 'rejected') {
-        badgeClass = 's-rejected';
-        badgeText  = '✕ DITOLAK';
-      }
+    filtered.forEach(function (d) {
+      var statusClass = d.statusCat;
+      var statusLabel = d.status;
+      if (statusClass === 'approved') statusLabel = '✓ DI-ACC';
+      else if (statusClass === 'rejected') statusLabel = '✕ DITOLAK';
+      else statusLabel = '⏳ MENUNGGU ACC';
 
-      var cleanWa = (item.phone || '').replace(/[^0-9]/g, '');
-      if (cleanWa.startsWith('0')) cleanWa = '62' + cleanWa.substring(1);
-      var waUrl = 'https://wa.me/' + cleanWa + '?text=' + encodeURIComponent('Halo Kak ' + item.nama + ' (@' + item.username + '), terkait pengajuan sample produk ' + item.produk + ' di booth NEZHAMAINAN (Shopee Super Summit 2026)...');
+      var cleanPhone = String(d.phone || '').replace(/\D/g, '');
+      if (cleanPhone.charAt(0) === '0') cleanPhone = '62' + cleanPhone.substring(1);
+      else if (cleanPhone.charAt(0) === '8') cleanPhone = '62' + cleanPhone;
 
-      html += '<div class="app-card" id="card_' + esc(item.kodeKlaim) + '">';
-      html += '  <div class="app-info">';
-      html += '    <div class="app-title-row">';
-      html += '      <span class="app-kode">' + esc(item.kodeKlaim) + '</span>';
-      html += '      <span class="app-name">' + esc(item.nama) + '</span>';
-      html += '      <span class="status-badge ' + badgeClass + '">' + badgeText + '</span>';
-      html += '    </div>';
-      html += '    <div class="app-meta">';
-      html += '      <span>🛍️ Shopee: <b>@' + esc(item.username) + '</b></span>';
-      html += '      <span>📱 WA: <b>' + esc(item.phone) + '</b></span>';
-      html += '      <span>📦 Produk: <b>' + esc(item.produk) + '</b></span>';
-      html += '      <span>🕒 Waktu: <b>' + esc(item.waktu) + '</b></span>';
-      html += '    </div>';
+      var waText = encodeURIComponent(
+        'Halo Kak ' + (d.nama || '') + '!\n' +
+        'Kami dari booth NEZHAMAINAN di Shopee Super Summit 2026.\n\n' +
+        'Mengenai pengajuan Prioritas Sample gratis kamu (Kode: ' + d.kodeKlaim + '):\n' +
+        (d.statusCat === 'approved'
+          ? '🎉 Pengajuan kamu sudah kami ACC di sistem Shopee! Silakan periksa notifikasi aplikasi Shopee kamu ya.'
+          : '📌 Pastikan kamu sudah klik "Minta Sample Gratis" di aplikasi Shopee pada produk toko NEZHAMAINAN ya.')
+      );
+      var waUrl = 'https://wa.me/' + cleanPhone + '?text=' + waText;
+
+      html += '<div class="app-card" id="card_' + esc(d.kodeKlaim) + '">';
+
+      // Col 1: Kode & Status
+      html += '  <div class="app-head">';
+      html += '    <div class="app-code">' + esc(d.kodeKlaim) + '</div>';
+      html += '    <div class="app-status-badge ' + statusClass + '">' + statusLabel + '</div>';
+      html += '    <div class="app-time">⏰ ' + esc(d.waktu) + '</div>';
       html += '  </div>';
 
+      // Col 2: Info Pendaftar
+      html += '  <div class="app-details">';
+      html += '    <div class="app-name">👤 ' + esc(d.nama) + '</div>';
+      html += '    <div class="app-sub-info">';
+      html += '      <span class="meta-tag">🛍️ Shopee: <b>@' + esc(d.username.replace(/^@+/,'')) + '</b></span>';
+      html += '      <span class="meta-tag">📱 WA: <b>' + esc(d.phone) + '</b></span>';
+      html += '    </div>';
+      html += '    <div class="app-prod">📦 Sample: <span>' + esc(d.produk || 'Belum dipilih') + '</span></div>';
+      html += '  </div>';
+
+      // Col 3: Tombol Aksi
       html += '  <div class="app-actions">';
-      html += '    <a href="' + waUrl + '" target="_blank" class="btn-wa">💬 Chat WA</a>';
+      html += '    <a href="' + waUrl + '" target="_blank" rel="noopener noreferrer" class="btn-wa">💬 Chat WA</a>';
       html += '    <div class="btn-row">';
-      if (item.statusCat !== 'approved') {
-        html += '    <button type="button" class="btn-action-acc" onclick="ubahStatusPendaftar(\'' + esc(item.kodeKlaim) + '\', \'SUDAH DI-ACC\')">✓ ACC</button>';
+      if (d.statusCat !== 'approved') {
+        html += '    <button type="button" class="btn-action btn-acc" onclick="ubahStatusKlaim(\'' + esc(d.kodeKlaim) + '\', \'SUDAH DI-ACC\')">✓ ACC</button>';
       }
-      if (item.statusCat !== 'rejected') {
-        html += '    <button type="button" class="btn-action-reject" onclick="ubahStatusPendaftar(\'' + esc(item.kodeKlaim) + '\', \'DITOLAK\')">✕ Tolak</button>';
+      if (d.statusCat !== 'rejected') {
+        html += '    <button type="button" class="btn-action btn-reject" onclick="ubahStatusKlaim(\'' + esc(d.kodeKlaim) + '\', \'DITOLAK\')">✕ Tolak</button>';
       }
-      if (item.statusCat !== 'pending') {
-        html += '    <button type="button" class="btn-action-reset" onclick="ubahStatusPendaftar(\'' + esc(item.kodeKlaim) + '\', \'MENUNGGU ACC\')">⏳ Reset</button>';
+      if (d.statusCat !== 'pending') {
+        html += '    <button type="button" class="btn-action btn-pending" onclick="ubahStatusKlaim(\'' + esc(d.kodeKlaim) + '\', \'MENUNGGU ACC\')">⏳ Reset</button>';
       }
       html += '    </div>';
       html += '  </div>';
@@ -1291,10 +1497,11 @@
     container.innerHTML = html;
   }
 
-  window.ubahStatusPendaftar = function (kodeKlaim, statusBaru) {
-    if (!confirm('Ubah status ' + kodeKlaim + ' menjadi "' + statusBaru + '"?')) return;
+  // Ubah status 1-klik
+  window.ubahStatusKlaim = function (kodeKlaim, statusBaru) {
+    if (!confirm('Apakah Anda yakin ingin mengubah status ' + kodeKlaim + ' menjadi: "' + statusBaru + '"?')) return;
 
-    showToast('Memperbarui status di Spreadsheet...');
+    showToast('Memperbarui status ' + kodeKlaim + '...');
 
     callApi({
       action:     'adminUpdateStatus',
@@ -1303,27 +1510,28 @@
       statusBaru: statusBaru
     }, function (res) {
       if (res && res.success) {
-        showToast('✓ Status ' + kodeKlaim + ' berhasil diubah jadi: ' + statusBaru);
-        // Update data lokal langsung tanpa reload
-        allApplicants.forEach(function (it) {
-          if (it.kodeKlaim === kodeKlaim) {
-            it.status = statusBaru;
-            if (statusBaru === 'SUDAH DI-ACC') it.statusCat = 'approved';
-            else if (statusBaru === 'DITOLAK') it.statusCat = 'rejected';
-            else it.statusCat = 'pending';
+        showToast('✓ ' + (res.message || 'Status berhasil diperbarui!'));
+        for (var i = 0; i < allApplicants.length; i++) {
+          if (allApplicants[i].kodeKlaim === kodeKlaim) {
+            allApplicants[i].status = statusBaru;
+            var cat = 'pending';
+            if (statusBaru === 'SUDAH DI-ACC') cat = 'approved';
+            else if (statusBaru === 'DITOLAK') cat = 'rejected';
+            allApplicants[i].statusCat = cat;
+            break;
           }
-        });
-        hitungUlangStats();
+        }
+        recalcStats();
         renderApplicantList();
       } else {
-        alert('Gagal update: ' + ((res && res.message) || 'Error tidak diketahui'));
+        alert((res && res.message) || 'Gagal mengubah status.');
       }
     }, function (err) {
-      alert('Gagal terhubung ke server: ' + err);
+      alert('Gagal update status: ' + err);
     });
   };
 
-  function hitungUlangStats() {
+  function recalcStats() {
     var stats = { total: allApplicants.length, pending: 0, approved: 0, rejected: 0 };
     allApplicants.forEach(function (item) {
       if (item.statusCat === 'approved') stats.approved++;
@@ -1339,26 +1547,24 @@
   function muatPengaturan() {
     callApi({ action: 'adminGetSettings', pin: currentPin }, function (res) {
       if (res && res.success) {
-        document.getElementById('setIsOpen').checked        = (res.isOpen !== false);
-        document.getElementById('setShopeeUrl').value       = res.shopeeUrl || 'https://shopee.co.id/nezhamainan';
-        document.getElementById('setAnnouncement').value    = res.announcement || '';
+        document.getElementById('setIsOpen').checked     = (res.isOpen !== false);
+        document.getElementById('setShopeeUrl').value    = res.shopeeUrl || 'https://shopee.co.id/nezhamainan';
+        document.getElementById('setAnnouncement').value = res.announcement || '';
         currentChips = res.chips || [];
         renderChipsManager();
       } else {
-        // Fallback default
-        document.getElementById('setIsOpen').checked        = true;
-        document.getElementById('setShopeeUrl').value       = 'https://shopee.co.id/nezhamainan';
-        document.getElementById('setAnnouncement').value    = '';
+        document.getElementById('setIsOpen').checked     = true;
+        document.getElementById('setShopeeUrl').value    = 'https://shopee.co.id/nezhamainan';
+        document.getElementById('setAnnouncement').value = '';
         if (!currentChips || currentChips.length === 0) {
           currentChips = ['Mobil Remot RC', 'Robot Action Figure', 'Puzzle Edukasi Kayu', 'Water / Bubble Gun', 'Board Game Anak'];
         }
         renderChipsManager();
       }
     }, function () {
-      // Fallback default jika offline
-      document.getElementById('setIsOpen').checked        = true;
-      document.getElementById('setShopeeUrl').value       = 'https://shopee.co.id/nezhamainan';
-      document.getElementById('setAnnouncement').value    = '';
+      document.getElementById('setIsOpen').checked     = true;
+      document.getElementById('setShopeeUrl').value    = 'https://shopee.co.id/nezhamainan';
+      document.getElementById('setAnnouncement').value = '';
       if (!currentChips || currentChips.length === 0) {
         currentChips = ['Mobil Remot RC', 'Robot Action Figure', 'Puzzle Edukasi Kayu', 'Water / Bubble Gun', 'Board Game Anak'];
       }
@@ -1369,12 +1575,12 @@
   function renderChipsManager() {
     var listEl = document.getElementById('chipsManageList');
     if (!currentChips || currentChips.length === 0) {
-      listEl.innerHTML = '<span style="font-size:12px;color:var(--text-muted)">Belum ada chips produk rekomendasi.</span>';
+      listEl.innerHTML = '<span style="font-size:12.5px;color:var(--text-muted)">Belum ada chips produk rekomendasi.</span>';
       return;
     }
     var html = '';
     currentChips.forEach(function (chip, idx) {
-      html += '<span class="chip-tag">' + esc(chip) + ' <span class="chip-del" onclick="hapusChip(' + idx + ')">&times;</span></span>';
+      html += '<span class="chip-tag">' + esc(chip) + ' <span class="chip-del" onclick="hapusChip(' + idx + ')" title="Hapus chip">&times;</span></span>';
     });
     listEl.innerHTML = html;
   }
@@ -1408,7 +1614,7 @@
     var newPin       = document.getElementById('setNewPin').value.trim();
 
     btn.disabled = true;
-    btn.textContent = 'Menyimpan...';
+    btn.innerHTML = '<span class="spin"></span> Menyimpan Pengaturan...';
 
     var payload = {
       action:       'adminSaveSettings',
@@ -1429,7 +1635,7 @@
           currentPin = newPin;
           try { localStorage.setItem(STORAGE_ADMIN, newPin); } catch (_) {}
           document.getElementById('setNewPin').value = '';
-          alert('PIN Admin telah diperbarui menjadi: ' + newPin);
+          alert('✓ PIN Admin telah diperbarui menjadi: ' + newPin);
         }
       } else {
         alert((res && res.message) || 'Gagal menyimpan pengaturan.');
@@ -1460,4 +1666,3 @@
 
 </body>
 </html>
-
