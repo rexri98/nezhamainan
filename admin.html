@@ -1473,6 +1473,42 @@
       text-align: right;
       word-break: break-word;
     }
+    .btn-intip-shopee {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(238, 77, 45, 0.15);
+      border: 1px solid rgba(238, 77, 45, 0.4);
+      color: #ff7043;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-intip-shopee:hover {
+      background: rgba(238, 77, 45, 0.32);
+      color: #fff;
+      border-color: #ee4d2d;
+    }
+    .link-intip-user {
+      margin-left: 6px;
+      color: #fb923c;
+      font-size: 11px;
+      text-decoration: none;
+      padding: 2px 7px;
+      background: rgba(251, 146, 60, 0.15);
+      border-radius: 5px;
+      border: 1px solid rgba(251, 146, 60, 0.35);
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+    .link-intip-user:hover {
+      background: rgba(251, 146, 60, 0.35);
+      color: #fff;
+      border-color: #fb923c;
+    }
     .v-actions-wrap {
       display: flex;
       flex-direction: column;
@@ -2255,6 +2291,9 @@
 
           <!-- Top-Right Camera Controls -->
           <div class="cam-controls-bar">
+            <button type="button" class="btn-cam-ctrl" id="btnSoundToggle" title="Nyalakan/Matikan Bunyi Scan">
+              <span id="soundIcon" style="font-size:15px;line-height:1;">🔊</span>
+            </button>
             <button type="button" class="btn-cam-ctrl" id="btnFlipCam" title="Ganti Kamera Depan / Belakang">
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0-4.418-3.582-8-8-8s-8 3.582-8 8c0 2.21 1.005 4.185 2.6 5.5"/><path d="M4 20c0-4.418 3.582-8 8-8s8 3.582 8 8"/><polyline points="20 4 20 10 14 10"/><polyline points="4 20 4 14 10 14"/></svg>
             </button>
@@ -2300,7 +2339,12 @@
           </div>
           <div class="v-detail-row">
             <span class="v-lbl">Akun Shopee:</span>
-            <span class="v-val" id="vUsername">-</span>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
+              <span class="v-val" id="vUsername">-</span>
+              <a href="#" target="_blank" rel="noopener noreferrer" class="btn-intip-shopee" id="btnVIntipShopee" title="Buka profil Shopee affiliate" style="display:none;">
+                <span>🔍 Intip Profil</span>
+              </a>
+            </div>
           </div>
           <div class="v-detail-row">
             <span class="v-lbl">WhatsApp:</span>
@@ -2936,7 +2980,9 @@
       html += '  <div class="app-details">';
       html += '    <div class="app-name">👤 ' + esc(d.nama) + '</div>';
       html += '    <div class="app-sub-info">';
-      html += '      <span class="meta-tag">🛍️ Shopee: <b>@' + esc(d.username.replace(/^@+/,'')) + '</b></span>';
+      var rawUser = String(d.username || '').replace(/^@+/, '').trim();
+      var shopeeUserUrl = rawUser ? ('https://shopee.co.id/' + encodeURIComponent(rawUser)) : '#';
+      html += '      <span class="meta-tag">🛍️ Shopee: <b>@' + esc(rawUser) + '</b>' + (rawUser ? ' <a href="' + shopeeUserUrl + '" target="_blank" rel="noopener noreferrer" class="link-intip-user" title="Buka profil Shopee @' + esc(rawUser) + '">🔍 Intip</a>' : '') + '</span>';
       html += '      <span class="meta-tag">📱 WA: <b>' + esc(d.phone) + '</b></span>';
       html += '    </div>';
       html += '    <div class="app-prod">📦 Sample: <span>' + esc(d.produk || 'Belum dipilih') + '</span></div>';
@@ -3209,6 +3255,31 @@
   var lastScannedCode = '';
   var lastScanTime = 0;
   var currentVerifiedApplicant = null;
+  var soundScanEnabled = localStorage.getItem('nzh_scan_sound') !== 'false';
+
+  function playScanBeep() {
+    if (!soundScanEnabled) return;
+    try {
+      var AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      var ctx = new AudioCtx();
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1320, ctx.currentTime + 0.08);
+
+      gain.gain.setValueAtTime(0.18, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.15);
+    } catch (_) {}
+  }
 
   // Cek dukungan native BarcodeDetector browser jika format qr_code benar-benar didukung platform
   if ('BarcodeDetector' in window && typeof BarcodeDetector.getSupportedFormats === 'function') {
@@ -3436,7 +3507,7 @@
       return;
     }
 
-    // Efek visual: Reticle berubah hijau (TANPA SUARA)
+    // Efek visual & audio: Reticle berubah hijau + Bip Sukses
     var ret = document.getElementById('scannerReticle');
     if (ret) {
       var corners = ret.querySelectorAll('.reticle-corner');
@@ -3445,6 +3516,7 @@
     if (navigator.vibrate) {
       try { navigator.vibrate([40, 50, 40]); } catch (_) {}
     }
+    playScanBeep();
 
     updateScannerStatus('✓ QR Tiket ' + cleanCode + ' Terdeteksi!', 'normal');
     hentikanKamera();
@@ -3526,9 +3598,18 @@
     // Kode Klaim
     document.getElementById('vClaimCode').textContent = item.kodeKlaim || '-';
 
-    // Detail Pendaftar
     document.getElementById('vNama').textContent = item.nama || '-';
-    document.getElementById('vUsername').textContent = (item.username ? '@' + item.username.replace(/^@+/, '') : '-');
+    var rawItemUser = String(item.username || '').replace(/^@+/, '').trim();
+    document.getElementById('vUsername').textContent = (rawItemUser ? '@' + rawItemUser : '-');
+    var btnIntip = document.getElementById('btnVIntipShopee');
+    if (btnIntip) {
+      if (rawItemUser) {
+        btnIntip.href = 'https://shopee.co.id/' + encodeURIComponent(rawItemUser);
+        btnIntip.style.display = 'inline-flex';
+      } else {
+        btnIntip.style.display = 'none';
+      }
+    }
     document.getElementById('vPhone').textContent = item.phone || '-';
     document.getElementById('vProduk').textContent = item.produk || '-';
     document.getElementById('vWaktu').textContent = item.waktu || '-';
@@ -3665,6 +3746,19 @@
   document.getElementById('btnScanQr').addEventListener('click', bukaScannerModal);
   document.getElementById('btnScannerClose').addEventListener('click', tutupScannerModal);
   document.getElementById('btnFlipCam').addEventListener('click', flipKamera);
+
+  // Tombol Audio Beep Toggle
+  var btnSound = document.getElementById('btnSoundToggle');
+  var soundIcon = document.getElementById('soundIcon');
+  if (soundIcon) soundIcon.textContent = soundScanEnabled ? '🔊' : '🔇';
+  if (btnSound) {
+    btnSound.addEventListener('click', function () {
+      soundScanEnabled = !soundScanEnabled;
+      try { localStorage.setItem('nzh_scan_sound', soundScanEnabled ? 'true' : 'false'); } catch (_) {}
+      if (soundIcon) soundIcon.textContent = soundScanEnabled ? '🔊' : '🔇';
+      showToast(soundScanEnabled ? '🔊 Bunyi Scan Aktif' : '🔇 Bunyi Scan Dimatikan');
+    });
+  }
 
   // Tutup modal jika klik backdrop luar
   document.getElementById('scannerModal').addEventListener('click', function (e) {
