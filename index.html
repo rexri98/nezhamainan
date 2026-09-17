@@ -1832,18 +1832,8 @@
   ============================================================ */
   function panggilAPI(data, onOk, onErr) {
     var isDone = false;
-
-    function finishOk(res) {
-      if (isDone) return;
-      isDone = true;
-      if (onOk) onOk(res);
-    }
-
-    function finishErr(msg) {
-      if (isDone) return;
-      isDone = true;
-      if (onErr) onErr(msg);
-    }
+    function finishOk(res)  { if (!isDone) { isDone = true; if (onOk) onOk(res); } }
+    function finishErr(msg) { if (!isDone) { isDone = true; if (onErr) onErr(msg); } }
 
     // Cek koneksi offline
     if (typeof navigator !== 'undefined' && navigator.onLine === false) {
@@ -1851,49 +1841,7 @@
       return;
     }
 
-    // Strategi 1: Direct FETCH dengan credentials: 'omit'
-    // Membawa credentials: 'omit' agar Android tidak mengirim cookie login Google yang memicu conflict/403
-    var params = {};
-    for (var key in data) {
-      if (data.hasOwnProperty(key)) params[key] = data[key] || '';
-    }
-    var qStr = new URLSearchParams(params).toString();
-    var fetchUrl = SCRIPT_URL + '?' + qStr;
-
-    var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-    var fetchTimer = setTimeout(function () {
-      if (controller) controller.abort();
-    }, 14000);
-
-    fetch(fetchUrl, {
-      method: 'GET',
-      mode: 'cors',
-      credentials: 'omit',
-      cache: 'no-store',
-      signal: controller ? controller.signal : undefined
-    })
-    .then(function (res) {
-      clearTimeout(fetchTimer);
-      if (!res.ok && res.status !== 302) {
-        throw new Error('HTTP ' + res.status);
-      }
-      return res.json();
-    })
-    .then(function (json) {
-      finishOk(json);
-    })
-    .catch(function (fetchError) {
-      clearTimeout(fetchTimer);
-      if (isDone) return;
-      console.warn('Fetch fallback to JSONP:', fetchError);
-
-      // Strategi 2: Fallback otomatis ke JSONP jika Fetch gagal di browser tertentu
-      panggilJSONP(data, finishOk, function (jsonpError) {
-        finishErr(
-          'Tidak dapat terhubung ke server. Periksa koneksi internet / WiFi di HP kamu lalu coba lagi.'
-        );
-      });
-    });
+    panggilJSONP(data, finishOk, finishErr);
   }
 
   function panggilJSONP(data, onOk, onErr) {

@@ -1115,65 +1115,44 @@
   var currentChips  = [];
 
   /* ============================================================
-     FAST HYBRID CALLER (JSONP & FAST FETCH)
+     FAST & RELIABLE API CALLER (DIRECT JSONP UNTUK GOOGLE APPS SCRIPT)
   ============================================================ */
   function callApi(data, onOk, onErr) {
     var isDone = false;
     function finishOk(res)  { if (!isDone) { isDone = true; if (onOk) onOk(res); } }
     function finishErr(msg) { if (!isDone) { isDone = true; if (onErr) onErr(msg); } }
 
-    var params = {};
-    for (var k in data) {
-      if (data.hasOwnProperty(k)) params[k] = data[k] || '';
-    }
-    var qStr = new URLSearchParams(params).toString();
-    var fetchUrl = SCRIPT_URL + '?' + qStr;
+    var cb = '_nzh_adm_' + Date.now() + '_' + Math.floor(Math.random() * 99999);
+    var scriptId = '_script_' + cb;
 
-    var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
     var timer = setTimeout(function () {
-      if (controller) controller.abort();
-    }, 3200);
-
-    fetch(fetchUrl, {
-      method: 'GET',
-      mode: 'cors',
-      credentials: 'omit',
-      cache: 'no-store',
-      signal: controller ? controller.signal : undefined
-    })
-    .then(function (res) {
-      clearTimeout(timer);
-      return res.json();
-    })
-    .then(function (json) { finishOk(json); })
-    .catch(function () {
-      clearTimeout(timer);
-      callJsonp(data, finishOk, finishErr);
-    });
-  }
-
-  function callJsonp(data, onOk, onErr) {
-    var cb = '_admin_' + Date.now() + '_' + Math.floor(Math.random() * 99999);
-    var t = setTimeout(function () {
       clean();
-      if (onErr) onErr('Koneksi timeout.');
-    }, 12000);
+      finishErr('Koneksi timeout (server tidak merespons dalam 15 detik).');
+    }, 15000);
 
     function clean() {
-      clearTimeout(t);
-      delete window[cb];
-      var el = document.getElementById(cb);
+      clearTimeout(timer);
+      try { delete window[cb]; } catch (_) { window[cb] = undefined; }
+      var el = document.getElementById(scriptId);
       if (el) el.remove();
     }
 
-    window[cb] = function (res) { clean(); onOk(res); };
+    window[cb] = function (res) {
+      clean();
+      finishOk(res);
+    };
+
     var params = { callback: cb };
     for (var k in data) {
       if (data.hasOwnProperty(k)) params[k] = data[k] || '';
     }
+
     var s = document.createElement('script');
-    s.id = cb;
-    s.onerror = function () { clean(); if (onErr) onErr('Gagal memuat skrip server.'); };
+    s.id = scriptId;
+    s.onerror = function () {
+      clean();
+      finishErr('Gagal memuat skrip server Google Apps Script.');
+    };
     s.src = SCRIPT_URL + '?' + new URLSearchParams(params).toString();
     document.head.appendChild(s);
   }
