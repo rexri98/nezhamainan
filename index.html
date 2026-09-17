@@ -72,6 +72,7 @@
     /* ─── PAGE WRAPPER ─── */
     .page {
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
@@ -1785,40 +1786,111 @@
         font-size: 14px;
         height: 42px;
       }
-    /* ─── LIVE ANNOUNCEMENT BANNER ─── */
-    .live-announcement {
+    /* ─── LIVE RUNNING TEXT MARQUEE TICKER ─── */
+    .marquee-ticker {
+      width: 100%;
+      max-width: 960px;
+      margin: 0 auto 16px auto;
+      background: linear-gradient(90deg, #1b0708 0%, #2f0b09 35%, #1a0607 100%);
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      border-radius: 999px;
       display: flex;
       align-items: center;
-      gap: 10px;
-      background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(239, 43, 28, 0.10));
-      border: 1px solid rgba(245, 158, 11, 0.45);
-      border-radius: 12px;
-      padding: 11px 15px;
-      margin-bottom: 18px;
-      font-size: 13px;
-      color: #92400e;
-      line-height: 1.45;
-      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.08);
-      animation: annGlow 3s ease-in-out infinite alternate;
+      padding: 6px 14px 6px 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25), 0 0 15px rgba(245, 158, 11, 0.12);
+      overflow: hidden;
+      box-sizing: border-box;
+      position: relative;
+      z-index: 10;
     }
-    .live-announcement .ann-icon {
-      font-size: 18px;
+    .ticker-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: linear-gradient(135deg, #ef2b1c 0%, #b31d10 100%);
+      color: #fff;
+      font-size: 11.5px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 6px 13px;
+      border-radius: 999px;
       flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(239, 43, 28, 0.45);
+      z-index: 2;
     }
-    .live-announcement .ann-content {
+    .ticker-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 7px #fff;
+      animation: tickerPulse 1.4s ease-in-out infinite alternate;
+    }
+    @keyframes tickerPulse {
+      from { opacity: 0.35; transform: scale(0.85); }
+      to   { opacity: 1; transform: scale(1.2); }
+    }
+    .ticker-track {
       flex: 1;
-      font-weight: 600;
-      color: #b45309;
+      overflow: hidden;
+      white-space: nowrap;
+      position: relative;
+      margin-left: 14px;
+      mask-image: linear-gradient(to right, transparent 0%, black 2%, black 96%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 2%, black 96%, transparent 100%);
     }
-    @keyframes annGlow {
-      from { border-color: rgba(245, 158, 11, 0.35); }
-      to   { border-color: rgba(245, 158, 11, 0.7); box-shadow: 0 3px 14px rgba(245, 158, 11, 0.22); }
+    .ticker-content {
+      display: inline-block;
+      white-space: nowrap;
+      padding-left: 100%;
+      animation: tickerScroll 24s linear infinite;
+      font-size: 13px;
+      font-weight: 600;
+      color: #fed7aa;
+      letter-spacing: 0.3px;
+    }
+    .ticker-content:hover,
+    .marquee-ticker:hover .ticker-content {
+      animation-play-state: paused;
+      cursor: default;
+    }
+    @keyframes tickerScroll {
+      0%   { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-100%, 0, 0); }
+    }
+    @media (max-width: 640px) {
+      .marquee-ticker {
+        border-radius: 14px;
+        padding: 6px 10px;
+        margin-bottom: 12px;
+      }
+      .ticker-badge {
+        font-size: 10.5px;
+        padding: 5px 10px;
+        gap: 5px;
+      }
+      .ticker-content {
+        font-size: 12px;
+        animation-duration: 18s;
+      }
     }
   </style>
 </head>
 <body>
 
 <div class="page">
+
+  <!-- ─── LIVE RUNNING TEXT MARQUEE TICKER ─── -->
+  <div id="liveAnnouncementBar" class="marquee-ticker" style="display:none;" role="region" aria-label="Pengumuman Booth">
+    <div class="ticker-badge">
+      <span class="ticker-dot"></span>
+      <span>📢 INFO BOOTH</span>
+    </div>
+    <div class="ticker-track">
+      <div class="ticker-content" id="liveAnnouncementText"></div>
+    </div>
+  </div>
 
   <!-- ══════════════════════════════════════════
        FORM CARD
@@ -1862,12 +1934,6 @@
 
     <!-- FORM PANEL (kanan — putih) -->
     <div class="form-panel">
-      <!-- Running / Live Announcement Banner -->
-      <div id="liveAnnouncementBanner" class="live-announcement" style="display:none;">
-        <span class="ann-icon">📢</span>
-        <div class="ann-content" id="liveAnnouncementText"></div>
-      </div>
-
       <div class="form-head" id="formHead">
         <h2>Pengajuan Sample Prioritas</h2>
         <p>Isi data akun Shopee kamu untuk diprioritaskan persetujuannya.</p>
@@ -2055,12 +2121,6 @@
 
     <!-- DETAILS PANEL (kanan di PC, bawah di Mobile — putih) -->
     <div class="form-panel status-detail-panel">
-      <!-- Live Announcement Banner in Claim View -->
-      <div id="claimAnnouncementBanner" class="live-announcement" style="display:none;">
-        <span class="ann-icon">📢</span>
-        <div class="ann-content" id="claimAnnouncementText"></div>
-      </div>
-
       <div class="form-head">
         <h2>Detail Pengajuan Prioritas</h2>
         <p>Data akun Shopee kamu terdaftar di Booth NEZHAMAINAN</p>
@@ -3207,7 +3267,7 @@
     var t = setTimeout(function () {
       bersih();
       if (onErr) onErr('Koneksi timeout. Server antrean sedang bangun, silakan coba ketuk lagi.');
-    }, 14000); // 14 detik batas responsif anti-lelet
+    }, 30000); // 30 detik batas responsif anti-cold-boot
 
     function bersih() {
       clearTimeout(t);
@@ -3534,6 +3594,19 @@
     var fClosed = document.getElementById('closedPanel');
     var badge   = document.querySelector('.brand-badge');
 
+    // 1. Running Text Marquee Ticker di bagian atas halaman (selalu sinkron)
+    var liveAnn    = document.getElementById('liveAnnouncementBar');
+    var liveAnnTxt = document.getElementById('liveAnnouncementText');
+    if (liveAnn && liveAnnTxt) {
+      if (pengumuman && pengumuman.trim()) {
+        var cleanTxt = pengumuman.trim();
+        liveAnnTxt.textContent = cleanTxt + '   ✦   ' + cleanTxt + '   ✦   ' + cleanTxt;
+        liveAnn.style.display = 'flex';
+      } else {
+        liveAnn.style.display = 'none';
+      }
+    }
+
     if (!buka) {
       if (fHead)   fHead.style.display   = 'none';
       if (fForm)   fForm.style.display   = 'none';
@@ -3566,29 +3639,6 @@
         badge.style.background = 'rgba(245,158,11,.14)';
         badge.style.color = 'var(--gold)';
         badge.style.borderColor = 'rgba(245,158,11,.3)';
-      }
-
-      // Tampilkan Running / Live Announcement Banner jika diisi oleh Admin
-      var liveAnn    = document.getElementById('liveAnnouncementBanner');
-      var liveAnnTxt = document.getElementById('liveAnnouncementText');
-      if (liveAnn && liveAnnTxt) {
-        if (pengumuman && pengumuman.trim()) {
-          liveAnnTxt.textContent = pengumuman.trim();
-          liveAnn.style.display = 'flex';
-        } else {
-          liveAnn.style.display = 'none';
-        }
-      }
-
-      var claimAnn    = document.getElementById('claimAnnouncementBanner');
-      var claimAnnTxt = document.getElementById('claimAnnouncementText');
-      if (claimAnn && claimAnnTxt) {
-        if (pengumuman && pengumuman.trim()) {
-          claimAnnTxt.textContent = pengumuman.trim();
-          claimAnn.style.display = 'flex';
-        } else {
-          claimAnn.style.display = 'none';
-        }
       }
     }
   }

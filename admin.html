@@ -2087,6 +2087,9 @@
         <button type="button" class="btn-bulk-acc" id="btnBulkAcc" title="ACC semua pendaftar yang sedang menunggu konfirmasi">
           ⚡ ACC Semua yang Menunggu (<span id="bulkCount">0</span>)
         </button>
+        <button type="button" class="btn-scan-qr" id="btnRefreshList" style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2);" title="Segarkan data pendaftar dari server">
+          <span>🔄 Segarkan Data</span>
+        </button>
       </div>
 
       <!-- Applicant List -->
@@ -2468,7 +2471,7 @@
     var timer = setTimeout(function () {
       clean();
       finishErr('Koneksi timeout. Server sedang memproses antrean, silakan coba lagi.');
-    }, 14000);
+    }, 30000); // 30 detik batas responsif anti-cold-boot
 
     function clean() {
       clearTimeout(timer);
@@ -2874,7 +2877,7 @@
     }, function (err) {
       adminRefreshInFlight = false;
       if (!isSilent && (!allApplicants || allApplicants.length === 0)) {
-        container.innerHTML = '<div class="empty-state" style="color:#ef4444;line-height:1.6;">⚠️ Gagal terhubung ke Google Apps Script: ' + (err || 'timeout') + '<br><small style="color:var(--text-muted)">Periksa koneksi internet atau ketuk tombol Refresh Data.</small></div>';
+        container.innerHTML = '<div class="empty-state" style="color:#ef4444;line-height:1.6;">⚠️ Gagal terhubung ke Google Apps Script: ' + (err || 'timeout') + '<br><small style="color:var(--text-muted);display:block;margin:6px 0 12px 0;">Periksa koneksi internet atau ketuk tombol di bawah.</small><button type="button" class="btn-scan-qr" style="display:inline-flex;margin:0 auto;background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.25);" onclick="muatDataPendaftar(false)"><span>🔄 Coba Muat Ulang</span></button></div>';
       }
     });
   }
@@ -3757,6 +3760,15 @@
       try { localStorage.setItem('nzh_scan_sound', soundScanEnabled ? 'true' : 'false'); } catch (_) {}
       if (soundIcon) soundIcon.textContent = soundScanEnabled ? '🔊' : '🔇';
       showToast(soundScanEnabled ? '🔊 Bunyi Scan Aktif' : '🔇 Bunyi Scan Dimatikan');
+    });
+  }
+
+  // Tombol Segarkan Data di Toolbar
+  var btnRefreshList = document.getElementById('btnRefreshList');
+  if (btnRefreshList) {
+    btnRefreshList.addEventListener('click', function () {
+      muatDataPendaftar(false);
+      showToast('🔄 Menyinkronkan data dari Spreadsheet...');
     });
   }
 
