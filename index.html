@@ -1228,13 +1228,54 @@
     }
     .claim-btn-row {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       width: 100%;
+      margin-top: 4px;
     }
     .claim-btn-row .btn-sync,
     .claim-btn-row .btn-back-form {
       flex: 1;
-      margin-top: 0 !important;
+      min-width: 0;
+      height: 42px;
+      margin: 0 !important;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border-radius: 11px;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 0 10px;
+      box-sizing: border-box;
+      transition: all .2s ease;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .claim-btn-row .btn-sync {
+      background: #ffffff;
+      border: 1.5px solid #d1d5db;
+      color: #1f2937;
+      box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    }
+    .claim-btn-row .btn-sync:hover {
+      background: #f9fafb;
+      border-color: #9ca3af;
+      color: #111827;
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(0,0,0,.08);
+    }
+    .claim-btn-row .btn-back-form {
+      background: #ffffff;
+      border: 1.5px solid #d1d5db;
+      color: #4b5563;
+      box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    }
+    .claim-btn-row .btn-back-form:hover {
+      background: #f9fafb;
+      border-color: #9ca3af;
+      color: #111827;
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(0,0,0,.08);
     }
 
     /* ─── QR CODE VIP PASS ─── */
@@ -1600,24 +1641,22 @@
         border-radius: 11px;
       }
       .claim-btn-row {
-        flex-direction: column;
+        display: flex;
+        flex-direction: row;
         gap: 8px;
         width: 100%;
         margin-top: 4px;
       }
-      .claim-btn-row .btn-sync {
-        width: 100%;
-        height: 40px;
-        font-size: 12px;
-        margin: 0 !important;
-        border-radius: 10px;
-      }
+      .claim-btn-row .btn-sync,
       .claim-btn-row .btn-back-form {
-        width: 100%;
-        height: 38px;
+        flex: 1;
+        min-width: 0;
+        height: 42px;
         font-size: 11.5px;
-        margin: 0 !important;
+        padding: 0 6px;
         border-radius: 10px;
+        margin: 0 !important;
+        white-space: nowrap;
       }
       .lookup-trigger-wrap {
         font-size: 11px;
@@ -2041,11 +2080,11 @@
           📸 Simpan Tiket ke Galeri (Gambar)
         </button>
         <div class="claim-btn-row">
-          <button type="button" class="btn-sync" id="btnSyncStatus">
-            🔄 Cek Status ACC Realtime
+          <button type="button" class="btn-sync" id="btnSyncStatus" title="Cek Status ACC Realtime">
+            <span>🔄</span> <span>Cek Status ACC</span>
           </button>
-          <button type="button" class="btn-back-form" id="btnBackToForm">
-            ← Kembali / Cek Akun Lain
+          <button type="button" class="btn-back-form" id="btnBackToForm" title="Kembali ke pendaftaran / cek akun lain">
+            <span>←</span> <span>Cek Akun Lain</span>
           </button>
         </div>
       </div>
@@ -3097,7 +3136,7 @@
       if (syncBtn) {
         syncBtn.style.display = 'inline-flex';
         syncBtn.disabled = false;
-        syncBtn.innerHTML = '🔄 Cek Status ACC Realtime';
+        syncBtn.innerHTML = '<span>🔄</span> <span>Cek Status ACC</span>';
       }
       /* Mulai polling otomatis ke Google Sheet */
       mulaiPollingStatus(d.kodeKlaim);
@@ -3120,14 +3159,14 @@
     var btn = document.getElementById('btnSyncStatus');
     if (isManual && btn) {
       btn.disabled = true;
-      btn.innerHTML = '<span class="spinner" style="border-color:#9ca3af;border-top-color:#111;width:12px;height:12px;"></span> MEMERIKSA SPREADSHEET...';
+      btn.innerHTML = '<span class="spinner" style="border-color:#9ca3af;border-top-color:#111;width:12px;height:12px;"></span> Memeriksa...';
     }
 
     panggilAPI({ action: 'cekStatus', kodeKlaim: kodeKlaim }, function (res) {
       statusRequestInFlight = false;
       if (isManual && btn) {
         btn.disabled = false;
-        btn.innerHTML = '🔄 Cek Status ACC Realtime';
+        btn.innerHTML = '<span>🔄</span> <span>Cek Status ACC</span>';
       }
 
       if (res && res.success && res.status) {
@@ -3147,7 +3186,7 @@
       statusRequestInFlight = false;
       if (isManual && btn) {
         btn.disabled = false;
-        btn.innerHTML = '🔄 Cek Status ACC Realtime';
+        btn.innerHTML = '<span>🔄</span> <span>Cek Status ACC</span>';
       }
     });
   }
@@ -3535,20 +3574,30 @@
   var btnGuideShopee = document.getElementById('btnGuideShopee');
 
   function bukaModalPanduan() {
-    if (guideModal) {
-      guideModal.style.display = 'flex';
-      if (btnGuideShopee && SHOPEE_STORE_URL) {
-        btnGuideShopee.href = SHOPEE_STORE_URL;
-      }
+    if (!guideModal) return;
+    guideModal.style.display = 'flex';
+    if (btnGuideShopee && SHOPEE_STORE_URL) {
+      btnGuideShopee.href = SHOPEE_STORE_URL;
     }
+    setTimeout(function () {
+      guideModal.classList.add('open');
+    }, 10);
   }
 
   function tutupModalPanduan() {
-    if (guideModal) guideModal.style.display = 'none';
+    if (!guideModal) return;
+    guideModal.classList.remove('open');
+    setTimeout(function () {
+      guideModal.style.display = 'none';
+    }, 250);
   }
 
-  if (btnOpenGuide)  btnOpenGuide.addEventListener('click', bukaModalPanduan);
-  if (btnCloseGuide) btnCloseGuide.addEventListener('click', tutupModalPanduan);
+  if (btnOpenGuide) {
+    btnOpenGuide.addEventListener('click', bukaModalPanduan);
+  }
+  if (btnCloseGuide) {
+    btnCloseGuide.addEventListener('click', tutupModalPanduan);
+  }
   if (guideModal) {
     guideModal.addEventListener('click', function (e) {
       if (e.target === guideModal) tutupModalPanduan();
