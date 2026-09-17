@@ -3205,27 +3205,38 @@
 
     submitInFlight   = true;
     tombol.disabled  = true;
-    tombol.innerHTML = '<span class="spinner"></span> MENGHUBUNGKAN KE SERVER...';
+    tombol.innerHTML = '<span class="spinner"></span> MENGIRIM DATA PENGAJUAN...';
     var pesan = document.getElementById('pesan');
     pesan.className  = '';
     pesan.style.display = 'none';
 
-    // Tahapan status loading informatif
-    var timerStage = setTimeout(function () {
-      if (tombol.disabled) {
-        tombol.innerHTML = '<span class="spinner"></span> SINKRONISASI ANTREAN SPREADSHEET...';
+    // Tahapan status loading aktif (memberikan feedback visual langsung pada HP/PC)
+    var timerStage1 = setTimeout(function () {
+      if (submitInFlight && tombol.disabled) {
+        tombol.innerHTML = '<span class="spinner"></span> MENYINKRONKAN KE GOOGLE SPREADSHEET...';
       }
-    }, 4500);
+    }, 2800);
 
-    /* Kirim ke Apps Script (JSONP) dengan Timeout 14s + Auto-Retry */
+    var timerStage2 = setTimeout(function () {
+      if (submitInFlight && tombol.disabled) {
+        tombol.innerHTML = '<span class="spinner"></span> MEMBUAT TIKET KODE PRIORITAS...';
+      }
+    }, 6500);
+
+    function resetSubmitButton() {
+      submitInFlight = false;
+      clearTimeout(timerStage1);
+      clearTimeout(timerStage2);
+      tombol.disabled  = false;
+      tombol.innerHTML = 'DAFTARKAN PRIORITAS ACC';
+    }
+
+    /* Kirim ke Apps Script (Direct JSONP) dengan Timeout Responsif 16s + Auto-Retry */
     panggilAPI(
       { nama: nama, username: username, phone: phone, produk: produk },
 
       function (res) {
-        submitInFlight = false;
-        clearTimeout(timerStage);
-        tombol.disabled  = false;
-        tombol.innerHTML = 'KIRIM DATA';
+        resetSubmitButton();
 
         if (res.success) {
           var dataSimpan = {
@@ -3254,20 +3265,17 @@
       },
 
       function (err) {
-        submitInFlight = false;
-        clearTimeout(timerStage);
-        tombol.disabled  = false;
-        tombol.innerHTML = 'DAFTARKAN PRIORITAS ACC';
+        resetSubmitButton();
         showMsg('err',
-          '<span class="msg-t">⚠ GAGAL TERHUBUNG KE SERVER</span><br>' +
-          esc(err || 'Server sedang sibuk. Silakan ketuk tombol untuk mencoba lagi.')
+          '<span class="msg-t">⚠ KONEKSI TERPUTUS / SERVER SIBUK</span><br>' +
+          esc(err || 'Server sedang memproses antrean. Silakan ketuk tombol sekali lagi.')
         );
       }
     );
   });
 
   /* ============================================================
-     FAST & RESILIENT API ENGINE (14s TIMEOUT + AUTO RETRY)
+     FAST & RESILIENT API ENGINE (16s TIMEOUT + SMART RETRY)
   ============================================================ */
   function panggilAPI(data, onOk, onErr, retryCount) {
     if (retryCount === undefined) retryCount = 1;
@@ -3279,11 +3287,11 @@
         if (retryCount > 0) {
           var tombol = document.getElementById('tombol');
           if (tombol && tombol.disabled) {
-            tombol.innerHTML = '<span class="spinner"></span> MENCOBA ULANG KONEKSI...';
+            tombol.innerHTML = '<span class="spinner"></span> MENGHUBUNGKAN ULANG KE SERVER...';
           }
           setTimeout(function () {
             panggilAPI(data, onOk, onErr, retryCount - 1);
-          }, 1200);
+          }, 600);
         } else {
           if (onErr) onErr(msg);
         }
@@ -3303,8 +3311,8 @@
 
     var t = setTimeout(function () {
       bersih();
-      if (onErr) onErr('Koneksi timeout. Server antrean sedang bangun, silakan coba ketuk lagi.');
-    }, 30000); // 30 detik batas responsif anti-cold-boot
+      if (onErr) onErr('Koneksi timeout. Server antrean sedang bersiap, silakan coba ketuk lagi.');
+    }, 16000); // 16 detik timeout responsif
 
     function bersih() {
       clearTimeout(t);
@@ -3318,21 +3326,22 @@
       onOk(res);
     };
 
-    var params = { callback: cb };
+    var qParts = [];
+    qParts.push('callback=' + encodeURIComponent(cb));
     for (var key in data) {
       if (data.hasOwnProperty(key)) {
-        params[key] = (data[key] !== undefined && data[key] !== null) ? String(data[key]) : '';
+        var val = (data[key] !== undefined && data[key] !== null) ? String(data[key]) : '';
+        qParts.push(encodeURIComponent(key) + '=' + encodeURIComponent(val));
       }
     }
-    var p = new URLSearchParams(params);
 
     var s = document.createElement('script');
     s.id = '_nzhs_' + cb;
     s.onerror = function () {
       bersih();
-      if (onErr) onErr('Gagal memuat respons server.');
+      if (onErr) onErr('Gagal memuat respons dari server Google Apps Script.');
     };
-    s.src = SCRIPT_URL + '?' + p.toString();
+    s.src = SCRIPT_URL + '?' + qParts.join('&');
     document.head.appendChild(s);
   }
 

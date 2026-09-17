@@ -2458,7 +2458,7 @@
         if (retryCount > 0) {
           setTimeout(function () {
             callApi(data, onOk, onErr, retryCount - 1);
-          }, 1200);
+          }, 600);
         } else {
           if (onErr) onErr(msg);
         }
@@ -2471,7 +2471,7 @@
     var timer = setTimeout(function () {
       clean();
       finishErr('Koneksi timeout. Server sedang memproses antrean, silakan coba lagi.');
-    }, 30000); // 30 detik batas responsif anti-cold-boot
+    }, 20000); // 20 detik batas responsif anti-lag
 
     function clean() {
       clearTimeout(timer);
