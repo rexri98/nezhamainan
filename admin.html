@@ -1822,7 +1822,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
           </svg>
-          <input type="text" id="searchInput" class="search-input" placeholder="Cari nama, username @..., nomor WA, atau kode NZH-xxxx...">
+          <input type="text" id="searchInput" class="search-input" placeholder="Cari nama, username @..., nomor WA, atau kode NZH-xxxxxx...">
         </div>
         <div class="filter-pills" id="filterPills">
           <button type="button" class="fpill active" data-f="all">Semua</button>
@@ -1972,7 +1972,7 @@
         <div class="manual-lookup-box">
           <div class="manual-lookup-lbl">Atau cari tiket manual dengan Kode Klaim:</div>
           <div class="manual-lookup-row">
-            <input type="text" id="manualCodeInput" class="manual-input" placeholder="Contoh: NZH-2668" maxlength="15" autocomplete="off" spellcheck="false">
+            <input type="text" id="manualCodeInput" class="manual-input" placeholder="Contoh: NZH-123456" maxlength="15" autocomplete="off" spellcheck="false">
             <button type="button" class="btn-manual-verify" id="btnManualVerify">Cek Tiket</button>
           </div>
         </div>
@@ -1990,7 +1990,7 @@
         <!-- Big Ticket Claim Code -->
         <div class="v-claim-box">
           <div class="v-claim-lbl">KODE ANTREAN VIP</div>
-          <div class="v-claim-val" id="vClaimCode">NZH-0000</div>
+          <div class="v-claim-val" id="vClaimCode">NZH-000000</div>
         </div>
 
         <!-- Detail Data Pendaftar -->
@@ -2125,7 +2125,7 @@
     var timer = setTimeout(function () {
       clean();
       finishErr('Koneksi timeout. Server sedang memproses antrean, silakan coba lagi.');
-    }, 18000);
+    }, 14000);
 
     function clean() {
       clearTimeout(timer);
@@ -2336,9 +2336,9 @@
     showToast('Memperbarui data dari Spreadsheet...');
   });
 
-  /* Auto-Refresh (Live Monitor 15s) */
+  /* Auto-Refresh (Live Monitor 30s) */
   var autoRefreshTimer = null;
-  var autoRefreshCountdown = 15;
+  var autoRefreshCountdown = 30;
   var autoRefreshInterval = null;
 
   document.getElementById('btnAutoRefresh').addEventListener('click', function () {
@@ -2354,13 +2354,13 @@
       showToast('Auto-refresh dinonaktifkan.');
     } else {
       btn.classList.add('auto-active');
-      autoRefreshCountdown = 15;
-      txt.textContent = 'Auto: 15s';
-      showToast('✓ Auto-refresh aktif (tiap 15 detik).');
+      autoRefreshCountdown = 30;
+      txt.textContent = 'Auto: 30s';
+      showToast('✓ Auto-refresh aktif (tiap 30 detik).');
 
       autoRefreshInterval = setInterval(function () {
         autoRefreshCountdown--;
-        if (autoRefreshCountdown <= 0) autoRefreshCountdown = 15;
+        if (autoRefreshCountdown <= 0) autoRefreshCountdown = 30;
         txt.textContent = 'Auto: ' + autoRefreshCountdown + 's';
       }, 1000);
 
@@ -2368,7 +2368,7 @@
         if (document.getElementById('paneApplicants').style.display !== 'none') {
           muatDataPendaftar(true);
         }
-      }, 15000);
+      }, 30000);
     }
   });
 
@@ -2459,7 +2459,10 @@
     prosesNext();
   });
 
+  var adminRefreshInFlight = false;
   function muatDataPendaftar(isSilent) {
+    if (adminRefreshInFlight) return;
+    adminRefreshInFlight = true;
     var container = document.getElementById('appList');
 
     // 1. Tampilkan data dari cache lokal jika ada (instan 0 ms tanpa blank)
@@ -2483,6 +2486,7 @@
     }
 
     callApi({ action: 'adminGetData', pin: currentPin }, function (res) {
+      adminRefreshInFlight = false;
       if (res && res.success) {
         allApplicants = res.data || [];
         updateStatCards(res.stats || {});
@@ -2505,6 +2509,7 @@
         }
       }
     }, function (err) {
+      adminRefreshInFlight = false;
       if (!isSilent && (!allApplicants || allApplicants.length === 0)) {
         container.innerHTML = '<div class="empty-state" style="color:#ef4444;line-height:1.6;">⚠️ Gagal terhubung ke Google Apps Script: ' + (err || 'timeout') + '<br><small style="color:var(--text-muted)">Periksa koneksi internet atau ketuk tombol Refresh Data.</small></div>';
       }
@@ -3019,9 +3024,19 @@
     }
   }
 
-  // Frame Loop untuk Mendeteksi QR Code
+  // Frame Loop untuk Mendeteksi QR Code (Dithrottle 6-8 scan per detik)
+  var lastScanFrameTime = 0;
+  var SCAN_INTERVAL = 140; // ~7 scan/detik (responsif tanpa membebani CPU / baterai)
+
   function mulaiScanLoop() {
     if (!scannerActive) return;
+
+    var now = performance.now ? performance.now() : Date.now();
+    if (now - lastScanFrameTime < SCAN_INTERVAL) {
+      scannerAnimId = requestAnimationFrame(mulaiScanLoop);
+      return;
+    }
+    lastScanFrameTime = now;
 
     var video = document.getElementById('scannerVideo');
     if (!video || video.readyState < 2 || !video.videoWidth) {
@@ -3029,7 +3044,7 @@
       return;
     }
 
-    // Engine 1: Coba Native BarcodeDetector jika didukung OS
+    // Engine 1: Coba Native BarcodeDetector jika didukung OS/Browser
     if (nativeBarcodeDetector) {
       nativeBarcodeDetector.detect(video)
         .then(function (barcodes) {
@@ -3038,7 +3053,7 @@
             onQrDetected(barcodes[0].rawValue);
             return;
           }
-          // Jika native kosong di frame ini (misal di Windows), langsung serahkan ke engine jsQR!
+          // Jika native belum mendeteksi pada frame ini, serahkan ke engine jsQR
           scanWithJsQR(video);
         })
         .catch(function () {
@@ -3050,7 +3065,7 @@
     }
   }
 
-  // Engine jsQR dengan Resolusi Tajam & Dual-Pass (Full Frame + Center Zoom)
+  // Engine jsQR dengan Resolusi Optimal 640–720px & Single-Pass
   function scanWithJsQR(video) {
     if (!scannerActive) return;
 
@@ -3061,35 +3076,20 @@
       var vw = video.videoWidth || 640;
       var vh = video.videoHeight || 480;
 
-      // Resolusi tajam hingga 1080px (tidak lagi downscale ke 480px agar QR kecil di HP terbaca)
-      var maxDim = 1080;
-      var scale = (vw > maxDim || vh > maxDim) ? (maxDim / Math.max(vw, vh)) : 1;
-      var scanW = Math.round(vw * scale);
-      var scanH = Math.round(vh * scale);
+      // Resolusi optimal 640-720px: presisi tinggi tanpa beban double-processing 1080p
+      var targetW = Math.min(vw, 720);
+      var targetH = Math.round(vh * (targetW / vw));
 
-      canvas.width = scanW;
-      canvas.height = scanH;
+      canvas.width = targetW;
+      canvas.height = targetH;
       var ctx = canvas.getContext('2d', { willReadFrequently: true });
-      ctx.drawImage(video, 0, 0, scanW, scanH);
+      ctx.drawImage(video, 0, 0, targetW, targetH);
 
       if (typeof jsQR !== 'undefined') {
-        // Pass 1: Scan Seluruh Layar Kamera (bisa deteksi meski HP ditaruh miring di meja/pinggir)
-        var imgData = ctx.getImageData(0, 0, scanW, scanH);
-        var code = jsQR(imgData.data, scanW, scanH, { inversionAttempts: 'attemptBoth' });
+        var imgData = ctx.getImageData(0, 0, targetW, targetH);
+        var code = jsQR(imgData.data, targetW, targetH, { inversionAttempts: 'attemptBoth' });
         if (code && code.data) {
           onQrDetected(code.data);
-          return;
-        }
-
-        // Pass 2: Jika belum ketemu di full frame, periksa area tengah reticle (digital zoom 60%)
-        var cropW = Math.round(scanW * 0.6);
-        var cropH = Math.round(scanH * 0.6);
-        var cropX = Math.round((scanW - cropW) / 2);
-        var cropY = Math.round((scanH - cropH) / 2);
-        var centerData = ctx.getImageData(cropX, cropY, cropW, cropH);
-        var centerCode = jsQR(centerData.data, cropW, cropH, { inversionAttempts: 'attemptBoth' });
-        if (centerCode && centerCode.data) {
-          onQrDetected(centerCode.data);
           return;
         }
       }
@@ -3140,7 +3140,7 @@
   function prosesVerifikasiKode(kode) {
     kode = String(kode || '').trim().toUpperCase();
     if (!kode) {
-      alert('Masukkan kode klaim yang valid (Contoh: NZH-2668)');
+      alert('Masukkan kode klaim yang valid (Contoh: NZH-123456)');
       return;
     }
 
@@ -3330,7 +3330,7 @@
   document.getElementById('btnManualVerify').addEventListener('click', function () {
     var val = document.getElementById('manualCodeInput').value.trim();
     if (!val) {
-      alert('Ketikkan kode klaim pendaftar (Contoh: NZH-2668)');
+      alert('Ketikkan kode klaim pendaftar (Contoh: NZH-123456)');
       return;
     }
     prosesVerifikasiKode(val);

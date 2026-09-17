@@ -1247,7 +1247,7 @@
     }
     .qr-canvas-holder {
       background: #ffffff;
-      padding: 8px;
+      padding: 10px;
       border-radius: 14px;
       box-shadow: 0 6px 20px rgba(0,0,0,.35);
       display: inline-flex;
@@ -1257,8 +1257,8 @@
     }
     .qr-canvas-holder canvas {
       display: block;
-      width: 135px;
-      height: 135px;
+      width: 160px;
+      height: 160px;
       border-radius: 0;
     }
     .qr-scan-hint {
@@ -1493,8 +1493,8 @@
         border-radius: 7px;
       }
       .qr-canvas-holder canvas {
-        width: 120px;
-        height: 120px;
+        width: 210px;
+        height: 210px;
         border-radius: 0;
       }
       .qr-scan-hint {
@@ -1970,7 +1970,7 @@
         <div class="code-box">
           <div class="code-lbl">Kode Prioritas ACC</div>
           <div class="code-val-wrap">
-            <div class="code-val" id="cc-kode">NZH-0000</div>
+            <div class="code-val" id="cc-kode">NZH-000000</div>
             <button type="button" class="btn-copy-code" id="btnCopyCode" title="Salin Kode Prioritas">
               <span id="copyIcon">📋</span> <span id="copyText">Salin</span>
             </button>
@@ -2068,14 +2068,14 @@
     </div>
     <div class="modal-body">
       <p class="modal-desc">
-        Masukkan <b>Kode Prioritas (NZH-xxxx)</b>, <b>Nomor WhatsApp</b>, atau <b>Username Shopee</b> yang kamu gunakan saat mendaftar di booth.
+        Masukkan <b>Kode Prioritas (NZH-xxxxxx)</b>, <b>Nomor WhatsApp</b>, atau <b>Username Shopee</b> yang kamu gunakan saat mendaftar di booth.
       </p>
       <div class="f-wrap modal-input-wrap">
         <svg class="f-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="11" cy="11" r="8"/>
           <path d="M21 21l-4.35-4.35"/>
         </svg>
-        <input class="f-input" id="lookupQuery" type="text" placeholder="Contoh: NZH-2668 / 0812... / @username" autocomplete="off">
+        <input class="f-input" id="lookupQuery" type="text" placeholder="Contoh: NZH-123456 / 0812... / @username" autocomplete="off">
       </div>
       <div id="lookupMsg" style="display:none;"></div>
     </div>
@@ -2194,12 +2194,15 @@
       var _bytes = [];
       for (var i = 0; i < data.length; i++) {
         var code = data.charCodeAt(i);
-        if (code > 0x7f) {
+        if (code <= 0x7f) {
+          _bytes.push(code);
+        } else if (code <= 0x7ff) {
+          _bytes.push(0xc0 | (code >> 6));
+          _bytes.push(0x80 | (code & 0x3f));
+        } else {
           _bytes.push(0xe0 | ((code >> 12) & 0x0f));
           _bytes.push(0x80 | ((code >> 6) & 0x3f));
           _bytes.push(0x80 | (code & 0x3f));
-        } else {
-          _bytes.push(code);
         }
       }
       return {
@@ -2295,7 +2298,23 @@
         [2, 86, 68, 2, 87, 69], [4, 69, 43, 1, 70, 44], [6, 43, 19, 2, 44, 20], [6, 43, 15, 2, 44, 16]
       ],
       getRSBlocks: function (typeNumber, errorCorrectionLevel) {
-        var offset = (typeNumber - 1) * 4 + errorCorrectionLevel;
+        var ecIndex = 1;
+        if (typeof errorCorrectionLevel === 'string') {
+          var lvl = errorCorrectionLevel.toUpperCase();
+          if (lvl === 'L') ecIndex = 0;
+          else if (lvl === 'M') ecIndex = 1;
+          else if (lvl === 'Q') ecIndex = 2;
+          else if (lvl === 'H') ecIndex = 3;
+        } else {
+          switch (errorCorrectionLevel) {
+            case QRErrorCorrectionLevel.L: ecIndex = 0; break;
+            case QRErrorCorrectionLevel.M: ecIndex = 1; break;
+            case QRErrorCorrectionLevel.Q: ecIndex = 2; break;
+            case QRErrorCorrectionLevel.H: ecIndex = 3; break;
+            default: ecIndex = 1; break;
+          }
+        }
+        var offset = (typeNumber - 1) * 4 + ecIndex;
         var raw = this.RS_BLOCK_TABLE[offset];
         var list = [];
         for (var i = 0; i < raw.length; i += 3) {
@@ -2638,7 +2657,17 @@
           }
           _typeNumber = typeNumber;
         }
-        makeImpl(false, 0);
+        var minLostPoint = 0;
+        var pattern = 0;
+        for (var i = 0; i < 8; i++) {
+          makeImpl(true, i);
+          var lostPoint = QRUtil.getLostPoint(_this);
+          if (i === 0 || minLostPoint > lostPoint) {
+            minLostPoint = lostPoint;
+            pattern = i;
+          }
+        }
+        makeImpl(false, pattern);
       };
 
       return _this;
@@ -2837,10 +2866,12 @@
   }
 
   /* ============================================================
-     FORM SUBMIT DENGAN VALIDASI NOMOR WA WAJIB 08
+     FORM SUBMIT DENGAN VALIDASI NOMOR WA WAJIB 08 & ANTI DOUBLE-SUBMIT
   ============================================================ */
+  var submitInFlight = false;
   document.getElementById('affiliateForm').addEventListener('submit', function (e) {
     e.preventDefault();
+    if (submitInFlight) return;
 
     var nama     = document.getElementById('nama').value.trim();
     var username = document.getElementById('username').value.trim();
@@ -2862,6 +2893,7 @@
     }
     var phone = pCheck.clean;
 
+    submitInFlight   = true;
     tombol.disabled  = true;
     tombol.innerHTML = '<span class="spinner"></span> MENGHUBUNGKAN KE SERVER...';
     var pesan = document.getElementById('pesan');
@@ -2875,11 +2907,12 @@
       }
     }, 4500);
 
-    /* Kirim ke Apps Script (JSONP) dengan Timeout 18s + Auto-Retry */
+    /* Kirim ke Apps Script (JSONP) dengan Timeout 14s + Auto-Retry */
     panggilAPI(
       { nama: nama, username: username, phone: phone, produk: produk },
 
       function (res) {
+        submitInFlight = false;
         clearTimeout(timerStage);
         tombol.disabled  = false;
         tombol.innerHTML = 'KIRIM DATA';
@@ -2911,6 +2944,7 @@
       },
 
       function (err) {
+        submitInFlight = false;
         clearTimeout(timerStage);
         tombol.disabled  = false;
         tombol.innerHTML = 'DAFTARKAN PRIORITAS ACC';
@@ -2923,7 +2957,7 @@
   });
 
   /* ============================================================
-     FAST & RESILIENT API ENGINE (18s TIMEOUT + AUTO RETRY)
+     FAST & RESILIENT API ENGINE (14s TIMEOUT + AUTO RETRY)
   ============================================================ */
   function panggilAPI(data, onOk, onErr, retryCount) {
     if (retryCount === undefined) retryCount = 1;
@@ -2960,7 +2994,7 @@
     var t = setTimeout(function () {
       bersih();
       if (onErr) onErr('Koneksi timeout. Server antrean sedang bangun, silakan coba ketuk lagi.');
-    }, 18000); // 18 detik batas realistis cold-start tanpa membuat user menunggu lama
+    }, 14000); // 14 detik batas responsif anti-lelet
 
     function bersih() {
       clearTimeout(t);
@@ -3071,15 +3105,18 @@
 
     document.getElementById('formCard').style.display  = 'none';
     document.getElementById('claimCard').style.display = 'grid';
-    drawQrCode(document.getElementById('claimQrCanvas'), d.kodeKlaim || 'NZH-0000');
+    drawQrCode(document.getElementById('claimQrCanvas'), d.kodeKlaim || 'NZH-000000');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   /* ============================================================
-     CEK STATUS REALTIME KE GOOGLE SHEET
+     CEK STATUS REALTIME KE GOOGLE SHEET (IN-FLIGHT GUARD & VISIBILITY)
   ============================================================ */
+  var statusRequestInFlight = false;
   function cekStatusRealtime(kodeKlaim, isManual) {
-    if (!kodeKlaim) return;
+    if (!kodeKlaim || statusRequestInFlight) return;
+    statusRequestInFlight = true;
+
     var btn = document.getElementById('btnSyncStatus');
     if (isManual && btn) {
       btn.disabled = true;
@@ -3087,6 +3124,7 @@
     }
 
     panggilAPI({ action: 'cekStatus', kodeKlaim: kodeKlaim }, function (res) {
+      statusRequestInFlight = false;
       if (isManual && btn) {
         btn.disabled = false;
         btn.innerHTML = '🔄 Cek Status ACC Realtime';
@@ -3106,6 +3144,7 @@
         }
       }
     }, function () {
+      statusRequestInFlight = false;
       if (isManual && btn) {
         btn.disabled = false;
         btn.innerHTML = '🔄 Cek Status ACC Realtime';
@@ -3120,8 +3159,10 @@
         berhentiPolling();
         return;
       }
+      if (document.visibilityState === 'hidden') return;
+      if (statusRequestInFlight) return;
       cekStatusRealtime(kodeKlaim, false);
-    }, 15000);
+    }, 30000); // Polling efisien tiap 30 detik
   }
 
   function berhentiPolling() {
@@ -3130,6 +3171,13 @@
       pollingTimer = null;
     }
   }
+
+  // Auto cek saat tab kembali aktif
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible' && currentClaimData && currentClaimData.status === 'MENUNGGU ACC' && !statusRequestInFlight) {
+      cekStatusRealtime(currentClaimData.kodeKlaim, false);
+    }
+  });
 
   document.getElementById('btnSyncStatus').addEventListener('click', function () {
     if (currentClaimData && currentClaimData.kodeKlaim) {
@@ -3446,7 +3494,7 @@
   if (btnCopyCode) {
     btnCopyCode.addEventListener('click', function () {
       var code = (document.getElementById('cc-kode').textContent || '').trim();
-      if (!code || code === 'NZH-0000' || code === '—') return;
+      if (!code || code === 'NZH-0000' || code === 'NZH-000000' || code === '—') return;
 
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(code).then(afterCopy, fallbackCopy);
@@ -3577,7 +3625,7 @@
     // Kode Monospace Besar
     ctx.fillStyle = '#ffffff';
     ctx.font = '900 44px "Courier New", monospace';
-    ctx.fillText(d.kodeKlaim || 'NZH-0000', W / 2, boxY + 82);
+    ctx.fillText(d.kodeKlaim || 'NZH-000000', W / 2, boxY + 82);
 
     // Status Pill
     var statusStr = String(d.status || '').trim().toUpperCase();
@@ -3645,7 +3693,7 @@
     drawRoundRect(ctx, 44, qrBoxY, W - 88, qrBoxH, 16, true, true);
 
     // Render QR Code di sebelah kiri
-    var qrPayload = d.kodeKlaim || 'NZH-0000';
+    var qrPayload = d.kodeKlaim || 'NZH-000000';
     drawQrOnTicketCanvas(ctx, qrPayload, 62, qrBoxY + 15, 114);
 
     // Keterangan di sebelah kanan QR Code
