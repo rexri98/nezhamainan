@@ -1859,7 +1859,7 @@
               <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>
             </svg>
             <input class="f-input" id="nama" type="text" required
-                   autocomplete="name" placeholder="Contoh: Nezha">
+                   autocomplete="name" placeholder="Nama asli kamu">
           </div>
         </div>
 
@@ -1877,7 +1877,7 @@
             </svg>
             <input class="f-input" id="username" type="text" required
                    autocomplete="off" spellcheck="false"
-                   placeholder="Contoh: @nezhamainan">
+                   placeholder="Contoh: @username_affiliate">
           </div>
           <div class="f-hint">Gunakan username akun Shopee Affiliate kamu.</div>
         </div>
@@ -1896,9 +1896,9 @@
             </svg>
             <input class="f-input" id="phone" type="tel" required
                    inputmode="numeric" autocomplete="tel" maxlength="14"
-                   placeholder="Contoh: 081234567890">
+                   placeholder="Contoh: 081287654321">
           </div>
-          <div class="f-hint" id="phoneHint">Wajib diawali <b>08</b> (10–13 digit angka). Contoh: 081234567890</div>
+          <div class="f-hint" id="phoneHint">Wajib diawali <b>08</b> (10–13 digit). Digunakan untuk konfirmasi sample di booth.</div>
         </div>
 
         <!-- Produk (opsional) -->
@@ -2834,13 +2834,78 @@
     return s;
   }
 
+  /* ============================================================
+     VALIDASI ANTI-ASAL PADA NAMA LENGKAP & USERNAME SHOPEE
+  ============================================================ */
+  function cekValiditasNama(val) {
+    var raw = String(val || '').trim();
+    if (!raw) return { valid: false, clean: '', msg: 'Nama lengkap wajib diisi!' };
+    if (raw.length < 3) return { valid: false, clean: raw, msg: '⚠️ Nama terlalu pendek (minimal 3 karakter).' };
+    if (raw.length > 50) return { valid: false, clean: raw, msg: '⚠️ Nama terlalu panjang (maksimal 50 karakter).' };
+
+    // Wajib ada huruf alfabet
+    if (!/[a-zA-Z]/.test(raw)) {
+      return { valid: false, clean: raw, msg: '⚠️ Nama harus memuat huruf alfabet.' };
+    }
+
+    // Blokir karakter kembar berturut-turut (misal aaaa, xxxx)
+    if (/([a-zA-Z])\1{3,}/i.test(raw)) {
+      return { valid: false, clean: raw, msg: '⚠️ Nama tidak boleh memuat huruf berulang terus-menerus.' };
+    }
+
+    // Blokir keyboard mash / kata asal terkenal
+    var lower = raw.toLowerCase().replace(/[^a-z0-9]/g, '');
+    var mashList = ['asdasd', 'asdfgh', 'asdf', 'qweqwe', 'qwerty', 'zxcvbnm', 'zxcv', 'jkljkl', 'testing', 'coba', 'cobaan', 'admin', 'sample', 'tester', '123123', 'anonim'];
+    for (var k = 0; k < mashList.length; k++) {
+      if (lower === mashList[k] || lower.indexOf(mashList[k]) === 0) {
+        return { valid: false, clean: raw, msg: '⚠️ Masukkan nama asli kamu (bukan ketikan acak / testing).' };
+      }
+    }
+
+    return { valid: true, clean: raw };
+  }
+
+  function cekValiditasUsername(val) {
+    var raw = String(val || '').trim().replace(/^@+/, '').replace(/\s+/g, '');
+    if (!raw) return { valid: false, clean: '', msg: 'Username Shopee wajib diisi!' };
+    if (raw.length < 4) return { valid: false, clean: raw, msg: '⚠️ Username Shopee minimal 4 karakter.' };
+    if (raw.length > 30) return { valid: false, clean: raw, msg: '⚠️ Username Shopee maksimal 30 karakter.' };
+
+    // Format username Shopee: hanya alfanumerik, titik, underscore
+    if (!/^[a-zA-Z0-9._]+$/.test(raw)) {
+      return { valid: false, clean: raw, msg: '⚠️ Username Shopee hanya boleh huruf, angka, titik (.), dan garis bawah (_).' };
+    }
+
+    // Shopee username tidak boleh murni angka
+    if (/^\d+$/.test(raw)) {
+      return { valid: false, clean: raw, msg: '⚠️ Username Shopee tidak boleh hanya berupa angka semua.' };
+    }
+
+    // Karakter kembar berulang
+    if (/([a-zA-Z0-9])\1{3,}/i.test(raw)) {
+      return { valid: false, clean: raw, msg: '⚠️ Username tidak boleh memuat karakter berulang terus-menerus.' };
+    }
+
+    // Keyboard mash check
+    var lower = raw.toLowerCase();
+    var mashList = ['asdasd', 'asdfgh', 'asdf', 'qweqwe', 'qwerty', 'zxcvbnm', 'zxcv', 'testing', 'coba', 'admin', 'sample', 'shopee', 'affiliate', '123456'];
+    if (mashList.indexOf(lower) !== -1) {
+      return { valid: false, clean: raw, msg: '⚠️ Masukkan username akun Shopee kamu yang sebenarnya.' };
+    }
+
+    return { valid: true, clean: raw.toLowerCase() };
+  }
+
+  /* ============================================================
+     VALIDASI KETAT NOMOR WHATSAPP (PREFIX OPERATOR + ANTI-DUMMY)
+  ============================================================ */
   function cekValiditasNomorWA(val) {
     var raw = String(val || '').trim();
     if (!raw) return { valid: false, clean: '', msg: 'Wajib diawali <b>08</b> (10–13 digit).' };
 
     var clean = bersihkanNomorWA(raw);
     if (!clean.startsWith('08')) {
-      return { valid: false, clean: clean, msg: '⚠️ Wajib diawali <b>08</b> (Contoh: 081234567890)' };
+      return { valid: false, clean: clean, msg: '⚠️ Wajib diawali <b>08</b> (nomor HP Indonesia)' };
     }
     if (clean.length < 10) {
       return { valid: false, clean: clean, msg: '⚠️ Minimal 10 digit (kurang ' + (10 - clean.length) + ' angka lagi)' };
@@ -2848,13 +2913,81 @@
     if (clean.length > 13) {
       return { valid: false, clean: clean, msg: '⚠️ Maksimal 13 digit (kelebihan ' + (clean.length - 13) + ' angka)' };
     }
-    if (!/^08[1-9][0-9]{7,10}$/.test(clean)) {
-      return { valid: false, clean: clean, msg: '⚠️ Format nomor operator tidak valid (Contoh: 081234567890)' };
+
+    // 1. Validasi Prefix Resmi Seluler Indonesia (Telkomsel, Indosat, XL, Axis, Smartfren, Tri)
+    if (!/^08(1[1-9]|2[1-3]|3[1-38]|5[1-35-9]|7[78]|8[1-9]|9[5-9])/.test(clean)) {
+      return { valid: false, clean: clean, msg: '⚠️ Prefix operator seluler tidak dikenal di Indonesia' };
     }
-    if (/^08(\d)\1{7,}$/.test(clean)) {
-      return { valid: false, clean: clean, msg: '⚠️ Nomor tidak boleh angka berulang semua' };
+
+    // 2. Blokir Nomor Dummy / Percobaan Terkenal
+    var dummyList = [
+      '081234567890', '08123456789', '0812345678', '08234567890', '0823456789',
+      '089876543210', '08987654321', '0876543210', '081122334455', '081212121212'
+    ];
+    if (dummyList.indexOf(clean) !== -1) {
+      return { valid: false, clean: clean, msg: '⚠️ Nomor terdeteksi angka acak/dummy. Masukkan nomor WA aktif kamu.' };
     }
-    return { valid: true, clean: clean, msg: '✓ Nomor valid (diawali 08)' };
+
+    // 3. Blokir Pola Sekuensial Panjang (contoh: 123456 atau 654321)
+    if (/012345|123456|234567|345678|456789|567890|987654|876543|765432|654321|543210/.test(clean)) {
+      return { valid: false, clean: clean, msg: '⚠️ Nomor tidak boleh berupa angka berurutan (123456 / 654321)' };
+    }
+
+    // 4. Blokir Ekor Berulang / Kembar Panjang (contoh: ...11111, ...00000, ...99999)
+    if (/(\d)\1{4,}/.test(clean)) {
+      return { valid: false, clean: clean, msg: '⚠️ Nomor tidak boleh angka kembar berulang terus-menerus' };
+    }
+
+    // 5. Blokir Pola Berulang 2 Digit atau 3 Digit (contoh: 12121212, 123123123)
+    if (/^08(\d{2})\1{3,}$/.test(clean) || /^08(\d{3})\1{2,}$/.test(clean)) {
+      return { valid: false, clean: clean, msg: '⚠️ Nomor berpola berulang tidak valid' };
+    }
+
+    // 6. Cek Variasi Angka (Entropi)
+    var digitsObj = {};
+    for (var i = 0; i < clean.length; i++) {
+      digitsObj[clean[i]] = true;
+    }
+    if (Object.keys(digitsObj).length < 4) {
+      return { valid: false, clean: clean, msg: '⚠️ Variasi angka nomor terlalu sedikit / tidak valid' };
+    }
+    if (clean.length > 4) {
+      var tailDigits = {};
+      for (var t = 4; t < clean.length; t++) {
+        tailDigits[clean[t]] = true;
+      }
+      if (Object.keys(tailDigits).length < 3) {
+        return { valid: false, clean: clean, msg: '⚠️ Variasi angka nomor terlalu sedikit / terdeteksi tidak valid' };
+      }
+    }
+
+    return { valid: true, clean: clean, msg: '✓ Nomor valid & operator terverifikasi' };
+  }
+
+  var namaEl = document.getElementById('nama');
+  if (namaEl) {
+    namaEl.addEventListener('input', function () {
+      if (this.value.trim().length >= 3) {
+        var chk = cekValiditasNama(this.value);
+        this.style.borderColor = chk.valid ? '#10b981' : '#ef4444';
+      } else {
+        this.style.borderColor = '';
+      }
+    });
+  }
+
+  var userEl = document.getElementById('username');
+  if (userEl) {
+    userEl.addEventListener('input', function () {
+      var filtered = this.value.replace(/\s+/g, '');
+      if (this.value !== filtered) this.value = filtered;
+      if (this.value.trim().length >= 3) {
+        var chk = cekValiditasUsername(this.value);
+        this.style.borderColor = chk.valid ? '#10b981' : '#ef4444';
+      } else {
+        this.style.borderColor = '';
+      }
+    });
   }
 
   var phoneEl = document.getElementById('phone');
@@ -2875,7 +3008,7 @@
       var res = cekValiditasNomorWA(this.value);
       if (!this.value) {
         if (phoneHintEl) {
-          phoneHintEl.innerHTML = 'Wajib diawali <b>08</b> (10–13 digit angka). Contoh: 081234567890';
+          phoneHintEl.innerHTML = 'Wajib diawali <b>08</b> (10–13 digit). Digunakan untuk konfirmasi sample di booth.';
           phoneHintEl.style.color = '';
         }
         if (phoneStatusLabel) phoneStatusLabel.style.display = 'none';
@@ -2912,15 +3045,37 @@
     e.preventDefault();
     if (submitInFlight) return;
 
-    var nama     = document.getElementById('nama').value.trim();
-    var username = document.getElementById('username').value.trim();
-    var phoneRaw = document.getElementById('phone').value.trim();
-    var produk   = document.getElementById('produk').value.trim();
-    var tombol   = document.getElementById('tombol');
+    var namaRaw     = document.getElementById('nama').value.trim();
+    var usernameRaw = document.getElementById('username').value.trim();
+    var phoneRaw    = document.getElementById('phone').value.trim();
+    var produk      = document.getElementById('produk').value.trim();
+    var tombol      = document.getElementById('tombol');
 
-    if (!nama)     { showMsg('err', 'Nama lengkap wajib diisi!'); return; }
-    if (!username) { showMsg('err', 'Username Shopee wajib diisi!'); return; }
+    // 1. Validasi Nama Lengkap
+    var nCheck = cekValiditasNama(namaRaw);
+    if (!nCheck.valid) {
+      showMsg('err', nCheck.msg);
+      if (namaEl) {
+        namaEl.focus();
+        namaEl.style.borderColor = '#ef4444';
+      }
+      return;
+    }
+    var nama = nCheck.clean;
 
+    // 2. Validasi Username Shopee
+    var uCheck = cekValiditasUsername(usernameRaw);
+    if (!uCheck.valid) {
+      showMsg('err', uCheck.msg);
+      if (userEl) {
+        userEl.focus();
+        userEl.style.borderColor = '#ef4444';
+      }
+      return;
+    }
+    var username = uCheck.clean;
+
+    // 3. Validasi No. WhatsApp
     var pCheck = cekValiditasNomorWA(phoneRaw);
     if (!pCheck.valid) {
       showMsg('err', pCheck.msg.replace(/<[^>]*>/g, ''));
