@@ -1928,11 +1928,12 @@
     <div class="scanner-header">
       <div>
         <div class="scanner-title">
-          <span>??</span> Scan QR Tiket Pengunjung
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" style="color:var(--gold);"><path d="M4 4h6v6H4V4zm2 2v2h2V6H6zm8-2h6v6h-6V4zm2 2v2h2V6h-2zM4 14h6v6H4v-6zm2 2v2h2v-2H6zm10-2h2v2h-2v-2zm-2 2h2v2h-2v-2zm4 0h2v2h-2v-2zm-2 2h2v2h-2v-2zm2 2h2v2h-2v-2zm-4 0h2v2h-2v-2z"/></svg>
+          Scan QR Tiket Pengunjung
         </div>
         <div class="scanner-subtitle" id="scannerSub">Arahkan kamera ke layar HP pengunjung yang menampilkan QR E-Pass</div>
       </div>
-      <button type="button" class="scanner-close" id="btnScannerClose" title="Tutup Pemindai">?</button>
+      <button type="button" class="scanner-close" id="btnScannerClose" title="Tutup Pemindai">&times;</button>
     </div>
 
     <!-- Modal Body -->
@@ -1956,7 +1957,7 @@
           <!-- Top-Right Camera Controls -->
           <div class="cam-controls-bar">
             <button type="button" class="btn-cam-ctrl" id="btnFlipCam" title="Ganti Kamera Depan / Belakang">
-              ??
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0-4.418-3.582-8-8-8s-8 3.582-8 8c0 2.21 1.005 4.185 2.6 5.5"/><path d="M4 20c0-4.418 3.582-8 8-8s8 3.582 8 8"/><polyline points="20 4 20 10 14 10"/><polyline points="4 20 4 14 10 14"/></svg>
             </button>
           </div>
 
@@ -1983,7 +1984,7 @@
         <!-- Card Top Bar: Status Badge + Verification Indicator -->
         <div class="v-card-top">
           <div class="v-status-badge" id="vStatusBadge">MENUNGGU ACC</div>
-          <div class="v-verified-lbl">? QR TIKET TERVERIFIKASI</div>
+          <div class="v-verified-lbl">&#10003; QR TIKET TERVERIFIKASI</div>
         </div>
 
         <!-- Big Ticket Claim Code -->
@@ -1995,23 +1996,23 @@
         <!-- Detail Data Pendaftar -->
         <div class="v-detail-card">
           <div class="v-detail-row">
-            <span class="v-lbl">?? Nama Kreator:</span>
+            <span class="v-lbl">Nama Kreator:</span>
             <span class="v-val" id="vNama">-</span>
           </div>
           <div class="v-detail-row">
-            <span class="v-lbl">??? Akun Shopee:</span>
+            <span class="v-lbl">Akun Shopee:</span>
             <span class="v-val" id="vUsername">-</span>
           </div>
           <div class="v-detail-row">
-            <span class="v-lbl">?? WhatsApp:</span>
+            <span class="v-lbl">WhatsApp:</span>
             <span class="v-val" id="vPhone">-</span>
           </div>
           <div class="v-detail-row">
-            <span class="v-lbl">?? Sample Mainan:</span>
+            <span class="v-lbl">Sample Mainan:</span>
             <span class="v-val" id="vProduk">-</span>
           </div>
           <div class="v-detail-row">
-            <span class="v-lbl">?? Waktu Daftar:</span>
+            <span class="v-lbl">Waktu Daftar:</span>
             <span class="v-val" id="vWaktu">-</span>
           </div>
         </div>
@@ -2019,14 +2020,14 @@
         <!-- Action Buttons for Booth Crew -->
         <div class="v-actions-wrap" id="vActionsWrap">
           <button type="button" class="btn-v-acc" id="btnVAcc">
-            <span>? ACC SEKARANG (1-Klik)</span>
+            <span>&#10003; ACC SEKARANG (1-Klik)</span>
           </button>
           <div class="v-sub-actions">
             <a href="#" target="_blank" rel="noopener noreferrer" class="btn-v-wa" id="btnVChatWa">
-              <span>?? Chat WhatsApp</span>
+              <span>Chat WhatsApp</span>
             </a>
             <button type="button" class="btn-v-reject" id="btnVReject">
-              <span>? Tolak</span>
+              <span>&times; Tolak</span>
             </button>
           </div>
         </div>
@@ -2036,7 +2037,7 @@
 
         <!-- Scan Next Visitor Button -->
         <button type="button" class="btn-v-scan-next" id="btnVScanNext">
-          <span>?? Scan Tiket Berikutnya</span>
+          <span>Scan Tiket Berikutnya</span>
         </button>
 
       </div>
@@ -2864,13 +2865,19 @@
   var lastScanTime = 0;
   var currentVerifiedApplicant = null;
 
-  // Cek dukungan native BarcodeDetector browser (hardware-accelerated di Chrome Android/Edge/WebKit)
-  if ('BarcodeDetector' in window) {
-    try {
-      nativeBarcodeDetector = new BarcodeDetector({ formats: ['qr_code'] });
-    } catch (_) {
+  // Cek dukungan native BarcodeDetector browser jika format qr_code benar-benar didukung platform
+  if ('BarcodeDetector' in window && typeof BarcodeDetector.getSupportedFormats === 'function') {
+    BarcodeDetector.getSupportedFormats().then(function (formats) {
+      if (formats && formats.indexOf('qr_code') !== -1) {
+        try {
+          nativeBarcodeDetector = new BarcodeDetector({ formats: ['qr_code'] });
+        } catch (_) {
+          nativeBarcodeDetector = null;
+        }
+      }
+    }).catch(function () {
       nativeBarcodeDetector = null;
-    }
+    });
   }
 
   // Buka Modal Scanner
@@ -2996,57 +3003,80 @@
     if (!scannerActive) return;
 
     var video = document.getElementById('scannerVideo');
-    if (!video || video.readyState < 2) {
+    if (!video || video.readyState < 2 || !video.videoWidth) {
       scannerAnimId = requestAnimationFrame(mulaiScanLoop);
       return;
     }
 
-    // Engine 1: Native BarcodeDetector (Cepat & Ringan)
+    // Engine 1: Coba Native BarcodeDetector jika didukung OS
     if (nativeBarcodeDetector) {
       nativeBarcodeDetector.detect(video)
         .then(function (barcodes) {
           if (!scannerActive) return;
-          if (barcodes && barcodes.length > 0) {
+          if (barcodes && barcodes.length > 0 && barcodes[0].rawValue) {
             onQrDetected(barcodes[0].rawValue);
-          } else {
-            scannerAnimId = requestAnimationFrame(mulaiScanLoop);
+            return;
           }
+          // Jika native kosong di frame ini (misal di Windows), langsung serahkan ke engine jsQR!
+          scanWithJsQR(video);
         })
         .catch(function () {
-          fallbackJsQRScan(video);
+          scanWithJsQR(video);
         });
     } else {
-      // Engine 2: Embedded jsQR
-      fallbackJsQRScan(video);
+      // Engine 2: Pure Embedded jsQR
+      scanWithJsQR(video);
     }
   }
 
-  // Fallback Engine menggunakan Canvas + jsQR
-  function fallbackJsQRScan(video) {
+  // Engine jsQR dengan Resolusi Tajam & Dual-Pass (Full Frame + Center Zoom)
+  function scanWithJsQR(video) {
     if (!scannerActive) return;
+
     try {
       var canvas = document.getElementById('scannerCanvas');
+      if (!canvas) return;
+
       var vw = video.videoWidth || 640;
       var vh = video.videoHeight || 480;
-      var scanW = Math.min(vw, 480);
-      var scanH = Math.floor(vh * (scanW / vw));
+
+      // Resolusi tajam hingga 1080px (tidak lagi downscale ke 480px agar QR kecil di HP terbaca)
+      var maxDim = 1080;
+      var scale = (vw > maxDim || vh > maxDim) ? (maxDim / Math.max(vw, vh)) : 1;
+      var scanW = Math.round(vw * scale);
+      var scanH = Math.round(vh * scale);
 
       canvas.width = scanW;
       canvas.height = scanH;
       var ctx = canvas.getContext('2d', { willReadFrequently: true });
       ctx.drawImage(video, 0, 0, scanW, scanH);
-      var imgData = ctx.getImageData(0, 0, scanW, scanH);
 
       if (typeof jsQR !== 'undefined') {
+        // Pass 1: Scan Seluruh Layar Kamera (bisa deteksi meski HP ditaruh miring di meja/pinggir)
+        var imgData = ctx.getImageData(0, 0, scanW, scanH);
         var code = jsQR(imgData.data, scanW, scanH, { inversionAttempts: 'attemptBoth' });
         if (code && code.data) {
           onQrDetected(code.data);
           return;
         }
+
+        // Pass 2: Jika belum ketemu di full frame, periksa area tengah reticle (digital zoom 60%)
+        var cropW = Math.round(scanW * 0.6);
+        var cropH = Math.round(scanH * 0.6);
+        var cropX = Math.round((scanW - cropW) / 2);
+        var cropY = Math.round((scanH - cropH) / 2);
+        var centerData = ctx.getImageData(cropX, cropY, cropW, cropH);
+        var centerCode = jsQR(centerData.data, cropW, cropH, { inversionAttempts: 'attemptBoth' });
+        if (centerCode && centerCode.data) {
+          onQrDetected(centerCode.data);
+          return;
+        }
       }
     } catch (_) {}
 
-    scannerAnimId = requestAnimationFrame(mulaiScanLoop);
+    if (scannerActive) {
+      scannerAnimId = requestAnimationFrame(mulaiScanLoop);
+    }
   }
 
   // Saat QR Code Terdeteksi Kamera
