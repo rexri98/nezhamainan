@@ -2125,7 +2125,7 @@
     var timer = setTimeout(function () {
       clean();
       finishErr('Koneksi timeout. Server sedang memproses antrean, silakan coba lagi.');
-    }, 35000);
+    }, 18000);
 
     function clean() {
       clearTimeout(timer);
@@ -2264,7 +2264,6 @@
               btn.innerHTML = '<span>Masuk ke Dashboard</span>';
             }
             muatDataPendaftar();
-            muatPengaturan();
           }, 350);
         }, 600);
 
@@ -2462,7 +2461,24 @@
 
   function muatDataPendaftar(isSilent) {
     var container = document.getElementById('appList');
-    if (!isSilent) {
+
+    // 1. Tampilkan data dari cache lokal jika ada (instan 0 ms tanpa blank)
+    if (!isSilent && (!allApplicants || allApplicants.length === 0)) {
+      try {
+        var rawCache = sessionStorage.getItem('nzh_adm_applicants_cache');
+        if (rawCache) {
+          var cObj = JSON.parse(rawCache);
+          if (cObj && Array.isArray(cObj.data)) {
+            allApplicants = cObj.data;
+            updateStatCards(cObj.stats || {});
+            renderApplicantList();
+            isSilent = true; // Sudah ada tampilan, latar belakang diam-diam sinkron
+          }
+        }
+      } catch (_) {}
+    }
+
+    if (!isSilent && (!allApplicants || allApplicants.length === 0)) {
       container.innerHTML = '<div class="spinner-bar"><div class="spin"></div> Memperbarui data pendaftar dari Spreadsheet...</div>';
     }
 
@@ -2471,8 +2487,16 @@
         allApplicants = res.data || [];
         updateStatCards(res.stats || {});
         renderApplicantList();
+
+        try {
+          sessionStorage.setItem('nzh_adm_applicants_cache', JSON.stringify({ data: allApplicants, stats: res.stats || {} }));
+        } catch (_) {}
+
+        if (res.settings) {
+          terapkanAdminPengaturan(res.settings);
+        }
       } else {
-        if (!isSilent) {
+        if (!isSilent && (!allApplicants || allApplicants.length === 0)) {
           var errDetail = (res && res.message) ? res.message : 'Gagal memuat data.';
           if (errDetail.indexOf('field wajib') !== -1) {
             errDetail = 'Google Apps Script masih versi lama. Silakan salin isi file <code>Code.gs</code> lalu Deploy versi baru di <b>script.google.com</b>.';
@@ -2481,8 +2505,8 @@
         }
       }
     }, function (err) {
-      if (!isSilent) {
-        container.innerHTML = '<div class="empty-state" style="color:#ef4444;line-height:1.6;">⚠️ Gagal terhubung ke Google Apps Script: ' + (err || 'timeout') + '<br><small style="color:var(--text-muted)">Pastikan script sudah di-deploy sebagai Web App dengan akses "Anyone".</small></div>';
+      if (!isSilent && (!allApplicants || allApplicants.length === 0)) {
+        container.innerHTML = '<div class="empty-state" style="color:#ef4444;line-height:1.6;">⚠️ Gagal terhubung ke Google Apps Script: ' + (err || 'timeout') + '<br><small style="color:var(--text-muted)">Periksa koneksi internet atau ketuk tombol Refresh Data.</small></div>';
       }
     });
   }
@@ -2684,35 +2708,32 @@
     }
   }
 
+  function terapkanAdminPengaturan(res) {
+    if (!res) return;
+    var isOpen = (res.isOpen !== false);
+    var toggle = document.getElementById('setIsOpen');
+    if (toggle) toggle.checked = isOpen;
+    updateToggleUI(isOpen);
+
+    var shopInput = document.getElementById('setShopeeUrl');
+    if (shopInput) shopInput.value = res.shopeeUrl || 'https://shopee.co.id/nezhamainan';
+
+    var annInput = document.getElementById('setAnnouncement');
+    if (annInput) annInput.value = res.announcement || '';
+
+    if (Array.isArray(res.chips) && res.chips.length > 0) {
+      currentChips = res.chips;
+    } else if (!currentChips || currentChips.length === 0) {
+      currentChips = ['Mobil Remot RC', 'Robot Action Figure', 'Puzzle Edukasi Kayu', 'Water / Bubble Gun', 'Board Game Anak'];
+    }
+    renderChipsManager();
+  }
+
   function muatPengaturan() {
     callApi({ action: 'adminGetSettings', pin: currentPin }, function (res) {
       if (res && res.success) {
-        var isOpen = (res.isOpen !== false);
-        document.getElementById('setIsOpen').checked     = isOpen;
-        updateToggleUI(isOpen);
-        document.getElementById('setShopeeUrl').value    = res.shopeeUrl || 'https://shopee.co.id/nezhamainan';
-        document.getElementById('setAnnouncement').value = res.announcement || '';
-        currentChips = res.chips || [];
-        renderChipsManager();
-      } else {
-        document.getElementById('setIsOpen').checked     = true;
-        updateToggleUI(true);
-        document.getElementById('setShopeeUrl').value    = 'https://shopee.co.id/nezhamainan';
-        document.getElementById('setAnnouncement').value = '';
-        if (!currentChips || currentChips.length === 0) {
-          currentChips = ['Mobil Remot RC', 'Robot Action Figure', 'Puzzle Edukasi Kayu', 'Water / Bubble Gun', 'Board Game Anak'];
-        }
-        renderChipsManager();
+        terapkanAdminPengaturan(res);
       }
-    }, function () {
-      document.getElementById('setIsOpen').checked     = true;
-      updateToggleUI(true);
-      document.getElementById('setShopeeUrl').value    = 'https://shopee.co.id/nezhamainan';
-      document.getElementById('setAnnouncement').value = '';
-      if (!currentChips || currentChips.length === 0) {
-        currentChips = ['Mobil Remot RC', 'Robot Action Figure', 'Puzzle Edukasi Kayu', 'Water / Bubble Gun', 'Board Game Anak'];
-      }
-      renderChipsManager();
     });
   }
 
