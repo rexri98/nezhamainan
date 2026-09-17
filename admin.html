@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>NEZHAMAINAN Admin | Manajemen Prioritas Sample Shopee Super Summit 2026</title>
+  <link rel="icon" href="/logo.jpg">
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* ─── RESET & VARS ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --red:        #ef2b1c;
+      --red-dark:   #b01e12;
+      --gold:       #f59e0b;
+      --shopee:     #ee4d2d;
+      --shopee-dark:#d73211;
+      --green:      #10b981;
+      --green-dark: #059669;
+      --bg:         #0d0403;
+      --card-bg:    #180806;
+      --border:     rgba(255,255,255,.1);
+      --text:       #f3f4f6;
+      --text-muted: #9ca3af;
+      --font:       'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── LOGIN SCREEN ─── */
+    #loginScreen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: radial-gradient(circle at top center, #2e0804 0%, #0d0403 70%);
+    }
+    .login-card {
+      background: rgba(26, 8, 6, .92);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 400px;
+      padding: 34px 28px;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,.7), 0 0 40px rgba(239,43,28,.15);
+      backdrop-filter: blur(14px);
+    }
+    .login-logo {
+      width: 140px;
+      height: auto;
+      margin-bottom: 14px;
+      filter: drop-shadow(0 0 14px rgba(239,43,28,.5));
+    }
+    .login-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: rgba(245,158,11,.14);
+      border: 1px solid rgba(245,158,11,.3);
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
+    .login-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .login-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    .pin-input {
+      width: 100%;
+      height: 52px;
+      background: rgba(255,255,255,.07);
+      border: 1.5px solid rgba(255,255,255,.18);
+      border-radius: 14px;
+      font-family: inherit;
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: 6px;
+      color: #fff;
+      text-align: center;
+      margin-bottom: 14px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .pin-input:focus {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(239,43,28,.25);
+    }
+    .btn-login {
+      width: 100%;
+      height: 48px;
+      background: linear-gradient(135deg, var(--red), var(--red-dark));
+      border: none;
+      border-radius: 14px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(239,43,28,.4);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-login:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(239,43,28,.55);
+    }
+    .login-msg {
+      margin-top: 14px;
+      font-size: 12px;
+      padding: 10px;
+      border-radius: 10px;
+      display: none;
+    }
+    .login-msg.err {
+      display: block;
+      background: rgba(239,68,68,.15);
+      border: 1px solid rgba(239,68,68,.3);
+      color: #fca5a5;
+    }
+
+    /* ─── DASHBOARD SHELL ─── */
+    #dashboardScreen {
+      display: none;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header / Navbar */
+    .admin-nav {
+      background: rgba(24,8,6,.95);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .nav-logo {
+      height: 28px;
+      width: auto;
+    }
+    .nav-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-pill {
+      font-size: 10px;
+      font-weight: 800;
+      background: rgba(245,158,11,.2);
+      color: var(--gold);
+      border: 1px solid rgba(245,158,11,.35);
+      padding: 2px 7px;
+      border-radius: 999px;
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-nav {
+      appearance: none;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+      color: #fff;
+      padding: 7px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background .2s;
+    }
+    .btn-nav:hover {
+      background: rgba(255,255,255,.15);
+    }
+    .btn-logout {
+      background: rgba(239,68,68,.15);
+      border-color: rgba(239,68,68,.3);
+      color: #fca5a5;
+    }
+    .btn-logout:hover {
+      background: rgba(239,68,68,.3);
+    }
+
+    /* Tab bar */
+    .tabs-bar {
+      display: flex;
+      gap: 8px;
+      padding: 12px 20px 0;
+      background: #110504;
+      border-bottom: 1px solid var(--border);
+    }
+    .tab-btn {
+      appearance: none;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      transition: all .2s;
+    }
+    .tab-btn:hover {
+      color: #fff;
+    }
+    .tab-btn.active {
+      color: #fff;
+      border-bottom-color: var(--red);
+    }
+
+    /* Container */
+    .admin-content {
+      flex: 1;
+      padding: 20px;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* ─── METRIC STAT CARDS ─── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      cursor: pointer;
+      transition: transform .2s, border-color .2s;
+    }
+    .stat-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,.25);
+    }
+    .stat-card.active {
+      border-color: var(--gold);
+      box-shadow: 0 0 16px rgba(245,158,11,.2);
+    }
+    .stat-lbl {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .stat-val {
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1;
+      color: #fff;
+    }
+    .stat-val.c-pending  { color: var(--gold); }
+    .stat-val.c-approved { color: var(--green); }
+    .stat-val.c-rejected { color: #f87171; }
+
+    /* ─── SEARCH & FILTER BAR ─── */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 12px 16px;
+      border-radius: 16px;
+    }
+    .search-box {
+      flex: 1;
+      min-width: 240px;
+      position: relative;
+    }
+    .search-box svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      stroke: var(--text-muted);
+    }
+    .search-input {
+      width: 100%;
+      height: 40px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 10px;
+      padding: 0 12px 0 36px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 13px;
+      outline: none;
+    }
+    .search-input:focus {
+      border-color: var(--red);
+    }
+    .filter-pills {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .fpill {
+      appearance: none;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .fpill:hover {
+      color: #fff;
+      background: rgba(255,255,255,.12);
+    }
+    .fpill.active {
+      background: var(--red);
+      border-color: var(--red);
+      color: #fff;
+    }
+
+    /* ─── APPLICANT CARDS ─── */
+    .app-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .app-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px 18px;
+      display: grid;
+      grid-template-columns: 1.2fr 2fr 1.6fr;
+      gap: 16px;
+      align-items: center;
+      transition: border-color .2s;
+    }
+    .app-card:hover {
+      border-color: rgba(255,255,255,.2);
+    }
+
+    /* Card col 1: Info kode & status */
+    .app-head {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .app-code {
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: #fff;
+    }
+    .app-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      width: fit-content;
+      text-transform: uppercase;
+    }
+    .app-status-badge.pending {
+      background: rgba(245,158,11,.18);
+      color: var(--gold);
+      border: 1px solid rgba(245,158,11,.35);
+    }
+    .app-status-badge.approved {
+      background: rgba(16,185,129,.18);
+      color: var(--green);
+      border: 1px solid rgba(16,185,129,.35);
+    }
+    .app-status-badge.rejected {
+      background: rgba(239,68,68,.18);
+      color: #f87171;
+      border: 1px solid rgba(239,68,68,.35);
+    }
+    .app-time {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Card col 2: Kreator details */
+    .app-details {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .app-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+    }
+    .app-sub-info {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .app-sub-info span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .app-prod {
+      font-size: 12px;
+      color: #fcd34d;
+      margin-top: 2px;
+      font-weight: 600;
+    }
+
+    /* Card col 3: Actions */
+    .app-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-end;
+    }
+    .btn-row {
+      display: flex;
+      gap: 6px;
+      width: 100%;
+      justify-content: flex-end;
+    }
+    .btn-action {
+      appearance: none;
+      border: none;
+      border-radius: 9px;
+      padding: 7px 12px;
+      font-family: inherit;
+      font-size: 11.5px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all .2s;
+    }
+    .btn-acc {
+      background: linear-gradient(135deg, var(--green), var(--green-dark));
+      color: #fff;
+    }
+    .btn-acc:hover {
+      background: var(--green-dark);
+      transform: translateY(-1px);
+    }
+    .btn-reject {
+      background: rgba(239,68,68,.18);
+      border: 1px solid rgba(239,68,68,.3);
+      color: #fca5a5;
+    }
+    .btn-reject:hover {
+      background: rgba(239,68,68,.3);
+    }
+    .btn-pending {
+      background: rgba(245,158,11,.15);
+      border: 1px solid rgba(245,158,11,.3);
+      color: var(--gold);
+    }
+    .btn-pending:hover {
+      background: rgba(245,158,11,.25);
+    }
+    .btn-wa {
+      background: #25d366;
+      color: #0d2e14;
+      text-decoration: none;
+      padding: 7px 12px;
+      border-radius: 9px;
+      font-size: 11.5px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: transform .2s;
+    }
+    .btn-wa:hover {
+      transform: translateY(-1px);
+      background: #22bf5b;
+    }
+
+    /* ─── SETTINGS TAB ─── */
+    .settings-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px 28px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .set-group {
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .set-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .set-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+    .set-input {
+      width: 100%;
+      height: 44px;
+      background: rgba(255,255,255,.06);
+      border: 1.5px solid rgba(255,255,255,.14);
+      border-radius: 12px;
+      padding: 0 14px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 13.5px;
+      outline: none;
+    }
+    .set-input:focus {
+      border-color: var(--red);
+    }
+
+    /* Toggle switch */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 28px;
+      flex-shrink: 0;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: #374151;
+      transition: .3s;
+      border-radius: 28px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: var(--green);
+    }
+    input:checked + .slider:before {
+      transform: translateX(22px);
+    }
+
+    /* Chips manager */
+    .chip-manage-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .chip-tag {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .chip-tag .chip-del {
+      cursor: pointer;
+      color: #f87171;
+      font-size: 14px;
+      line-height: 1;
+      border-radius: 50%;
+      padding: 2px;
+    }
+    .chip-tag .chip-del:hover {
+      background: rgba(239,68,68,.2);
+    }
+    .add-chip-row {
+      display: flex;
+      gap: 8px;
+    }
+    .btn-add-chip {
+      appearance: none;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      color: #fff;
+      padding: 0 16px;
+      height: 44px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 12.5px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-add-chip:hover {
+      background: rgba(255,255,255,.2);
+    }
+
+    .btn-save-settings {
+      width: 100%;
+      height: 48px;
+      background: linear-gradient(135deg, var(--red), var(--red-dark));
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(239,43,28,.35);
+      transition: transform .2s;
+    }
+    .btn-save-settings:hover {
+      transform: translateY(-1px);
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #111827;
+      border: 1px solid rgba(255,255,255,.2);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(0,0,0,.5);
+      z-index: 99999;
+      display: none;
+    }
+    .toast.show {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: fadeIn .25s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Empty state & Spinner */
+    .empty-state {
+      text-align: center;
+      padding: 50px 20px;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+    .spinner-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 40px;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+    .spin {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,.2);
+      border-top-color: var(--red);
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ─── RESPONSIVE (MOBILE) ─── */
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .app-card {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .app-actions {
+        align-items: flex-start;
+      }
+      .btn-row {
+        justify-content: flex-start;
+      }
+      .admin-nav {
+        padding: 10px 14px;
+      }
+      .admin-content {
+        padding: 14px 10px;
+      }
+      .filter-bar {
+        padding: 10px 12px;
+      }
+      .settings-panel {
+        padding: 18px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     1. LOGIN SCREEN
+══════════════════════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <img src="logo-transparent.png" alt="NEZHAMAINAN" class="login-logo">
+    <div><span class="login-badge">✦ Shopee Super Summit 2026</span></div>
+    <h1 class="login-title">Portal Kru & Admin</h1>
+    <p class="login-sub">Masukkan PIN keamanan admin untuk mengelola pengajuan sample affiliate.</p>
+
+    <input type="password" id="pinInput" class="pin-input" placeholder="••••" maxlength="8" autocomplete="current-password" inputmode="numeric">
+    <button type="button" id="btnLogin" class="btn-login">Masuk ke Dashboard</button>
+    <div id="loginMsg" class="login-msg"></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     2. DASHBOARD SCREEN
+══════════════════════════════════════════ -->
+<div id="dashboardScreen">
+
+  <!-- Navbar -->
+  <header class="admin-nav">
+    <div class="nav-left">
+      <img src="logo-transparent.png" alt="NEZHAMAINAN" class="nav-logo">
+      <div class="nav-title">
+        <span>Admin Panel</span>
+        <span class="nav-pill" id="liveBadge">LIVE EVENT</span>
+      </div>
+    </div>
+    <div class="nav-right">
+      <button type="button" class="btn-nav" id="btnRefreshData">
+        <span>🔄</span> <span class="d-pc">Muat Ulang</span>
+      </button>
+      <button type="button" class="btn-nav btn-logout" id="btnLogout">
+        <span>🚪</span> <span class="d-pc">Keluar</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Tabs Bar -->
+  <div class="tabs-bar">
+    <button type="button" class="tab-btn active" id="tabBtnApplicants">
+      📋 Data Pengajuan (<span id="tabCount">0</span>)
+    </button>
+    <button type="button" class="tab-btn" id="tabBtnSettings">
+      ⚙️ Pengaturan Web & Event
+    </button>
+  </div>
+
+  <main class="admin-content">
+
+    <!-- ── TAB 1: APPLICANTS ── -->
+    <section id="paneApplicants">
+
+      <!-- Metrics -->
+      <div class="stats-grid">
+        <div class="stat-card active" data-filter="all">
+          <div class="stat-lbl">Total Pendaftar <span>📊</span></div>
+          <div class="stat-val" id="statTotal">0</div>
+        </div>
+        <div class="stat-card" data-filter="pending">
+          <div class="stat-lbl">Menunggu ACC <span>⏳</span></div>
+          <div class="stat-val c-pending" id="statPending">0</div>
+        </div>
+        <div class="stat-card" data-filter="approved">
+          <div class="stat-lbl">Sudah Di-ACC <span>✓</span></div>
+          <div class="stat-val c-approved" id="statApproved">0</div>
+        </div>
+        <div class="stat-card" data-filter="rejected">
+          <div class="stat-lbl">Ditolak <span>✕</span></div>
+          <div class="stat-val c-rejected" id="statRejected">0</div>
+        </div>
+      </div>
+
+      <!-- Filters & Search -->
+      <div class="filter-bar">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+          </svg>
+          <input type="text" id="searchInput" class="search-input" placeholder="Cari nama, username @..., nomor WA, atau kode NZH-xxxx...">
+        </div>
+        <div class="filter-pills" id="filterPills">
+          <button type="button" class="fpill active" data-f="all">Semua</button>
+          <button type="button" class="fpill" data-f="pending">Menunggu ACC</button>
+          <button type="button" class="fpill" data-f="approved">Sudah Di-ACC</button>
+          <button type="button" class="fpill" data-f="rejected">Ditolak</button>
+        </div>
+      </div>
+
+      <!-- Applicant List -->
+      <div id="appList" class="app-list">
+        <div class="spinner-bar"><div class="spin"></div> Memuat data pendaftar dari Google Spreadsheet...</div>
+      </div>
+
+    </section>
+
+
+    <!-- ── TAB 2: SETTINGS ── -->
+    <section id="paneSettings" style="display:none;">
+      <div class="settings-panel">
+
+        <!-- 1. Status Pendaftaran -->
+        <div class="set-group">
+          <div class="toggle-row">
+            <div>
+              <div class="set-title">🟢 Status Pendaftaran di Booth</div>
+              <div class="set-desc">Jika dimatikan, formulir pendaftaran di web pengunjung akan ditutup sementara.</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="setIsOpen" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 2. Link Toko Shopee -->
+        <div class="set-group">
+          <div class="set-title">🛍️ Link Toko Shopee NEZHAMAINAN</div>
+          <div class="set-desc">Tautan yang dibuka pengunjung saat menekan tombol "Buka Toko di Shopee".</div>
+          <input type="url" id="setShopeeUrl" class="set-input" placeholder="https://shopee.co.id/nezhamainan">
+        </div>
+
+        <!-- 3. Chips Produk Rekomendasi -->
+        <div class="set-group">
+          <div class="set-title">⚡ Pilihan Cepat Produk Mainan (Chips)</div>
+          <div class="set-desc">Tombol rekomendasi produk yang tampil di formulir pengunjung.</div>
+          
+          <div class="chip-manage-list" id="chipsManageList"></div>
+
+          <div class="add-chip-row">
+            <input type="text" id="newChipInput" class="set-input" placeholder="Contoh: 🏎️ Mobil Balap RC">
+            <button type="button" class="btn-add-chip" id="btnAddChip">+ Tambah</button>
+          </div>
+        </div>
+
+        <!-- 4. Pengumuman / Catatan Booth -->
+        <div class="set-group">
+          <div class="set-title">📢 Pengumuman / Catatan Tambahan (Opsional)</div>
+          <div class="set-desc">Catatan khusus untuk kru atau pengunjung booth jika diperlukan.</div>
+          <input type="text" id="setAnnouncement" class="set-input" placeholder="Contoh: Booth NEZHAMAINAN Hall A No. 12">
+        </div>
+
+        <!-- 5. Ganti PIN Admin -->
+        <div class="set-group">
+          <div class="set-title">🔒 Ganti PIN Keamanan Admin</div>
+          <div class="set-desc">Masukkan PIN baru jika ingin mengganti kode akses masuk (minimal 4 karakter).</div>
+          <input type="password" id="setNewPin" class="set-input" placeholder="Kosongkan jika tidak ingin mengubah PIN">
+        </div>
+
+        <button type="button" class="btn-save-settings" id="btnSaveSettings">
+          💾 Simpan Semua Pengaturan
+        </button>
+
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Toast Alert -->
+<div id="toast" class="toast"></div>
+
+
+<script>
+  /* ============================================================
+     KONFIGURASI & VARIABEL STATE
+  ============================================================ */
+  var SCRIPT_URL    = 'https://script.google.com/macros/s/AKfycbwW5H1x-19m0c6JkMEh4fBl_XLWfOuh2HV05uhBJ4tww7sY29pNfLEXAeKusvEIgap3/exec';
+  var STORAGE_ADMIN = 'nzh_admin_pin_session';
+  
+  var currentPin       = '';
+  var allApplicants    = [];
+  var currentFilter    = 'all';
+  var currentSearch    = '';
+  var currentChips     = [];
+
+  /* ============================================================
+     HYBRID API CALLER
+  ============================================================ */
+  function callApi(data, onOk, onErr) {
+    var isDone = false;
+    function finishOk(res) { if (!isDone) { isDone = true; if (onOk) onOk(res); } }
+    function finishErr(msg) { if (!isDone) { isDone = true; if (onErr) onErr(msg); } }
+
+    var params = {};
+    for (var k in data) {
+      if (data.hasOwnProperty(k)) params[k] = data[k] || '';
+    }
+    var qStr = new URLSearchParams(params).toString();
+    var fetchUrl = SCRIPT_URL + '?' + qStr;
+
+    var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    var timer = setTimeout(function () { if (controller) controller.abort(); }, 14000);
+
+    fetch(fetchUrl, {
+      method: 'GET',
+      mode: 'cors',
+      credentials: 'omit',
+      cache: 'no-store',
+      signal: controller ? controller.signal : undefined
+    })
+    .then(function (res) {
+      clearTimeout(timer);
+      return res.json();
+    })
+    .then(function (json) { finishOk(json); })
+    .catch(function () {
+      clearTimeout(timer);
+      callJsonp(data, finishOk, finishErr);
+    });
+  }
+
+  function callJsonp(data, onOk, onErr) {
+    var cb = '_admin_' + Date.now() + '_' + Math.floor(Math.random() * 99999);
+    var t = setTimeout(function () {
+      clean();
+      if (onErr) onErr('Koneksi timeout.');
+    }, 16000);
+
+    function clean() {
+      clearTimeout(t);
+      delete window[cb];
+      var el = document.getElementById(cb);
+      if (el) el.remove();
+    }
+
+    window[cb] = function (res) { clean(); onOk(res); };
+    var params = { callback: cb };
+    for (var k in data) {
+      if (data.hasOwnProperty(k)) params[k] = data[k] || '';
+    }
+    var s = document.createElement('script');
+    s.id = cb;
+    s.onerror = function () { clean(); if (onErr) onErr('Gagal memuat skrip server.'); };
+    s.src = SCRIPT_URL + '?' + new URLSearchParams(params).toString();
+    document.head.appendChild(s);
+  }
+
+  /* ============================================================
+     AUTORISASI & SESI
+  ============================================================ */
+  document.addEventListener('DOMContentLoaded', function () {
+    var savedPin = localStorage.getItem(STORAGE_ADMIN);
+    if (savedPin) {
+      currentPin = savedPin;
+      verifikasiDanMasuk(savedPin, false);
+    }
+
+    document.getElementById('btnLogin').addEventListener('click', function () {
+      var pin = document.getElementById('pinInput').value.trim();
+      verifikasiDanMasuk(pin, true);
+    });
+
+    document.getElementById('pinInput').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        var pin = this.value.trim();
+        verifikasiDanMasuk(pin, true);
+      }
+    });
+
+    document.getElementById('btnLogout').addEventListener('click', function () {
+      localStorage.removeItem(STORAGE_ADMIN);
+      currentPin = '';
+      document.getElementById('dashboardScreen').style.display = 'none';
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('pinInput').value = '';
+    });
+  });
+
+  function verifikasiDanMasuk(pin, isManual) {
+    var btn = document.getElementById('btnLogin');
+    var msg = document.getElementById('loginMsg');
+
+    if (!pin) {
+      msg.className = 'login-msg err';
+      msg.textContent = 'Harap masukkan PIN Admin.';
+      return;
+    }
+
+    if (isManual) {
+      btn.disabled = true;
+      btn.textContent = 'Memverifikasi...';
+      msg.style.display = 'none';
+    }
+
+    callApi({ action: 'adminLogin', pin: pin }, function (res) {
+      if (btn) { btn.disabled = false; btn.textContent = 'Masuk ke Dashboard'; }
+
+      if (res && res.success) {
+        currentPin = pin;
+        try { localStorage.setItem(STORAGE_ADMIN, pin); } catch (_) {}
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('dashboardScreen').style.display = 'flex';
+        muatDataPendaftar();
+        muatPengaturan();
+      } else {
+        localStorage.removeItem(STORAGE_ADMIN);
+        if (msg) {
+          msg.className = 'login-msg err';
+          msg.textContent = (res && res.message) ? res.message : 'PIN Admin salah.';
+        }
+      }
+    }, function (err) {
+      if (btn) { btn.disabled = false; btn.textContent = 'Masuk ke Dashboard'; }
+      if (msg) {
+        msg.className = 'login-msg err';
+        msg.textContent = err || 'Gagal terhubung ke server.';
+      }
+    });
+  }
+
+  /* ============================================================
+     TAB SWITCHING
+  ============================================================ */
+  var tabBtnApp = document.getElementById('tabBtnApplicants');
+  var tabBtnSet = document.getElementById('tabBtnSettings');
+  var paneApp   = document.getElementById('paneApplicants');
+  var paneSet   = document.getElementById('paneSettings');
+
+  tabBtnApp.addEventListener('click', function () {
+    tabBtnApp.classList.add('active');
+    tabBtnSet.classList.remove('active');
+    paneApp.style.display = 'block';
+    paneSet.style.display = 'none';
+  });
+
+  tabBtnSet.addEventListener('click', function () {
+    tabBtnSet.classList.add('active');
+    tabBtnApp.classList.remove('active');
+    paneSet.style.display = 'block';
+    paneApp.style.display = 'none';
+  });
+
+  /* ============================================================
+     TAB 1: MANAJEMEN PENDAFTAR & APPROVAL
+  ============================================================ */
+  document.getElementById('btnRefreshData').addEventListener('click', function () {
+    muatDataPendaftar();
+    showToast('Memperbarui data dari Spreadsheet...');
+  });
+
+  function muatDataPendaftar() {
+    var container = document.getElementById('appList');
+    container.innerHTML = '<div class="spinner-bar"><div class="spin"></div> Memperbarui data pendaftar...</div>';
+
+    callApi({ action: 'adminGetData', pin: currentPin }, function (res) {
+      if (res && res.success) {
+        allApplicants = res.data || [];
+        updateStatCards(res.stats || {});
+        renderApplicantList();
+      } else {
+        container.innerHTML = '<div class="empty-state">⚠ ' + ((res && res.message) || 'Gagal memuat data') + '</div>';
+      }
+    }, function (err) {
+      container.innerHTML = '<div class="empty-state">⚠ Gagal terhubung: ' + err + '</div>';
+    });
+  }
+
+  function updateStatCards(stats) {
+    document.getElementById('statTotal').textContent    = stats.total    || allApplicants.length;
+    document.getElementById('statPending').textContent  = stats.pending  || 0;
+    document.getElementById('statApproved').textContent = stats.approved || 0;
+    document.getElementById('statRejected').textContent = stats.rejected || 0;
+    document.getElementById('tabCount').textContent     = stats.total    || allApplicants.length;
+  }
+
+  // Filter Buttons & Search
+  document.querySelectorAll('.stat-card').forEach(function (card) {
+    card.addEventListener('click', function () {
+      var f = this.getAttribute('data-filter');
+      setFilter(f);
+    });
+  });
+
+  document.querySelectorAll('.fpill').forEach(function (pill) {
+    pill.addEventListener('click', function () {
+      var f = this.getAttribute('data-f');
+      setFilter(f);
+    });
+  });
+
+  function setFilter(f) {
+    currentFilter = f;
+    document.querySelectorAll('.stat-card').forEach(function (c) {
+      c.classList.toggle('active', c.getAttribute('data-filter') === f);
+    });
+    document.querySelectorAll('.fpill').forEach(function (p) {
+      p.classList.toggle('active', p.getAttribute('data-f') === f);
+    });
+    renderApplicantList();
+  }
+
+  document.getElementById('searchInput').addEventListener('input', function () {
+    currentSearch = this.value.trim().toLowerCase();
+    renderApplicantList();
+  });
+
+  function renderApplicantList() {
+    var container = document.getElementById('appList');
+
+    var filtered = allApplicants.filter(function (item) {
+      // Filter status
+      if (currentFilter === 'pending'  && item.statusCat !== 'pending')  return false;
+      if (currentFilter === 'approved' && item.statusCat !== 'approved') return false;
+      if (currentFilter === 'rejected' && item.statusCat !== 'rejected') return false;
+
+      // Filter search
+      if (currentSearch) {
+        var match = (item.nama || '').toLowerCase().indexOf(currentSearch) !== -1 ||
+                    (item.username || '').toLowerCase().indexOf(currentSearch) !== -1 ||
+                    (item.phone || '').indexOf(currentSearch) !== -1 ||
+                    (item.kodeKlaim || '').toLowerCase().indexOf(currentSearch) !== -1 ||
+                    (item.produk || '').toLowerCase().indexOf(currentSearch) !== -1;
+        if (!match) return false;
+      }
+      return true;
+    });
+
+    if (filtered.length === 0) {
+      container.innerHTML = '<div class="empty-state">Tidak ada data pengajuan yang cocok dengan filter.</div>';
+      return;
+    }
+
+    var html = '';
+    filtered.forEach(function (d) {
+      var statusClass = d.statusCat;
+      var statusLabel = d.status;
+      if (statusClass === 'approved') statusLabel = '✓ DI-ACC';
+      else if (statusClass === 'rejected') statusLabel = '✕ DITOLAK';
+      else statusLabel = '⏳ MENUNGGU';
+
+      var cleanPhone = String(d.phone || '').replace(/\D/g, '');
+      if (cleanPhone.charAt(0) === '0') cleanPhone = '62' + cleanPhone.substring(1);
+      else if (cleanPhone.charAt(0) === '8') cleanPhone = '62' + cleanPhone;
+
+      var waText = encodeURIComponent(
+        'Halo Kak ' + (d.nama || '') + '!\n' +
+        'Kami dari booth NEZHAMAINAN di Shopee Super Summit 2026.\n\n' +
+        'Mengenai pengajuan Prioritas Sample gratis kamu (Kode: ' + d.kodeKlaim + '):\n' +
+        (d.statusCat === 'approved'
+          ? '🎉 Pengajuan kamu sudah kami ACC di sistem Shopee! Silakan periksa notifikasi aplikasi Shopee kamu ya.'
+          : '📌 Pastikan kamu sudah klik "Minta Sample Gratis" di aplikasi Shopee pada produk toko NEZHAMAINAN ya.')
+      );
+      var waUrl = 'https://wa.me/' + cleanPhone + '?text=' + waText;
+
+      html += [
+        '<div class="app-card" id="card_' + d.kodeKlaim + '">',
+          '<div class="app-head">',
+            '<div class="app-code">' + esc(d.kodeKlaim) + '</div>',
+            '<div class="app-status-badge ' + statusClass + '">' + statusLabel + '</div>',
+            '<div class="app-time">⏰ ' + esc(d.waktu) + '</div>',
+          '</div>',
+
+          '<div class="app-details">',
+            '<div class="app-name">👤 ' + esc(d.nama) + '</div>',
+            '<div class="app-sub-info">',
+              '<span>🛒 <b>@' + esc(d.username.replace(/^@+/,'')) + '</b></span>',
+              '<span>📱 ' + esc(d.phone) + '</span>',
+            '</div>',
+            '<div class="app-prod">📦 Sample: ' + esc(d.produk || '-') + '</div>',
+          '</div>',
+
+          '<div class="app-actions">',
+            '<div class="btn-row">',
+              '<a href="' + waUrl + '" target="_blank" rel="noopener noreferrer" class="btn-wa">💬 WA</a>',
+              (d.statusCat !== 'approved'
+                ? '<button type="button" class="btn-action btn-acc" onclick="ubahStatusKlaim(\'' + d.kodeKlaim + '\', \'SUDAH DI-ACC\')">✓ ACC</button>'
+                : ''),
+              (d.statusCat !== 'rejected'
+                ? '<button type="button" class="btn-action btn-reject" onclick="ubahStatusKlaim(\'' + d.kodeKlaim + '\', \'DITOLAK\')">✕ Tolak</button>'
+                : ''),
+              (d.statusCat !== 'pending'
+                ? '<button type="button" class="btn-action btn-pending" onclick="ubahStatusKlaim(\'' + d.kodeKlaim + '\', \'MENUNGGU ACC\')">⏳ Reset</button>'
+                : ''),
+            '</div>',
+          '</div>',
+        '</div>'
+      ].join('');
+    });
+
+    container.innerHTML = html;
+  }
+
+  // Ubah status 1-klik
+  window.ubahStatusKlaim = function (kodeKlaim, statusBaru) {
+    var card = document.getElementById('card_' + kodeKlaim);
+    if (card) card.style.opacity = '.5';
+    showToast('Mengubah status ' + kodeKlaim + ' menjadi ' + statusBaru + '...');
+
+    callApi({
+      action:     'adminUpdateStatus',
+      pin:        currentPin,
+      kodeKlaim:  kodeKlaim,
+      statusBaru: statusBaru
+    }, function (res) {
+      if (card) card.style.opacity = '1';
+      if (res && res.success) {
+        showToast('✓ ' + res.message);
+        // Update di lokal langsung
+        for (var i = 0; i < allApplicants.length; i++) {
+          if (allApplicants[i].kodeKlaim === kodeKlaim) {
+            allApplicants[i].status = statusBaru;
+            var cat = 'pending';
+            if (statusBaru === 'SUDAH DI-ACC') cat = 'approved';
+            else if (statusBaru === 'DITOLAK') cat = 'rejected';
+            allApplicants[i].statusCat = cat;
+            break;
+          }
+        }
+        recalcStats();
+        renderApplicantList();
+      } else {
+        alert((res && res.message) || 'Gagal mengubah status.');
+      }
+    }, function (err) {
+      if (card) card.style.opacity = '1';
+      alert('Gagal update status: ' + err);
+    });
+  };
+
+  function recalcStats() {
+    var stats = { total: allApplicants.length, pending: 0, approved: 0, rejected: 0 };
+    allApplicants.forEach(function (item) {
+      if (item.statusCat === 'approved') stats.approved++;
+      else if (item.statusCat === 'rejected') stats.rejected++;
+      else stats.pending++;
+    });
+    updateStatCards(stats);
+  }
+
+  /* ============================================================
+     TAB 2: PENGATURAN WEB & EVENT
+  ============================================================ */
+  function muatPengaturan() {
+    callApi({ action: 'adminGetSettings', pin: currentPin }, function (res) {
+      if (res && res.success) {
+        document.getElementById('setIsOpen').checked        = (res.isOpen !== false);
+        document.getElementById('setShopeeUrl').value       = res.shopeeUrl || 'https://shopee.co.id/nezhamainan';
+        document.getElementById('setAnnouncement').value    = res.announcement || '';
+        currentChips = res.chips || [];
+        renderChipsManager();
+      }
+    });
+  }
+
+  function renderChipsManager() {
+    var listEl = document.getElementById('chipsManageList');
+    if (!currentChips || currentChips.length === 0) {
+      listEl.innerHTML = '<span style="font-size:12px;color:var(--text-muted)">Belum ada chips produk rekomendasi.</span>';
+      return;
+    }
+    var html = '';
+    currentChips.forEach(function (chip, idx) {
+      html += '<span class="chip-tag">' + esc(chip) + ' <span class="chip-del" onclick="hapusChip(' + idx + ')">&times;</span></span>';
+    });
+    listEl.innerHTML = html;
+  }
+
+  window.hapusChip = function (idx) {
+    currentChips.splice(idx, 1);
+    renderChipsManager();
+  };
+
+  document.getElementById('btnAddChip').addEventListener('click', function () {
+    var input = document.getElementById('newChipInput');
+    var val = input.value.trim();
+    if (!val) return;
+    currentChips.push(val);
+    input.value = '';
+    renderChipsManager();
+  });
+
+  document.getElementById('newChipInput').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      document.getElementById('btnAddChip').click();
+    }
+  });
+
+  document.getElementById('btnSaveSettings').addEventListener('click', function () {
+    var btn = this;
+    var isOpen       = document.getElementById('setIsOpen').checked;
+    var shopeeUrl    = document.getElementById('setShopeeUrl').value.trim();
+    var announcement = document.getElementById('setAnnouncement').value.trim();
+    var newPin       = document.getElementById('setNewPin').value.trim();
+
+    btn.disabled = true;
+    btn.textContent = 'Menyimpan...';
+
+    var payload = {
+      action:       'adminSaveSettings',
+      pin:          currentPin,
+      isOpen:       isOpen,
+      shopeeUrl:    shopeeUrl,
+      announcement: announcement,
+      chips:        JSON.stringify(currentChips)
+    };
+    if (newPin) payload.newPin = newPin;
+
+    callApi(payload, function (res) {
+      btn.disabled = false;
+      btn.textContent = '💾 Simpan Semua Pengaturan';
+      if (res && res.success) {
+        showToast('✓ Pengaturan berhasil disimpan!');
+        if (newPin) {
+          currentPin = newPin;
+          try { localStorage.setItem(STORAGE_ADMIN, newPin); } catch (_) {}
+          document.getElementById('setNewPin').value = '';
+          alert('PIN Admin telah diperbarui menjadi: ' + newPin);
+        }
+      } else {
+        alert((res && res.message) || 'Gagal menyimpan pengaturan.');
+      }
+    }, function (err) {
+      btn.disabled = false;
+      btn.textContent = '💾 Simpan Semua Pengaturan';
+      alert('Gagal simpan: ' + err);
+    });
+  });
+
+  /* ============================================================
+     HELPERS
+  ============================================================ */
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show';
+    setTimeout(function () { t.className = 'toast'; }, 3200);
+  }
+
+  function esc(s) {
+    return String(s || '')
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+</script>
+
+</body>
+</html>
+
