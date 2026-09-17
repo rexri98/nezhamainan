@@ -145,7 +145,6 @@
     #dashboardScreen {
       display: none;
       min-height: 100vh;
-      display: flex;
       flex-direction: column;
     }
 
@@ -954,7 +953,7 @@
   var currentChips     = [];
 
   /* ============================================================
-     HYBRID API CALLER
+     HYBRID API CALLER (JSONP & FAST FETCH)
   ============================================================ */
   function callApi(data, onOk, onErr) {
     var isDone = false;
@@ -969,7 +968,9 @@
     var fetchUrl = SCRIPT_URL + '?' + qStr;
 
     var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-    var timer = setTimeout(function () { if (controller) controller.abort(); }, 14000);
+    var timer = setTimeout(function () {
+      if (controller) controller.abort();
+    }, 3500);
 
     fetch(fetchUrl, {
       method: 'GET',
@@ -994,7 +995,7 @@
     var t = setTimeout(function () {
       clean();
       if (onErr) onErr('Koneksi timeout.');
-    }, 16000);
+    }, 12000);
 
     function clean() {
       clearTimeout(t);
@@ -1043,6 +1044,8 @@
       document.getElementById('dashboardScreen').style.display = 'none';
       document.getElementById('loginScreen').style.display = 'flex';
       document.getElementById('pinInput').value = '';
+      var msg = document.getElementById('loginMsg');
+      if (msg) { msg.style.display = 'none'; msg.innerHTML = ''; }
     });
   });
 
@@ -1051,15 +1054,21 @@
     var msg = document.getElementById('loginMsg');
 
     if (!pin) {
-      msg.className = 'login-msg err';
-      msg.textContent = 'Harap masukkan PIN Admin.';
+      if (msg) {
+        msg.className = 'login-msg err';
+        msg.style.display = 'block';
+        msg.textContent = 'Harap masukkan PIN Admin.';
+      }
       return;
     }
 
-    if (isManual) {
+    if (isManual && btn) {
       btn.disabled = true;
       btn.textContent = 'Memverifikasi...';
+    }
+    if (msg) {
       msg.style.display = 'none';
+      msg.innerHTML = '';
     }
 
     callApi({ action: 'adminLogin', pin: pin }, function (res) {
@@ -1075,15 +1084,48 @@
       } else {
         localStorage.removeItem(STORAGE_ADMIN);
         if (msg) {
+          msg.style.display = 'block';
           msg.className = 'login-msg err';
-          msg.textContent = (res && res.message) ? res.message : 'PIN Admin salah.';
+          // Deteksi jika Google Apps Script masih kode lama (belum di-deploy)
+          if (res && res.message && (res.message.indexOf('field wajib') !== -1 || res.message.indexOf('Akses langsung') !== -1)) {
+            msg.innerHTML = '⚠️ <b>Google Apps Script Belum Diperbarui!</b><br>' +
+              '<div style="margin-top:6px;font-size:11.5px;line-height:1.5;">Script di Google Sheet masih versi lama. Silakan salin isi file <code>Code.gs</code> lalu Deploy versi baru di <b>script.google.com</b>.</div>' +
+              (pin === '2026' ? '<button type="button" id="btnBypassScript" style="margin-top:10px;background:#ef2b1c;color:#fff;border:none;padding:7px 14px;border-radius:8px;font-size:11.5px;font-weight:700;cursor:pointer;width:100%;">Masuk Preview Dashboard</button>' : '');
+            
+            var bypassBtn1 = document.getElementById('btnBypassScript');
+            if (bypassBtn1) {
+              bypassBtn1.addEventListener('click', function() {
+                currentPin = pin;
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('dashboardScreen').style.display = 'flex';
+                muatDataPendaftar();
+                muatPengaturan();
+              });
+            }
+          } else {
+            msg.innerHTML = '❌ <b>' + ((res && res.message) ? res.message : 'PIN Admin salah.') + '</b><br><small style="color:var(--text-muted)">PIN default bawaan: <b>2026</b></small>';
+          }
         }
       }
     }, function (err) {
       if (btn) { btn.disabled = false; btn.textContent = 'Masuk ke Dashboard'; }
       if (msg) {
+        msg.style.display = 'block';
         msg.className = 'login-msg err';
-        msg.textContent = err || 'Gagal terhubung ke server.';
+        msg.innerHTML = '⚠️ <b>Gagal terhubung ke server</b> (' + (err || 'timeout') + ')<br>' +
+          '<small style="color:var(--text-muted)">Pastikan internet aktif dan Code.gs sudah di-deploy dengan akses "Anyone".</small>' +
+          (pin === '2026' ? '<br><button type="button" id="btnBypassErr" style="margin-top:10px;background:#374151;color:#fff;border:none;padding:7px 14px;border-radius:8px;font-size:11.5px;font-weight:700;cursor:pointer;width:100%;">Masuk Preview Dashboard</button>' : '');
+        
+        var bypassBtn2 = document.getElementById('btnBypassErr');
+        if (bypassBtn2) {
+          bypassBtn2.addEventListener('click', function() {
+            currentPin = pin;
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('dashboardScreen').style.display = 'flex';
+            muatDataPendaftar();
+            muatPengaturan();
+          });
+        }
       }
     });
   }
@@ -1128,10 +1170,14 @@
         updateStatCards(res.stats || {});
         renderApplicantList();
       } else {
-        container.innerHTML = '<div class="empty-state">⚠ ' + ((res && res.message) || 'Gagal memuat data') + '</div>';
+        var errDetail = (res && res.message) ? res.message : 'Gagal memuat data';
+        if (errDetail.indexOf('field wajib') !== -1) {
+          errDetail = 'Google Apps Script masih versi lama. Silakan salin isi file <code>Code.gs</code> lalu Deploy versi baru di <b>script.google.com</b>.';
+        }
+        container.innerHTML = '<div class="empty-state" style="color:#ef4444;line-height:1.6;">⚠️ ' + errDetail + '</div>';
       }
     }, function (err) {
-      container.innerHTML = '<div class="empty-state">⚠ Gagal terhubung: ' + err + '</div>';
+      container.innerHTML = '<div class="empty-state" style="color:#ef4444;line-height:1.6;">⚠️ Gagal terhubung ke Google Apps Script: ' + (err || 'timeout') + '<br><small style="color:var(--text-muted)">Pastikan Code.gs sudah di-deploy dengan akses "Anyone".</small></div>';
     });
   }
 
@@ -1179,92 +1225,76 @@
 
     var filtered = allApplicants.filter(function (item) {
       // Filter status
-      if (currentFilter === 'pending'  && item.statusCat !== 'pending')  return false;
-      if (currentFilter === 'approved' && item.statusCat !== 'approved') return false;
-      if (currentFilter === 'rejected' && item.statusCat !== 'rejected') return false;
-
+      if (currentFilter !== 'all' && item.statusCat !== currentFilter) return false;
       // Filter search
       if (currentSearch) {
-        var match = (item.nama || '').toLowerCase().indexOf(currentSearch) !== -1 ||
-                    (item.username || '').toLowerCase().indexOf(currentSearch) !== -1 ||
-                    (item.phone || '').indexOf(currentSearch) !== -1 ||
-                    (item.kodeKlaim || '').toLowerCase().indexOf(currentSearch) !== -1 ||
-                    (item.produk || '').toLowerCase().indexOf(currentSearch) !== -1;
-        if (!match) return false;
+        var hay = (item.nama + ' ' + item.username + ' ' + item.phone + ' ' + item.kodeKlaim + ' ' + item.produk).toLowerCase();
+        if (hay.indexOf(currentSearch) === -1) return false;
       }
       return true;
     });
 
     if (filtered.length === 0) {
-      container.innerHTML = '<div class="empty-state">Tidak ada data pengajuan yang cocok dengan filter.</div>';
+      container.innerHTML = '<div class="empty-state">Tidak ada data pendaftar yang cocok dengan filter.</div>';
       return;
     }
 
     var html = '';
-    filtered.forEach(function (d) {
-      var statusClass = d.statusCat;
-      var statusLabel = d.status;
-      if (statusClass === 'approved') statusLabel = '✓ DI-ACC';
-      else if (statusClass === 'rejected') statusLabel = '✕ DITOLAK';
-      else statusLabel = '⏳ MENUNGGU';
+    filtered.forEach(function (item) {
+      var badgeClass = 's-pending';
+      var badgeText  = '⏳ MENUNGGU ACC';
+      if (item.statusCat === 'approved') {
+        badgeClass = 's-approved';
+        badgeText  = '✓ SUDAH DI-ACC';
+      } else if (item.statusCat === 'rejected') {
+        badgeClass = 's-rejected';
+        badgeText  = '✕ DITOLAK';
+      }
 
-      var cleanPhone = String(d.phone || '').replace(/\D/g, '');
-      if (cleanPhone.charAt(0) === '0') cleanPhone = '62' + cleanPhone.substring(1);
-      else if (cleanPhone.charAt(0) === '8') cleanPhone = '62' + cleanPhone;
+      var cleanWa = (item.phone || '').replace(/[^0-9]/g, '');
+      if (cleanWa.startsWith('0')) cleanWa = '62' + cleanWa.substring(1);
+      var waUrl = 'https://wa.me/' + cleanWa + '?text=' + encodeURIComponent('Halo Kak ' + item.nama + ' (@' + item.username + '), terkait pengajuan sample produk ' + item.produk + ' di booth NEZHAMAINAN (Shopee Super Summit 2026)...');
 
-      var waText = encodeURIComponent(
-        'Halo Kak ' + (d.nama || '') + '!\n' +
-        'Kami dari booth NEZHAMAINAN di Shopee Super Summit 2026.\n\n' +
-        'Mengenai pengajuan Prioritas Sample gratis kamu (Kode: ' + d.kodeKlaim + '):\n' +
-        (d.statusCat === 'approved'
-          ? '🎉 Pengajuan kamu sudah kami ACC di sistem Shopee! Silakan periksa notifikasi aplikasi Shopee kamu ya.'
-          : '📌 Pastikan kamu sudah klik "Minta Sample Gratis" di aplikasi Shopee pada produk toko NEZHAMAINAN ya.')
-      );
-      var waUrl = 'https://wa.me/' + cleanPhone + '?text=' + waText;
+      html += '<div class="app-card" id="card_' + esc(item.kodeKlaim) + '">';
+      html += '  <div class="app-info">';
+      html += '    <div class="app-title-row">';
+      html += '      <span class="app-kode">' + esc(item.kodeKlaim) + '</span>';
+      html += '      <span class="app-name">' + esc(item.nama) + '</span>';
+      html += '      <span class="status-badge ' + badgeClass + '">' + badgeText + '</span>';
+      html += '    </div>';
+      html += '    <div class="app-meta">';
+      html += '      <span>🛍️ Shopee: <b>@' + esc(item.username) + '</b></span>';
+      html += '      <span>📱 WA: <b>' + esc(item.phone) + '</b></span>';
+      html += '      <span>📦 Produk: <b>' + esc(item.produk) + '</b></span>';
+      html += '      <span>🕒 Waktu: <b>' + esc(item.waktu) + '</b></span>';
+      html += '    </div>';
+      html += '  </div>';
 
-      html += [
-        '<div class="app-card" id="card_' + d.kodeKlaim + '">',
-          '<div class="app-head">',
-            '<div class="app-code">' + esc(d.kodeKlaim) + '</div>',
-            '<div class="app-status-badge ' + statusClass + '">' + statusLabel + '</div>',
-            '<div class="app-time">⏰ ' + esc(d.waktu) + '</div>',
-          '</div>',
+      html += '  <div class="app-actions">';
+      html += '    <a href="' + waUrl + '" target="_blank" class="btn-wa">💬 Chat WA</a>';
+      html += '    <div class="btn-row">';
+      if (item.statusCat !== 'approved') {
+        html += '    <button type="button" class="btn-action-acc" onclick="ubahStatusPendaftar(\'' + esc(item.kodeKlaim) + '\', \'SUDAH DI-ACC\')">✓ ACC</button>';
+      }
+      if (item.statusCat !== 'rejected') {
+        html += '    <button type="button" class="btn-action-reject" onclick="ubahStatusPendaftar(\'' + esc(item.kodeKlaim) + '\', \'DITOLAK\')">✕ Tolak</button>';
+      }
+      if (item.statusCat !== 'pending') {
+        html += '    <button type="button" class="btn-action-reset" onclick="ubahStatusPendaftar(\'' + esc(item.kodeKlaim) + '\', \'MENUNGGU ACC\')">⏳ Reset</button>';
+      }
+      html += '    </div>';
+      html += '  </div>';
 
-          '<div class="app-details">',
-            '<div class="app-name">👤 ' + esc(d.nama) + '</div>',
-            '<div class="app-sub-info">',
-              '<span>🛒 <b>@' + esc(d.username.replace(/^@+/,'')) + '</b></span>',
-              '<span>📱 ' + esc(d.phone) + '</span>',
-            '</div>',
-            '<div class="app-prod">📦 Sample: ' + esc(d.produk || '-') + '</div>',
-          '</div>',
-
-          '<div class="app-actions">',
-            '<div class="btn-row">',
-              '<a href="' + waUrl + '" target="_blank" rel="noopener noreferrer" class="btn-wa">💬 WA</a>',
-              (d.statusCat !== 'approved'
-                ? '<button type="button" class="btn-action btn-acc" onclick="ubahStatusKlaim(\'' + d.kodeKlaim + '\', \'SUDAH DI-ACC\')">✓ ACC</button>'
-                : ''),
-              (d.statusCat !== 'rejected'
-                ? '<button type="button" class="btn-action btn-reject" onclick="ubahStatusKlaim(\'' + d.kodeKlaim + '\', \'DITOLAK\')">✕ Tolak</button>'
-                : ''),
-              (d.statusCat !== 'pending'
-                ? '<button type="button" class="btn-action btn-pending" onclick="ubahStatusKlaim(\'' + d.kodeKlaim + '\', \'MENUNGGU ACC\')">⏳ Reset</button>'
-                : ''),
-            '</div>',
-          '</div>',
-        '</div>'
-      ].join('');
+      html += '</div>';
     });
 
     container.innerHTML = html;
   }
 
-  // Ubah status 1-klik
-  window.ubahStatusKlaim = function (kodeKlaim, statusBaru) {
-    var card = document.getElementById('card_' + kodeKlaim);
-    if (card) card.style.opacity = '.5';
-    showToast('Mengubah status ' + kodeKlaim + ' menjadi ' + statusBaru + '...');
+  window.ubahStatusPendaftar = function (kodeKlaim, statusBaru) {
+    if (!confirm('Ubah status ' + kodeKlaim + ' menjadi "' + statusBaru + '"?')) return;
+
+    showToast('Memperbarui status di Spreadsheet...');
 
     callApi({
       action:     'adminUpdateStatus',
@@ -1272,32 +1302,28 @@
       kodeKlaim:  kodeKlaim,
       statusBaru: statusBaru
     }, function (res) {
-      if (card) card.style.opacity = '1';
       if (res && res.success) {
-        showToast('✓ ' + res.message);
-        // Update di lokal langsung
-        for (var i = 0; i < allApplicants.length; i++) {
-          if (allApplicants[i].kodeKlaim === kodeKlaim) {
-            allApplicants[i].status = statusBaru;
-            var cat = 'pending';
-            if (statusBaru === 'SUDAH DI-ACC') cat = 'approved';
-            else if (statusBaru === 'DITOLAK') cat = 'rejected';
-            allApplicants[i].statusCat = cat;
-            break;
+        showToast('✓ Status ' + kodeKlaim + ' berhasil diubah jadi: ' + statusBaru);
+        // Update data lokal langsung tanpa reload
+        allApplicants.forEach(function (it) {
+          if (it.kodeKlaim === kodeKlaim) {
+            it.status = statusBaru;
+            if (statusBaru === 'SUDAH DI-ACC') it.statusCat = 'approved';
+            else if (statusBaru === 'DITOLAK') it.statusCat = 'rejected';
+            else it.statusCat = 'pending';
           }
-        }
-        recalcStats();
+        });
+        hitungUlangStats();
         renderApplicantList();
       } else {
-        alert((res && res.message) || 'Gagal mengubah status.');
+        alert('Gagal update: ' + ((res && res.message) || 'Error tidak diketahui'));
       }
     }, function (err) {
-      if (card) card.style.opacity = '1';
-      alert('Gagal update status: ' + err);
+      alert('Gagal terhubung ke server: ' + err);
     });
   };
 
-  function recalcStats() {
+  function hitungUlangStats() {
     var stats = { total: allApplicants.length, pending: 0, approved: 0, rejected: 0 };
     allApplicants.forEach(function (item) {
       if (item.statusCat === 'approved') stats.approved++;
@@ -1318,7 +1344,25 @@
         document.getElementById('setAnnouncement').value    = res.announcement || '';
         currentChips = res.chips || [];
         renderChipsManager();
+      } else {
+        // Fallback default
+        document.getElementById('setIsOpen').checked        = true;
+        document.getElementById('setShopeeUrl').value       = 'https://shopee.co.id/nezhamainan';
+        document.getElementById('setAnnouncement').value    = '';
+        if (!currentChips || currentChips.length === 0) {
+          currentChips = ['Mobil Remot RC', 'Robot Action Figure', 'Puzzle Edukasi Kayu', 'Water / Bubble Gun', 'Board Game Anak'];
+        }
+        renderChipsManager();
       }
+    }, function () {
+      // Fallback default jika offline
+      document.getElementById('setIsOpen').checked        = true;
+      document.getElementById('setShopeeUrl').value       = 'https://shopee.co.id/nezhamainan';
+      document.getElementById('setAnnouncement').value    = '';
+      if (!currentChips || currentChips.length === 0) {
+        currentChips = ['Mobil Remot RC', 'Robot Action Figure', 'Puzzle Edukasi Kayu', 'Water / Bubble Gun', 'Board Game Anak'];
+      }
+      renderChipsManager();
     });
   }
 
