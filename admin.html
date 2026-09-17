@@ -1288,6 +1288,36 @@
       border-color: #f59e0b;
       transform: scale(1.08);
     }
+    .sound-select {
+      background: rgba(14, 4, 3, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      color: #f3f4f6;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 0 24px 0 10px;
+      height: 34px;
+      border-radius: 999px;
+      outline: none;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23f59e0b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      transition: all .2s;
+    }
+    .sound-select:hover, .sound-select:focus {
+      border-color: var(--gold);
+      background-color: rgba(30, 9, 7, 0.95);
+    }
+    .sound-select option {
+      background: #180705;
+      color: #fff;
+      font-size: 12px;
+    }
     .scanner-status-pill {
       position: absolute;
       bottom: 10px;
@@ -2294,6 +2324,12 @@
 
           <!-- Top-Right Camera Controls -->
           <div class="cam-controls-bar">
+            <select id="scanSoundSelect" class="sound-select" title="Pilih Nada Suara Scan QR">
+              <option value="gopay">🟢 GoPay / QRIS</option>
+              <option value="shopee">🟠 ShopeePay</option>
+              <option value="dana">🔵 Dana (Cling)</option>
+              <option value="barcode">🔴 Barcode (Tiitt)</option>
+            </select>
             <button type="button" class="btn-cam-ctrl" id="btnSoundToggle" title="Nyalakan/Matikan Bunyi Scan">
               <span id="soundIcon" style="font-size:15px;line-height:1;">🔊</span>
             </button>
@@ -3259,6 +3295,7 @@
   var lastScanTime = 0;
   var currentVerifiedApplicant = null;
   var soundScanEnabled = localStorage.getItem('nzh_scan_sound') !== 'false';
+  var currentSoundStyle = localStorage.getItem('nzh_scan_sound_type') || 'gopay';
   var sharedAudioCtx = null;
   var audioUnlocked = false;
 
@@ -3303,7 +3340,43 @@
     document.addEventListener(evtName, unlockAudioGlobal, { passive: true });
   });
 
-  // Bunyi "TIITT / BIIB" Barcode Scanner Realtime (100% Offline Web Audio API)
+  // Generator Nada Bel / Chime Elektronik Harmonis (GoPay, ShopeePay, Dana, Barcode)
+  function playChimeNote(ctx, freq, startTime, duration, volume, harmonicRatio) {
+    try {
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, startTime);
+
+      gain.gain.setValueAtTime(volume, startTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(startTime);
+      osc.stop(startTime + duration);
+
+      // Overtone kristal untuk kemilau denting bel seperti aplikasi pembayaran modern
+      if (harmonicRatio && harmonicRatio > 1) {
+        var oscH = ctx.createOscillator();
+        var gainH = ctx.createGain();
+        oscH.type = 'sine';
+        oscH.frequency.setValueAtTime(freq * harmonicRatio, startTime);
+
+        gainH.gain.setValueAtTime(volume * 0.22, startTime);
+        gainH.gain.exponentialRampToValueAtTime(0.0001, startTime + (duration * 0.65));
+
+        oscH.connect(gainH);
+        gainH.connect(ctx.destination);
+
+        oscH.start(startTime);
+        oscH.stop(startTime + (duration * 0.65));
+      }
+    } catch (_) {}
+  }
+
+  // Bunyi Notifikasi Scan QR Realtime (Default: GoPay / QRIS "Di-Ting!")
   function playScanBeep(toneType) {
     if (!soundScanEnabled) return;
     try {
@@ -3316,7 +3389,7 @@
       var now = ctx.currentTime || 0;
 
       if (toneType === 'error') {
-        // Nada Tiket Tidak Ditemukan / Error (Low Buzz 240Hz & 170Hz)
+        // Nada Tiket Gagal / Tidak Ditemukan (Low Warning Buzz 240Hz & 170Hz)
         var oscErr = ctx.createOscillator();
         var gainErr = ctx.createGain();
         oscErr.type = 'sawtooth';
@@ -3334,25 +3407,36 @@
         return;
       }
 
-      // Suara Otentik Barcode Scanner "TIITT / BIIB" (2400Hz, Crisp & Energetic)
-      var osc = ctx.createOscillator();
-      var gain = ctx.createGain();
+      var style = currentSoundStyle || 'gopay';
 
-      osc.type = 'sine';
-      // Laser Barcode Beep: Frekuensi 2350Hz ramp cepat ke 2520Hz untuk sentuhan snappy
-      osc.frequency.setValueAtTime(2350, now);
-      osc.frequency.exponentialRampToValueAtTime(2520, now + 0.04);
-
-      // Volume tegas, jernih dan renyah (0.35 gain)
-      gain.gain.setValueAtTime(0.35, now);
-      gain.gain.setValueAtTime(0.35, now + 0.08);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.13);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start(now);
-      osc.stop(now + 0.14);
+      if (style === 'shopee') {
+        // NADA SHOPEEPAY: Triad Ceria (E6 1318Hz -> A6 1760Hz -> C#7 2217Hz)
+        playChimeNote(ctx, 1318.5, now, 0.08, 0.22, 2.0);
+        playChimeNote(ctx, 1760.0, now + 0.045, 0.10, 0.28, 2.0);
+        playChimeNote(ctx, 2217.5, now + 0.09, 0.28, 0.40, 2.0);
+      } else if (style === 'dana') {
+        // NADA DANA / APPLE PAY: Crystal Bell Single Ding (C7 2093Hz)
+        playChimeNote(ctx, 2093.0, now, 0.30, 0.44, 2.0);
+      } else if (style === 'barcode') {
+        // NADA BARCODE KLASIK: Laser Supermarket Handheld (2400Hz)
+        var oscB = ctx.createOscillator();
+        var gainB = ctx.createGain();
+        oscB.type = 'sine';
+        oscB.frequency.setValueAtTime(2350, now);
+        oscB.frequency.exponentialRampToValueAtTime(2520, now + 0.04);
+        gainB.gain.setValueAtTime(0.35, now);
+        gainB.gain.setValueAtTime(0.35, now + 0.08);
+        gainB.gain.exponentialRampToValueAtTime(0.0001, now + 0.13);
+        oscB.connect(gainB);
+        gainB.connect(ctx.destination);
+        oscB.start(now);
+        oscB.stop(now + 0.14);
+      } else {
+        // DEFAULT: NADA GOPAY / QRIS SCAN ("Di-Ting!")
+        // Dua nada harmonis D6 (1175Hz) -> A6 (1760Hz) dengan resonansi bel e-wallet yang ramah
+        playChimeNote(ctx, 1175.0, now, 0.07, 0.28, 2.0);
+        playChimeNote(ctx, 1760.0, now + 0.055, 0.26, 0.42, 2.0);
+      }
     } catch (_) {}
   }
 
@@ -3842,10 +3926,29 @@
       soundScanEnabled = !soundScanEnabled;
       try { localStorage.setItem('nzh_scan_sound', soundScanEnabled ? 'true' : 'false'); } catch (_) {}
       if (soundIcon) soundIcon.textContent = soundScanEnabled ? '🔊' : '🔇';
-      showToast(soundScanEnabled ? '🔊 Bunyi Scan Aktif (Tiitt!)' : '🔇 Bunyi Scan Dimatikan');
+      showToast(soundScanEnabled ? '🔊 Bunyi Scan Aktif' : '🔇 Bunyi Scan Dimatikan');
       if (soundScanEnabled) {
         playScanBeep('scan');
       }
+    });
+  }
+
+  // Dropdown Pilihan Nada Suara Scan QR (GoPay/QRIS, ShopeePay, Dana, Barcode)
+  var selSound = document.getElementById('scanSoundSelect');
+  if (selSound) {
+    selSound.value = currentSoundStyle;
+    selSound.addEventListener('change', function () {
+      unlockAudioGlobal();
+      currentSoundStyle = this.value;
+      try { localStorage.setItem('nzh_scan_sound_type', currentSoundStyle); } catch (_) {}
+      if (!soundScanEnabled) {
+        soundScanEnabled = true;
+        try { localStorage.setItem('nzh_scan_sound', 'true'); } catch (_) {}
+        if (soundIcon) soundIcon.textContent = '🔊';
+      }
+      playScanBeep('scan');
+      var label = selSound.options[selSound.selectedIndex].text;
+      showToast('🔊 Nada Dipilih: ' + label);
     });
   }
 
