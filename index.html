@@ -2853,8 +2853,20 @@
       return { valid: false, clean: raw, msg: '⚠️ Nama tidak boleh memuat huruf berulang terus-menerus.' };
     }
 
+    // Blokir keyboard cluster mash (WASD, ASDF, QWER, ZXCV, dll)
+    var lettersOnly = lower.replace(/[^a-z]/g, '');
+    if (lettersOnly.length >= 4) {
+      if (/^[wasd]+$/i.test(lettersOnly) || /^[asdf]+$/i.test(lettersOnly) ||
+          /^[qwer]+$/i.test(lettersOnly) || /^[zxcv]+$/i.test(lettersOnly) ||
+          /^[hjkl]+$/i.test(lettersOnly) || /^[uiop]+$/i.test(lettersOnly)) {
+        return { valid: false, clean: raw, msg: '⚠️ Masukkan nama asli kamu (terdeteksi ketikan acak keyboard).' };
+      }
+    }
+    if (/(awd|asd|qwe|zxc|jkl|dfg|wer|wasd){2,}/i.test(lettersOnly)) {
+      return { valid: false, clean: raw, msg: '⚠️ Masukkan nama asli kamu (terdeteksi ketikan acak).' };
+    }
+
     // Blokir keyboard mash / kata asal terkenal
-    var lower = raw.toLowerCase().replace(/[^a-z0-9]/g, '');
     var mashList = ['asdasd', 'asdfgh', 'asdf', 'qweqwe', 'qwerty', 'zxcvbnm', 'zxcv', 'jkljkl', 'testing', 'coba', 'cobaan', 'admin', 'sample', 'tester', '123123', 'anonim'];
     for (var k = 0; k < mashList.length; k++) {
       if (lower === mashList[k] || lower.indexOf(mashList[k]) === 0) {
@@ -2884,6 +2896,19 @@
     // Karakter kembar berulang
     if (/([a-zA-Z0-9])\1{3,}/i.test(raw)) {
       return { valid: false, clean: raw, msg: '⚠️ Username tidak boleh memuat karakter berulang terus-menerus.' };
+    }
+
+    // Keyboard cluster mash check (WASD, ASDF, QWER, dll)
+    var userLetters = raw.toLowerCase().replace(/[^a-z]/g, '');
+    if (userLetters.length >= 4) {
+      if (/^[wasd]+$/i.test(userLetters) || /^[asdf]+$/i.test(userLetters) ||
+          /^[qwer]+$/i.test(userLetters) || /^[zxcv]+$/i.test(userLetters) ||
+          /^[hjkl]+$/i.test(userLetters) || /^[uiop]+$/i.test(userLetters)) {
+        return { valid: false, clean: raw, msg: '⚠️ Masukkan username akun Shopee kamu yang sebenarnya (terdeteksi ketikan acak).' };
+      }
+    }
+    if (/(awd|asd|qwe|zxc|jkl|dfg|wer|wasd){2,}/i.test(userLetters)) {
+      return { valid: false, clean: raw, msg: '⚠️ Masukkan username akun Shopee kamu yang sebenarnya.' };
     }
 
     // Keyboard mash check
