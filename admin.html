@@ -3259,28 +3259,100 @@
   var lastScanTime = 0;
   var currentVerifiedApplicant = null;
   var soundScanEnabled = localStorage.getItem('nzh_scan_sound') !== 'false';
+  var sharedAudioCtx = null;
+  var audioUnlocked = false;
 
-  function playScanBeep() {
-    if (!soundScanEnabled) return;
+  // Dapatkan atau Inisialisasi AudioContext Singleton
+  function getOrInitAudioContext() {
     try {
       var AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
-      var ctx = new AudioCtx();
+      if (!AudioCtx) return null;
+      if (!sharedAudioCtx) {
+        sharedAudioCtx = new AudioCtx();
+      }
+      if (sharedAudioCtx.state === 'suspended') {
+        sharedAudioCtx.resume().catch(function () {});
+      }
+      return sharedAudioCtx;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  // Buka Kunci Audio Browser (Autoplay Policy / iOS Safari & Mobile Chrome)
+  function unlockAudioGlobal() {
+    try {
+      var ctx = getOrInitAudioContext();
+      if (!ctx) return;
+      if (ctx.state === 'suspended') {
+        ctx.resume().catch(function () {});
+      }
+      if (!audioUnlocked && (ctx.state === 'running' || ctx.state === 'suspended')) {
+        var silentBuf = ctx.createBuffer(1, 1, 22050);
+        var src = ctx.createBufferSource();
+        src.buffer = silentBuf;
+        src.connect(ctx.destination);
+        src.start(0);
+        audioUnlocked = true;
+      }
+    } catch (_) {}
+  }
+
+  // Pre-unlock AudioContext saat ada interaksi pengguna pertama di layar
+  ['click', 'touchstart', 'touchend', 'keydown'].forEach(function (evtName) {
+    document.addEventListener(evtName, unlockAudioGlobal, { passive: true });
+  });
+
+  // Bunyi "TIITT / BIIB" Barcode Scanner Realtime (100% Offline Web Audio API)
+  function playScanBeep(toneType) {
+    if (!soundScanEnabled) return;
+    try {
+      var ctx = getOrInitAudioContext();
+      if (!ctx) return;
+      if (ctx.state === 'suspended') {
+        ctx.resume().catch(function () {});
+      }
+
+      var now = ctx.currentTime || 0;
+
+      if (toneType === 'error') {
+        // Nada Tiket Tidak Ditemukan / Error (Low Buzz 240Hz & 170Hz)
+        var oscErr = ctx.createOscillator();
+        var gainErr = ctx.createGain();
+        oscErr.type = 'sawtooth';
+        oscErr.frequency.setValueAtTime(240, now);
+        oscErr.frequency.setValueAtTime(170, now + 0.1);
+
+        gainErr.gain.setValueAtTime(0.2, now);
+        gainErr.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+
+        oscErr.connect(gainErr);
+        gainErr.connect(ctx.destination);
+
+        oscErr.start(now);
+        oscErr.stop(now + 0.29);
+        return;
+      }
+
+      // Suara Otentik Barcode Scanner "TIITT / BIIB" (2400Hz, Crisp & Energetic)
       var osc = ctx.createOscillator();
       var gain = ctx.createGain();
 
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(880, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(1320, ctx.currentTime + 0.08);
+      // Laser Barcode Beep: Frekuensi 2350Hz ramp cepat ke 2520Hz untuk sentuhan snappy
+      osc.frequency.setValueAtTime(2350, now);
+      osc.frequency.exponentialRampToValueAtTime(2520, now + 0.04);
 
-      gain.gain.setValueAtTime(0.18, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+      // Volume tegas, jernih dan renyah (0.35 gain)
+      gain.gain.setValueAtTime(0.35, now);
+      gain.gain.setValueAtTime(0.35, now + 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.13);
 
       osc.connect(gain);
       gain.connect(ctx.destination);
 
-      osc.start(ctx.currentTime);
-      osc.stop(ctx.currentTime + 0.15);
+      osc.start(now);
+      osc.stop(now + 0.14);
     } catch (_) {}
   }
 
@@ -3301,6 +3373,7 @@
 
   // Buka Modal Scanner
   function bukaScannerModal() {
+    unlockAudioGlobal();
     var m = document.getElementById('scannerModal');
     if (!m) return;
     m.classList.add('show');
@@ -3519,19 +3592,19 @@
     if (navigator.vibrate) {
       try { navigator.vibrate([40, 50, 40]); } catch (_) {}
     }
-    playScanBeep();
+    playScanBeep('scan');
 
     updateScannerStatus('✓ QR Tiket ' + cleanCode + ' Terdeteksi!', 'normal');
     hentikanKamera();
 
     // Verifikasi data
     setTimeout(function () {
-      prosesVerifikasiKode(cleanCode);
+      prosesVerifikasiKode(cleanCode, false);
     }, 250);
   }
 
   // Cari Data Tiket berdasarkan Kode Klaim
-  function prosesVerifikasiKode(kode) {
+  function prosesVerifikasiKode(kode, isManual) {
     kode = String(kode || '').trim().toUpperCase();
     if (!kode) {
       alert('Masukkan kode klaim yang valid (Contoh: NZH-123456)');
@@ -3548,6 +3621,9 @@
     }
 
     if (found) {
+      if (isManual) {
+        playScanBeep('scan');
+      }
       tampilkanHasilVerifikasi(found);
     } else {
       // 2. Jika belum ada di lokal, tanyakan ke server Google Apps Script
@@ -3568,13 +3644,18 @@
           allApplicants.unshift(appObj);
           recalcStats();
           renderApplicantList();
+          if (isManual) {
+            playScanBeep('scan');
+          }
           tampilkanHasilVerifikasi(appObj);
         } else {
+          playScanBeep('error');
           alert('Tiket dengan kode "' + kode + '" tidak ditemukan dalam database antrean.');
           resetScannerState();
           mulaiKamera();
         }
       }, function (err) {
+        playScanBeep('error');
         alert('Gagal memeriksa data tiket: ' + err);
         resetScannerState();
         mulaiKamera();
@@ -3736,7 +3817,8 @@
       alert('Ketikkan kode klaim pendaftar (Contoh: NZH-123456)');
       return;
     }
-    prosesVerifikasiKode(val);
+    unlockAudioGlobal();
+    prosesVerifikasiKode(val, true);
   });
   document.getElementById('manualCodeInput').addEventListener('keydown', function (e) {
     if (e.key === 'Enter') {
@@ -3756,10 +3838,14 @@
   if (soundIcon) soundIcon.textContent = soundScanEnabled ? '🔊' : '🔇';
   if (btnSound) {
     btnSound.addEventListener('click', function () {
+      unlockAudioGlobal();
       soundScanEnabled = !soundScanEnabled;
       try { localStorage.setItem('nzh_scan_sound', soundScanEnabled ? 'true' : 'false'); } catch (_) {}
       if (soundIcon) soundIcon.textContent = soundScanEnabled ? '🔊' : '🔇';
-      showToast(soundScanEnabled ? '🔊 Bunyi Scan Aktif' : '🔇 Bunyi Scan Dimatikan');
+      showToast(soundScanEnabled ? '🔊 Bunyi Scan Aktif (Tiitt!)' : '🔇 Bunyi Scan Dimatikan');
+      if (soundScanEnabled) {
+        playScanBeep('scan');
+      }
     });
   }
 
