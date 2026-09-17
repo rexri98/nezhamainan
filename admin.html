@@ -2101,18 +2101,30 @@
   /* ============================================================
      FAST & RELIABLE API CALLER (DIRECT JSONP UNTUK GOOGLE APPS SCRIPT)
   ============================================================ */
-  function callApi(data, onOk, onErr) {
+  function callApi(data, onOk, onErr, retryCount) {
+    if (retryCount === undefined) retryCount = 1;
     var isDone = false;
     function finishOk(res)  { if (!isDone) { isDone = true; if (onOk) onOk(res); } }
-    function finishErr(msg) { if (!isDone) { isDone = true; if (onErr) onErr(msg); } }
+    function finishErr(msg) {
+      if (!isDone) {
+        isDone = true;
+        if (retryCount > 0) {
+          setTimeout(function () {
+            callApi(data, onOk, onErr, retryCount - 1);
+          }, 1200);
+        } else {
+          if (onErr) onErr(msg);
+        }
+      }
+    }
 
     var cb = '_nzh_adm_' + Date.now() + '_' + Math.floor(Math.random() * 99999);
     var scriptId = '_script_' + cb;
 
     var timer = setTimeout(function () {
       clean();
-      finishErr('Koneksi timeout (server tidak merespons dalam 15 detik).');
-    }, 15000);
+      finishErr('Koneksi timeout. Server sedang memproses antrean, silakan coba lagi.');
+    }, 35000);
 
     function clean() {
       clearTimeout(timer);
@@ -2892,47 +2904,54 @@
     }
   }
 
-  // Mulai Kamera Pengguna
+  // Mulai Kamera Pengguna dengan Fallback Bertingkat
   function mulaiKamera() {
     hentikanKamera();
     updateScannerStatus('Mengakses kamera pemindai...', 'normal');
-
-    var constraints = {
-      video: {
-        facingMode: { ideal: currentFacingMode },
-        width: { ideal: 1280 },
-        height: { ideal: 720 }
-      },
-      audio: false
-    };
 
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       updateScannerStatus('⚠️ Browser tidak mendukung akses kamera. Gunakan input manual.', 'error');
       return;
     }
 
-    navigator.mediaDevices.getUserMedia(constraints)
-      .then(function (stream) {
-        scannerStream = stream;
-        var video = document.getElementById('scannerVideo');
-        video.srcObject = stream;
-        video.setAttribute('playsinline', 'true');
-        video.play().then(function () {
-          scannerActive = true;
-          updateScannerStatus('Arahkan kamera ke QR Code Tiket...', 'normal');
-          mulaiScanLoop();
-        }).catch(function (e) {
-          console.warn('Video play err:', e);
-          updateScannerStatus('Klik layar untuk memulai video', 'warn');
+    var constraintList = [
+      { video: { facingMode: { ideal: currentFacingMode }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false },
+      { video: { facingMode: currentFacingMode }, audio: false },
+      { video: true, audio: false }
+    ];
+
+    function cobaAksesKamera(idx) {
+      if (idx >= constraintList.length) {
+        updateScannerStatus('⚠️ Izin kamera ditolak atau kamera tidak ditemukan. Gunakan input manual.', 'error');
+        return;
+      }
+
+      navigator.mediaDevices.getUserMedia(constraintList[idx])
+        .then(function (stream) {
+          scannerStream = stream;
+          var video = document.getElementById('scannerVideo');
+          video.srcObject = stream;
+          video.setAttribute('playsinline', 'true');
+          video.play().then(function () {
+            scannerActive = true;
+            updateScannerStatus('Arahkan kamera ke QR Code Tiket...', 'normal');
+            mulaiScanLoop();
+          }).catch(function (e) {
+            console.warn('Video play err:', e);
+            updateScannerStatus('Klik layar untuk memulai video', 'warn');
+          });
+        })
+        .catch(function (err) {
+          console.warn('Kamera constraint [' + idx + '] error:', err);
+          if (err.name === 'NotAllowedError') {
+            updateScannerStatus('⚠️ Izin kamera ditolak oleh browser. Gunakan input manual di bawah.', 'error');
+          } else {
+            cobaAksesKamera(idx + 1);
+          }
         });
-      })
-      .catch(function (err) {
-        console.warn('Kamera error:', err);
-        var msg = 'Izin kamera ditolak atau kamera sedang digunakan.';
-        if (err.name === 'NotAllowedError') msg = 'Izin kamera ditolak oleh browser.';
-        else if (err.name === 'NotFoundError') msg = 'Tidak ada perangkat kamera ditemukan.';
-        updateScannerStatus('⚠️ ' + msg + ' Gunakan input manual di bawah.', 'error');
-      });
+    }
+
+    cobaAksesKamera(0);
   }
 
   // Hentikan Kamera & Animasi Frame
@@ -3019,7 +3038,7 @@
       var imgData = ctx.getImageData(0, 0, scanW, scanH);
 
       if (typeof jsQR !== 'undefined') {
-        var code = jsQR(imgData.data, scanW, scanH, { inversionAttempts: 'dontInvert' });
+        var code = jsQR(imgData.data, scanW, scanH, { inversionAttempts: 'attemptBoth' });
         if (code && code.data) {
           onQrDetected(code.data);
           return;
@@ -3089,8 +3108,8 @@
       // 2. Jika belum ada di lokal, tanyakan ke server Google Apps Script
       showToast('Mencari data tiket ' + kode + ' di server...');
       callApi({ action: 'cekStatus', kodeKlaim: kode }, function (res) {
-        if (res && res.success && res.data) {
-          var d = res.data;
+        if (res && res.success) {
+          var d = res.data || res;
           var appObj = {
             kodeKlaim: d.kodeKlaim || kode,
             nama: d.nama || '-',

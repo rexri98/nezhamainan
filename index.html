@@ -1246,8 +1246,8 @@
     }
     .qr-canvas-holder {
       background: #ffffff;
-      padding: 6px;
-      border-radius: 12px;
+      padding: 8px;
+      border-radius: 14px;
       box-shadow: 0 6px 20px rgba(0,0,0,.35);
       display: inline-flex;
       align-items: center;
@@ -1256,9 +1256,9 @@
     }
     .qr-canvas-holder canvas {
       display: block;
-      width: 108px;
-      height: 108px;
-      border-radius: 6px;
+      width: 135px;
+      height: 135px;
+      border-radius: 0;
     }
     .qr-scan-hint {
       font-size: 10px;
@@ -1492,8 +1492,9 @@
         border-radius: 7px;
       }
       .qr-canvas-holder canvas {
-        width: 95px;
-        height: 95px;
+        width: 120px;
+        height: 120px;
+        border-radius: 0;
       }
       .qr-scan-hint {
         font-size: 9px;
@@ -1974,7 +1975,7 @@
           </div>
           <div class="code-qr-wrap" id="codeQrWrap">
             <div class="qr-canvas-holder">
-              <canvas id="claimQrCanvas" width="128" height="128"></canvas>
+              <canvas id="claimQrCanvas" width="280" height="280"></canvas>
             </div>
             <div class="qr-scan-hint"><span>📷</span> Scan di Meja Booth</div>
           </div>
@@ -2395,6 +2396,22 @@
       var _this = {};
 
       var makeImpl = function (test, maskPattern) {
+        if (!_typeNumber || _typeNumber < 1) {
+          var totalBits = 0;
+          for (var i = 0; i < _dataList.length; i++) {
+            totalBits += 4 + 16 + (_dataList[i].getLength() * 8);
+          }
+          for (var t = 1; t <= 10; t++) {
+            var rs = QRRSBlock.getRSBlocks(t, _errorCorrectionLevel);
+            var cap = 0;
+            for (var b = 0; b < rs.length; b++) cap += rs[b].dataCount;
+            if (totalBits <= cap * 8) {
+              _typeNumber = t;
+              break;
+            }
+          }
+          if (!_typeNumber || _typeNumber < 1) _typeNumber = 4;
+        }
         _moduleCount = _typeNumber * 4 + 17;
         _modules = new Array(_moduleCount);
         for (var r = 0; r < _moduleCount; r++) {
@@ -2633,9 +2650,10 @@
       qr.addData(text);
       qr.make();
       var count = qr.getModuleCount();
-      var margin = 2;
-      var size = canvas.width || 128;
-      var cellSize = size / (count + margin * 2);
+      var margin = 4;
+      var size = canvas.width || 280;
+      var total = count + margin * 2;
+      var cellSize = size / total;
       var ctx = canvas.getContext('2d');
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, size, size);
@@ -2643,16 +2661,17 @@
       for (var r = 0; r < count; r++) {
         for (var c = 0; c < count; c++) {
           if (qr.isDark(r, c)) {
-            ctx.fillRect(
-              Math.round((c + margin) * cellSize),
-              Math.round((r + margin) * cellSize),
-              Math.ceil(cellSize),
-              Math.ceil(cellSize)
-            );
+            var px = Math.round((c + margin) * cellSize);
+            var py = Math.round((r + margin) * cellSize);
+            var pw = Math.round((c + margin + 1) * cellSize) - px;
+            var ph = Math.round((r + margin + 1) * cellSize) - py;
+            ctx.fillRect(px, py, pw, ph);
           }
         }
       }
-    } catch (err) {}
+    } catch (err) {
+      console.warn('QR draw err:', err);
+    }
   }
 
   function drawQrOnTicketCanvas(ctx, text, x, y, size) {
@@ -2662,7 +2681,7 @@
       qr.addData(text);
       qr.make();
       var count = qr.getModuleCount();
-      var margin = 2;
+      var margin = 4;
       var totalModules = count + margin * 2;
       var cellSize = size / totalModules;
       ctx.fillStyle = '#ffffff';
@@ -2671,16 +2690,17 @@
       for (var r = 0; r < count; r++) {
         for (var c = 0; c < count; c++) {
           if (qr.isDark(r, c)) {
-            ctx.fillRect(
-              Math.round(x + (c + margin) * cellSize),
-              Math.round(y + (r + margin) * cellSize),
-              Math.ceil(cellSize),
-              Math.ceil(cellSize)
-            );
+            var px = Math.round(x + (c + margin) * cellSize);
+            var py = Math.round(y + (r + margin) * cellSize);
+            var pw = Math.round(x + (c + margin + 1) * cellSize) - px;
+            var ph = Math.round(y + (r + margin + 1) * cellSize) - py;
+            ctx.fillRect(px, py, pw, ph);
           }
         }
       }
-    } catch (err) {}
+    } catch (err) {
+      console.warn('Ticket QR err:', err);
+    }
   }
 
   /* ============================================================
@@ -2805,10 +2825,22 @@
      2. Otomatis fallback ke JSONP jika fetch diblokir oleh browser
      3. Deteksi status offline / sinyal lemah
   ============================================================ */
-  function panggilAPI(data, onOk, onErr) {
+  function panggilAPI(data, onOk, onErr, retryCount) {
+    if (retryCount === undefined) retryCount = 1;
     var isDone = false;
     function finishOk(res)  { if (!isDone) { isDone = true; if (onOk) onOk(res); } }
-    function finishErr(msg) { if (!isDone) { isDone = true; if (onErr) onErr(msg); } }
+    function finishErr(msg) {
+      if (!isDone) {
+        isDone = true;
+        if (retryCount > 0) {
+          setTimeout(function () {
+            panggilAPI(data, onOk, onErr, retryCount - 1);
+          }, 1500);
+        } else {
+          if (onErr) onErr(msg);
+        }
+      }
+    }
 
     // Cek koneksi offline
     if (typeof navigator !== 'undefined' && navigator.onLine === false) {
@@ -2824,8 +2856,8 @@
 
     var t = setTimeout(function () {
       bersih();
-      if (onErr) onErr('Koneksi timeout. Silakan coba lagi.');
-    }, 16000);
+      if (onErr) onErr('Koneksi timeout. Server sedang memproses antrean, silakan coba lagi.');
+    }, 35000);
 
     function bersih() {
       clearTimeout(t);
@@ -2981,8 +3013,12 @@
   function mulaiPollingStatus(kodeKlaim) {
     berhentiPolling();
     pollingTimer = setInterval(function () {
+      if (currentClaimData && (currentClaimData.status === 'SUDAH DI-ACC' || currentClaimData.status === 'DITOLAK')) {
+        berhentiPolling();
+        return;
+      }
       cekStatusRealtime(kodeKlaim, false);
-    }, 5000);
+    }, 15000);
   }
 
   function berhentiPolling() {
