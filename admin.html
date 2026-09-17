@@ -902,35 +902,315 @@
     }
     @keyframes spinAnim { to { transform: rotate(360deg); } }
 
-    /* ─── RESPONSIVE (MOBILE) ─── */
-    @media (max-width: 860px) {
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
+    /* ─── RESPONSIVE DESIGN (PC, TABLET, MOBILE) ─── */
+
+    /* 1. Large PC / Ultrawide Monitors (> 1280px) */
+    @media (min-width: 1280px) {
+      .admin-nav {
+        padding: 14px clamp(24px, 4vw, 48px);
+      }
+      .tabs-bar {
+        padding: 12px clamp(24px, 4vw, 48px) 0;
+      }
+      .admin-content {
+        max-width: 1320px;
+        padding: 28px clamp(24px, 4vw, 48px);
       }
       .app-card {
-        grid-template-columns: 1fr;
+        grid-template-columns: 220px 1fr 240px;
+        gap: 24px;
+        padding: 22px 28px;
+      }
+    }
+
+    /* 2. Tablet & Medium Laptops (769px - 1040px) */
+    @media (max-width: 1040px) and (min-width: 769px) {
+      .admin-content {
+        padding: 20px 18px;
+      }
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+      .app-card {
+        grid-template-columns: 190px 1fr 200px;
         gap: 16px;
-        padding: 18px;
+        padding: 18px 20px;
+      }
+    }
+
+    /* 3. Mobile & Small Tablets (<= 768px) */
+    @media (max-width: 768px) {
+      .d-pc {
+        display: none !important;
+      }
+
+      /* Navbar touch-compact on mobile */
+      .admin-nav {
+        padding: 10px 14px;
+      }
+      .nav-pill {
+        display: none; /* Hide badge on mobile to prevent overflow */
+      }
+      .nav-left {
+        gap: 8px;
+      }
+      .nav-logo {
+        height: 25px;
+      }
+      .nav-title {
+        font-size: 14px;
+      }
+      .nav-right {
+        gap: 6px;
+      }
+      .btn-nav {
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        justify-content: center;
+        border-radius: 10px;
+        font-size: 15px;
+      }
+
+      /* Tabs horizontal scrollable on mobile */
+      .tabs-bar {
+        padding: 6px 12px 0;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+      }
+      .tabs-bar::-webkit-scrollbar {
+        display: none;
+      }
+      .tab-btn {
+        font-size: 12.5px;
+        padding: 8px 14px;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      /* Main content */
+      .admin-content {
+        padding: 16px 12px;
+      }
+
+      /* Stats 2-column on mobile */
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+
+      /* Filter bar stacked on mobile */
+      .filter-bar {
+        padding: 12px 14px;
+        gap: 10px;
+      }
+      .search-box {
+        width: 100%;
+        min-width: 100%;
+        flex: none;
+      }
+      .search-input {
+        height: 40px;
+        font-size: 13px;
+      }
+      .filter-pills {
+        width: 100%;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+      }
+      .filter-pills::-webkit-scrollbar {
+        display: none;
+      }
+      .fpill {
+        white-space: nowrap;
+        flex-shrink: 0;
+        font-size: 11.5px;
+        padding: 6px 13px;
+      }
+
+      /* Bulk ACC prominent full-width CTA */
+      .toolbar-actions {
+        width: 100%;
+        justify-content: stretch;
+        margin-bottom: 14px;
+      }
+      .btn-bulk-acc {
+        width: 100%;
+        justify-content: center;
+        height: 44px;
+        font-size: 13px;
+      }
+
+      /* Single-column card layout on mobile */
+      .app-card {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        padding: 16px;
+        border-radius: 18px;
+      }
+      .app-head {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .app-code {
+        font-size: 18px;
+      }
+      .app-time {
+        width: 100%;
+        font-size: 11px;
+      }
+      .app-details {
+        gap: 5px;
+      }
+      .app-name {
+        font-size: 16px;
+      }
+      .app-sub-info {
+        gap: 6px;
+        font-size: 12px;
       }
       .app-actions {
         align-items: stretch;
       }
+      .btn-wa {
+        width: 100%;
+        height: 42px;
+        font-size: 12.5px;
+      }
       .btn-row {
         justify-content: stretch;
+        width: 100%;
+        gap: 8px;
       }
-      .admin-nav {
-        padding: 12px 16px;
+      .btn-action {
+        height: 40px;
+        font-size: 12px;
+        flex: 1;
       }
-      .admin-content {
-        padding: 16px 12px;
-      }
-      .filter-bar {
-        padding: 12px 14px;
-      }
+
+      /* Settings panel mobile */
       .settings-panel {
-        padding: 20px 18px;
+        padding: 20px 16px;
+        border-radius: 18px;
       }
-      .d-pc { display: none; }
+      .add-chip-row {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .add-chip-row .set-input {
+        width: 100%;
+        min-width: 100%;
+      }
+      .btn-add-chip {
+        width: 100%;
+        height: 44px;
+      }
+      .btn-save-settings {
+        height: 48px;
+        font-size: 14px;
+      }
+    }
+
+    /* 4. Small Mobile Phones (<= 480px) */
+    @media (max-width: 480px) {
+      .login-card {
+        padding: 28px 18px;
+        border-radius: 20px;
+      }
+      .login-logo {
+        width: 125px;
+        margin-bottom: 12px;
+      }
+      .login-title {
+        font-size: 18.5px;
+      }
+      .login-sub {
+        font-size: 12px;
+        margin-bottom: 20px;
+      }
+      .pin-input {
+        height: 48px;
+        font-size: 22px;
+        letter-spacing: 6px;
+      }
+      .btn-login {
+        height: 46px;
+        font-size: 13.5px;
+      }
+
+      .admin-content {
+        padding: 12px 10px;
+      }
+
+      .stats-grid {
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      .stat-card {
+        padding: 12px 10px;
+        border-radius: 14px;
+      }
+      .stat-lbl {
+        font-size: 9.5px;
+        margin-bottom: 4px;
+      }
+      .stat-val {
+        font-size: 22px;
+      }
+
+      .filter-bar {
+        padding: 10px 12px;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      .search-input {
+        height: 38px;
+        font-size: 12.5px;
+        padding-left: 36px;
+      }
+      .search-box svg {
+        width: 15px;
+        height: 15px;
+        left: 12px;
+      }
+
+      .app-card {
+        padding: 14px 12px;
+        border-radius: 16px;
+        gap: 12px;
+      }
+      .app-code {
+        font-size: 16.5px;
+      }
+      .app-name {
+        font-size: 15px;
+      }
+      .meta-tag {
+        padding: 3px 8px;
+        font-size: 11px;
+      }
+      .btn-action {
+        font-size: 11.5px;
+        padding: 8px 8px;
+      }
+
+      .toast {
+        left: 14px;
+        right: 14px;
+        bottom: 16px;
+        justify-content: center;
+        text-align: center;
+      }
     }
   </style>
 </head>
