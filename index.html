@@ -1786,93 +1786,82 @@
         font-size: 14px;
         height: 42px;
       }
-    /* ─── LIVE RUNNING TEXT MARQUEE TICKER ─── */
-    .marquee-ticker {
+    } /* /.max-width: 360px */
+
+    /* ─── LIVE WARNING NOTICE RUNNING TEXT (MARQUEE) ─── */
+    .warning-notice-bar {
       width: 100%;
       max-width: 960px;
       margin: 0 auto 16px auto;
-      background: linear-gradient(90deg, #1b0708 0%, #2f0b09 35%, #1a0607 100%);
-      border: 1px solid rgba(245, 158, 11, 0.45);
-      border-radius: 999px;
+      background: linear-gradient(90deg, #1c0303 0%, #3a0d00 50%, #1c0303 100%);
+      border: 1.5px solid #f59e0b;
+      border-radius: 12px;
       display: flex;
       align-items: center;
-      padding: 6px 14px 6px 8px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25), 0 0 15px rgba(245, 158, 11, 0.12);
+      padding: 8px 14px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35), 0 0 16px rgba(245, 158, 11, 0.22);
       overflow: hidden;
       box-sizing: border-box;
       position: relative;
       z-index: 10;
     }
-    .ticker-badge {
+    .notice-badge {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      background: linear-gradient(135deg, #ef2b1c 0%, #b31d10 100%);
+      gap: 6px;
+      background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
       color: #fff;
-      font-size: 11.5px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.8px;
       text-transform: uppercase;
-      padding: 6px 13px;
-      border-radius: 999px;
+      padding: 5px 12px;
+      border-radius: 7px;
       flex-shrink: 0;
-      box-shadow: 0 2px 8px rgba(239, 43, 28, 0.45);
-      z-index: 2;
+      box-shadow: 0 2px 8px rgba(239, 68, 68, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.25);
     }
-    .ticker-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #fff;
-      box-shadow: 0 0 7px #fff;
-      animation: tickerPulse 1.4s ease-in-out infinite alternate;
+    .notice-icon {
+      font-size: 13px;
+      display: inline-block;
+      animation: noticeFlash 1.2s ease-in-out infinite alternate;
     }
-    @keyframes tickerPulse {
-      from { opacity: 0.35; transform: scale(0.85); }
-      to   { opacity: 1; transform: scale(1.2); }
+    @keyframes noticeFlash {
+      from { opacity: 0.5; transform: scale(0.9); }
+      to   { opacity: 1; transform: scale(1.15); }
     }
-    .ticker-track {
+    .notice-marquee-wrap {
       flex: 1;
       overflow: hidden;
-      white-space: nowrap;
-      position: relative;
       margin-left: 14px;
-      mask-image: linear-gradient(to right, transparent 0%, black 2%, black 96%, transparent 100%);
-      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 2%, black 96%, transparent 100%);
+      display: flex;
+      align-items: center;
     }
-    .ticker-content {
-      display: inline-block;
-      white-space: nowrap;
-      padding-left: 100%;
-      animation: tickerScroll 24s linear infinite;
-      font-size: 13px;
+    .notice-marquee-wrap marquee {
+      font-size: 13.5px;
       font-weight: 600;
-      color: #fed7aa;
-      letter-spacing: 0.3px;
-    }
-    .ticker-content:hover,
-    .marquee-ticker:hover .ticker-content {
-      animation-play-state: paused;
+      color: #fef08a;
+      letter-spacing: 0.4px;
+      display: block;
+      width: 100%;
       cursor: default;
     }
-    @keyframes tickerScroll {
-      0%   { transform: translate3d(0, 0, 0); }
-      100% { transform: translate3d(-100%, 0, 0); }
-    }
     @media (max-width: 640px) {
-      .marquee-ticker {
-        border-radius: 14px;
-        padding: 6px 10px;
+      .warning-notice-bar {
+        border-radius: 10px;
+        padding: 7px 10px;
         margin-bottom: 12px;
       }
-      .ticker-badge {
-        font-size: 10.5px;
-        padding: 5px 10px;
-        gap: 5px;
+      .notice-badge {
+        font-size: 10px;
+        padding: 4px 8px;
+        gap: 4px;
       }
-      .ticker-content {
+      .notice-marquee-wrap {
+        margin-left: 10px;
+      }
+      .notice-marquee-wrap marquee {
         font-size: 12px;
-        animation-duration: 18s;
       }
     }
   </style>
@@ -1881,14 +1870,14 @@
 
 <div class="page">
 
-  <!-- ─── LIVE RUNNING TEXT MARQUEE TICKER ─── -->
-  <div id="liveAnnouncementBar" class="marquee-ticker" style="display:none;" role="region" aria-label="Pengumuman Booth">
-    <div class="ticker-badge">
-      <span class="ticker-dot"></span>
-      <span>📢 INFO BOOTH</span>
+  <!-- ─── WARNING NOTICE RUNNING TEXT (MARQUEE) ─── -->
+  <div id="liveAnnouncementBar" class="warning-notice-bar" style="display:none;" role="alert">
+    <div class="notice-badge">
+      <span class="notice-icon">⚠️</span>
+      <span>PERHATIAN</span>
     </div>
-    <div class="ticker-track">
-      <div class="ticker-content" id="liveAnnouncementText"></div>
+    <div class="notice-marquee-wrap">
+      <marquee id="liveAnnouncementText" behavior="scroll" direction="left" scrollamount="5" scrolldelay="10" onmouseover="this.stop()" onmouseout="this.start()"></marquee>
     </div>
   </div>
 
@@ -3600,7 +3589,7 @@
     if (liveAnn && liveAnnTxt) {
       if (pengumuman && pengumuman.trim()) {
         var cleanTxt = pengumuman.trim();
-        liveAnnTxt.textContent = cleanTxt + '   ✦   ' + cleanTxt + '   ✦   ' + cleanTxt;
+        liveAnnTxt.textContent = cleanTxt;
         liveAnn.style.display = 'flex';
       } else {
         liveAnn.style.display = 'none';
