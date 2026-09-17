@@ -2835,48 +2835,8 @@
   }
 
   /* ============================================================
-     VALIDASI ANTI-ASAL PADA NAMA LENGKAP & USERNAME SHOPEE
+     VALIDASI USERNAME SHOPEE & NOMOR WHATSAPP
   ============================================================ */
-  function cekValiditasNama(val) {
-    var raw = String(val || '').trim();
-    if (!raw) return { valid: false, clean: '', msg: 'Nama lengkap wajib diisi!' };
-    if (raw.length < 3) return { valid: false, clean: raw, msg: '⚠️ Nama terlalu pendek (minimal 3 karakter).' };
-    if (raw.length > 50) return { valid: false, clean: raw, msg: '⚠️ Nama terlalu panjang (maksimal 50 karakter).' };
-
-    // Wajib ada huruf alfabet
-    if (!/[a-zA-Z]/.test(raw)) {
-      return { valid: false, clean: raw, msg: '⚠️ Nama harus memuat huruf alfabet.' };
-    }
-
-    // Blokir karakter kembar berturut-turut (misal aaaa, xxxx)
-    if (/([a-zA-Z])\1{3,}/i.test(raw)) {
-      return { valid: false, clean: raw, msg: '⚠️ Nama tidak boleh memuat huruf berulang terus-menerus.' };
-    }
-
-    // Blokir keyboard cluster mash (WASD, ASDF, QWER, ZXCV, dll)
-    var lettersOnly = lower.replace(/[^a-z]/g, '');
-    if (lettersOnly.length >= 4) {
-      if (/^[wasd]+$/i.test(lettersOnly) || /^[asdf]+$/i.test(lettersOnly) ||
-          /^[qwer]+$/i.test(lettersOnly) || /^[zxcv]+$/i.test(lettersOnly) ||
-          /^[hjkl]+$/i.test(lettersOnly) || /^[uiop]+$/i.test(lettersOnly)) {
-        return { valid: false, clean: raw, msg: '⚠️ Masukkan nama asli kamu (terdeteksi ketikan acak keyboard).' };
-      }
-    }
-    if (/(awd|asd|qwe|zxc|jkl|dfg|wer|wasd){2,}/i.test(lettersOnly)) {
-      return { valid: false, clean: raw, msg: '⚠️ Masukkan nama asli kamu (terdeteksi ketikan acak).' };
-    }
-
-    // Blokir keyboard mash / kata asal terkenal
-    var mashList = ['asdasd', 'asdfgh', 'asdf', 'qweqwe', 'qwerty', 'zxcvbnm', 'zxcv', 'jkljkl', 'testing', 'coba', 'cobaan', 'admin', 'sample', 'tester', '123123', 'anonim'];
-    for (var k = 0; k < mashList.length; k++) {
-      if (lower === mashList[k] || lower.indexOf(mashList[k]) === 0) {
-        return { valid: false, clean: raw, msg: '⚠️ Masukkan nama asli kamu (bukan ketikan acak / testing).' };
-      }
-    }
-
-    return { valid: true, clean: raw };
-  }
-
   function cekValiditasUsername(val) {
     var raw = String(val || '').trim().replace(/^@+/, '').replace(/\s+/g, '');
     if (!raw) return { valid: false, clean: '', msg: 'Username Shopee wajib diisi!' };
@@ -2893,14 +2853,19 @@
       return { valid: false, clean: raw, msg: '⚠️ Username Shopee tidak boleh hanya berupa angka semua.' };
     }
 
-    // Karakter kembar berulang
-    if (/([a-zA-Z0-9])\1{3,}/i.test(raw)) {
+    // Karakter kembar berulang 5 kali berturut-turut (misal: aaaaa, 11111)
+    if (/([a-zA-Z0-9])\1{4,}/i.test(raw)) {
       return { valid: false, clean: raw, msg: '⚠️ Username tidak boleh memuat karakter berulang terus-menerus.' };
     }
 
-    // Keyboard cluster mash check (WASD, ASDF, QWER, dll)
+    // Blokir tawa / candaan
     var userLetters = raw.toLowerCase().replace(/[^a-z]/g, '');
-    if (userLetters.length >= 4) {
+    if (/(wkwk|awok|wkkw|huhu|haha|hehe)/i.test(userLetters)) {
+      return { valid: false, clean: raw, msg: '⚠️ Masukkan username akun Shopee kamu yang sebenarnya.' };
+    }
+
+    // Keyboard cluster mash check (WASD, ASDF, QWER, dll)
+    if (userLetters.length >= 5) {
       if (/^[wasd]+$/i.test(userLetters) || /^[asdf]+$/i.test(userLetters) ||
           /^[qwer]+$/i.test(userLetters) || /^[zxcv]+$/i.test(userLetters) ||
           /^[hjkl]+$/i.test(userLetters) || /^[uiop]+$/i.test(userLetters)) {
@@ -2992,12 +2957,7 @@
   var namaEl = document.getElementById('nama');
   if (namaEl) {
     namaEl.addEventListener('input', function () {
-      if (this.value.trim().length >= 3) {
-        var chk = cekValiditasNama(this.value);
-        this.style.borderColor = chk.valid ? '#10b981' : '#ef4444';
-      } else {
-        this.style.borderColor = '';
-      }
+      this.style.borderColor = '';
     });
   }
 
@@ -3076,17 +3036,16 @@
     var produk      = document.getElementById('produk').value.trim();
     var tombol      = document.getElementById('tombol');
 
-    // 1. Validasi Nama Lengkap
-    var nCheck = cekValiditasNama(namaRaw);
-    if (!nCheck.valid) {
-      showMsg('err', nCheck.msg);
+    // 1. Nama Lengkap (hanya wajib diisi)
+    var nama = namaRaw;
+    if (!nama) {
+      showMsg('err', 'Nama lengkap wajib diisi!');
       if (namaEl) {
         namaEl.focus();
         namaEl.style.borderColor = '#ef4444';
       }
       return;
     }
-    var nama = nCheck.clean;
 
     // 2. Validasi Username Shopee
     var uCheck = cekValiditasUsername(usernameRaw);
