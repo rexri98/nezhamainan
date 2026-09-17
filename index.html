@@ -1062,6 +1062,180 @@
       color: #166534;
     }
 
+    /* ─── COPY CODE BUTTON ─── */
+    .code-val-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .btn-copy-code {
+      appearance: none;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.25);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 11px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all .2s ease;
+      font-family: inherit;
+    }
+    .btn-copy-code:hover {
+      background: rgba(255,255,255,.24);
+      transform: scale(1.04);
+    }
+    .btn-copy-code.copied {
+      background: rgba(16,185,129,.28);
+      border-color: rgba(16,185,129,.6);
+      color: #6ee7b7;
+    }
+
+    /* ─── GUIDE BANNER (3 LANGKAH) ─── */
+    .guide-banner {
+      background: linear-gradient(135deg, rgba(245,158,11,.12), rgba(238,77,45,.08));
+      border: 1px dashed rgba(245,158,11,.45);
+      border-radius: 14px;
+      padding: 12px 16px;
+      margin-top: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all .2s ease;
+    }
+    .guide-banner:hover {
+      background: linear-gradient(135deg, rgba(245,158,11,.22), rgba(238,77,45,.14));
+      border-color: rgba(245,158,11,.75);
+      transform: translateY(-1px);
+    }
+    .guide-banner-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .guide-banner-title {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #b45309;
+      line-height: 1.35;
+    }
+    .guide-banner-sub {
+      font-size: 11px;
+      color: #92400e;
+      margin-top: 2px;
+      font-weight: 600;
+    }
+
+    /* ─── GUIDE MODAL ─── */
+    .guide-step {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 14px;
+      align-items: flex-start;
+    }
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--red);
+      color: #fff;
+      font-weight: 800;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 3px 8px rgba(239,43,28,.3);
+    }
+    .step-txt {
+      font-size: 12.5px;
+      line-height: 1.5;
+      color: #374151;
+    }
+    .step-txt b {
+      color: #111827;
+      display: block;
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+    .guide-highlight {
+      background: #fef3c7;
+      padding: 1px 6px;
+      border-radius: 4px;
+      color: #92400e;
+      font-weight: 700;
+    }
+    .guide-tip {
+      background: rgba(16,185,129,.1);
+      border: 1px solid rgba(16,185,129,.25);
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      color: #065f46;
+      line-height: 1.5;
+      margin-top: 10px;
+    }
+    .btn-guide-shopee {
+      width: 100%;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #ee4d2d, #ff5722);
+      color: #fff !important;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 13.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(238,77,45,.35);
+      transition: all .2s;
+    }
+    .btn-guide-shopee:hover {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+    }
+
+    /* ─── DOWNLOAD TICKET BUTTON ─── */
+    .btn-download-pass {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #1f2937, #111827);
+      color: #fff;
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: all .2s;
+      box-shadow: 0 4px 12px rgba(0,0,0,.2);
+      font-family: inherit;
+    }
+    .btn-download-pass:hover {
+      background: #000;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0,0,0,.3);
+    }
+    .claim-btn-row {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+    }
+    .claim-btn-row .btn-sync,
+    .claim-btn-row .btn-back-form {
+      flex: 1;
+      margin-top: 0 !important;
+    }
+
     /* ─────────────────────────────────────────────────────────
        CONFETTI
     ───────────────────────────────────────────────────────── */
@@ -1586,7 +1760,12 @@
       <div class="brand-bottom">
         <div class="code-box">
           <div class="code-lbl">Kode Prioritas ACC</div>
-          <div class="code-val" id="cc-kode">NZH-0000</div>
+          <div class="code-val-wrap">
+            <div class="code-val" id="cc-kode">NZH-0000</div>
+            <button type="button" class="btn-copy-code" id="btnCopyCode" title="Salin Kode Prioritas">
+              <span id="copyIcon">📋</span> <span id="copyText">Salin</span>
+            </button>
+          </div>
         </div>
       </div>
     </div><!-- /#cc-head -->
@@ -1625,6 +1804,15 @@
         📌 <b>Langkah Selanjutnya:</b> Pastikan kamu sudah klik <b>"Minta Sample Gratis"</b> di aplikasi Shopee pada produk toko NEZHAMAINAN. Tim seller kami akan segera meng-ACC pengajuanmu!
       </div>
 
+      <!-- Banner Panduan 3 Langkah -->
+      <div class="guide-banner" id="btnOpenGuide">
+        <span class="guide-banner-icon">💡</span>
+        <div class="guide-banner-text">
+          <div class="guide-banner-title">Belum tahu cara minta sample di aplikasi Shopee?</div>
+          <div class="guide-banner-sub">Ketuk di sini untuk lihat panduan 3 langkah mudahnya! 👉</div>
+        </div>
+      </div>
+
       <!-- Tombol Langsung Buka Shopee -->
       <a href="https://shopee.co.id/nezhamainan" target="_blank" rel="noopener noreferrer" class="btn-shopee" id="btnShopeeStore">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
@@ -1634,12 +1822,17 @@
       </a>
 
       <div class="claim-actions">
-        <button type="button" class="btn-sync" id="btnSyncStatus">
-          🔄 Cek Status ACC Realtime
+        <button type="button" class="btn-download-pass" id="btnDownloadPass">
+          📸 Simpan Tiket ke Galeri (Gambar)
         </button>
-        <button type="button" class="btn-back-form" id="btnBackToForm">
-          ← Kembali / Cek Akun Lain
-        </button>
+        <div class="claim-btn-row">
+          <button type="button" class="btn-sync" id="btnSyncStatus">
+            🔄 Cek Status ACC Realtime
+          </button>
+          <button type="button" class="btn-back-form" id="btnBackToForm">
+            ← Kembali / Cek Akun Lain
+          </button>
+        </div>
       </div>
 
       <div class="panel-foot">
@@ -1677,6 +1870,50 @@
     </div>
   </div>
 </div>
+
+<!-- Modal Panduan 3 Langkah Minta Sample -->
+<div id="guideModal" class="modal-backdrop" style="display:none;">
+  <div class="modal-box guide-modal-box">
+    <div class="modal-head">
+      <h3><span>🛍️</span> Cara Minta Sample di Shopee</h3>
+      <button type="button" class="modal-close" id="btnCloseGuide">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="guide-step">
+        <div class="step-num">1</div>
+        <div class="step-txt">
+          <b>Buka Toko NEZHAMAINAN di Shopee</b>
+          <p>Tekan tombol oranye <i>"Buka Toko di Shopee"</i> di bawah kartu antrean.</p>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="step-num">2</div>
+        <div class="step-txt">
+          <b>Pilih Produk Mainan yang Kamu Ajukan</b>
+          <p>Buka produk: <span class="guide-highlight" id="guideProdName">Produk Mainan</span>.</p>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="step-num">3</div>
+        <div class="step-txt">
+          <b>Klik Tombol "Minta Sample Gratis"</b>
+          <p>Klik tombol minta sample di aplikasi Shopee menggunakan akun affiliate kamu.</p>
+        </div>
+      </div>
+      <div class="guide-tip">
+        ✨ <b>Selesai!</b> Kru booth NEZHAMAINAN akan langsung meng-ACC pengajuanmu begitu antreanmu diverifikasi.
+      </div>
+    </div>
+    <div class="modal-foot">
+      <a href="https://shopee.co.id/nezhamainan" target="_blank" rel="noopener noreferrer" class="btn-guide-shopee" id="btnGuideShopee">
+        🛍️ Buka Toko Shopee Sekarang
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Canvas Tersembunyi untuk Render Gambar Tiket E-Pass -->
+<canvas id="ticketCanvas" width="600" height="850" style="display:none;"></canvas>
 
 <!-- Confetti container -->
 <div id="cf"></div>
@@ -1854,7 +2091,7 @@
 
     function bersih() {
       clearTimeout(t);
-      delete window[cb];
+      try { delete window[cb]; } catch (_) { window[cb] = undefined; }
       var el = document.getElementById('_nzhs_' + cb);
       if (el) el.remove();
     }
@@ -1866,7 +2103,9 @@
 
     var params = { callback: cb };
     for (var key in data) {
-      if (data.hasOwnProperty(key)) params[key] = data[key] || '';
+      if (data.hasOwnProperty(key)) {
+        params[key] = (data[key] !== undefined && data[key] !== null) ? String(data[key]) : '';
+      }
     }
     var p = new URLSearchParams(params);
 
@@ -1891,6 +2130,9 @@
     document.getElementById('cc-phone').textContent    = d.phone     || '—';
     document.getElementById('cc-produk').textContent   = d.produk    || '—';
     document.getElementById('cc-waktu').textContent    = d.waktu     || '—';
+
+    var guideProd = document.getElementById('guideProdName');
+    if (guideProd) guideProd.textContent = d.produk || 'Produk Pilihan';
 
     var statusStr = String(d.status || '').trim().toUpperCase();
     var isApproved = (statusStr === 'SUDAH DI-ACC' || statusStr === 'SUDAH DIAMBIL' || statusStr === 'DISETUJUI');
@@ -2301,6 +2543,239 @@
         prosesLookup();
       }
     });
+  }
+
+  /* ============================================================
+     FITUR 1-KLIK: SALIN KODE PRIORITAS ACC
+  ============================================================ */
+  var btnCopyCode = document.getElementById('btnCopyCode');
+  if (btnCopyCode) {
+    btnCopyCode.addEventListener('click', function () {
+      var code = (document.getElementById('cc-kode').textContent || '').trim();
+      if (!code || code === 'NZH-0000' || code === '—') return;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(afterCopy, fallbackCopy);
+      } else {
+        fallbackCopy();
+      }
+
+      function fallbackCopy() {
+        var tempInput = document.createElement('input');
+        tempInput.value = code;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        try { document.execCommand('copy'); afterCopy(); } catch (_) {}
+        document.body.removeChild(tempInput);
+      }
+
+      function afterCopy() {
+        var icon = document.getElementById('copyIcon');
+        var text = document.getElementById('copyText');
+        btnCopyCode.classList.add('copied');
+        if (icon) icon.textContent = '✓';
+        if (text) text.textContent = 'Tersalin!';
+        setTimeout(function () {
+          btnCopyCode.classList.remove('copied');
+          if (icon) icon.textContent = '📋';
+          if (text) text.textContent = 'Salin';
+        }, 2200);
+      }
+    });
+  }
+
+  /* ============================================================
+     MODAL PANDUAN 3 LANGKAH MINTA SAMPLE DI SHOPEE
+  ============================================================ */
+  var guideModal    = document.getElementById('guideModal');
+  var btnOpenGuide  = document.getElementById('btnOpenGuide');
+  var btnCloseGuide = document.getElementById('btnCloseGuide');
+  var btnGuideShopee = document.getElementById('btnGuideShopee');
+
+  function bukaModalPanduan() {
+    if (guideModal) {
+      guideModal.style.display = 'flex';
+      if (btnGuideShopee && SHOPEE_STORE_URL) {
+        btnGuideShopee.href = SHOPEE_STORE_URL;
+      }
+    }
+  }
+
+  function tutupModalPanduan() {
+    if (guideModal) guideModal.style.display = 'none';
+  }
+
+  if (btnOpenGuide)  btnOpenGuide.addEventListener('click', bukaModalPanduan);
+  if (btnCloseGuide) btnCloseGuide.addEventListener('click', tutupModalPanduan);
+  if (guideModal) {
+    guideModal.addEventListener('click', function (e) {
+      if (e.target === guideModal) tutupModalPanduan();
+    });
+  }
+
+  /* ============================================================
+     FITUR SIMPAN TIKET SEBAGAI GAMBAR (E-PASS HD CANVAS)
+  ============================================================ */
+  var btnDownloadPass = document.getElementById('btnDownloadPass');
+  if (btnDownloadPass) {
+    btnDownloadPass.addEventListener('click', unduhTiketSebagaiGambar);
+  }
+
+  function unduhTiketSebagaiGambar() {
+    if (!currentClaimData) {
+      alert('Data tiket belum tersedia.');
+      return;
+    }
+    var d = currentClaimData;
+    var canvas = document.getElementById('ticketCanvas');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var W = 600;
+    var H = 860;
+    canvas.width = W;
+    canvas.height = H;
+
+    // 1. Background Gradient Mewah
+    var bgGrad = ctx.createRadialGradient(W / 2, 70, 20, W / 2, H / 2, H * 0.75);
+    bgGrad.addColorStop(0, '#380a06');
+    bgGrad.addColorStop(0.6, '#130403');
+    bgGrad.addColorStop(1, '#090101');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, W, H);
+
+    // 2. Bingkai Garis Luar (Border)
+    ctx.strokeStyle = '#ef2b1c';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(16, 16, W - 32, H - 32);
+
+    ctx.strokeStyle = 'rgba(245,158,11,0.35)';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(24, 24, W - 48, H - 48);
+
+    // 3. Header Brand NEZHAMAINAN
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#ef2b1c';
+    ctx.font = '900 38px Inter, -apple-system, sans-serif';
+    ctx.fillText('NEZHAMAINAN', W / 2, 80);
+
+    // Sub-header Pill
+    ctx.fillStyle = 'rgba(245,158,11,0.14)';
+    ctx.strokeStyle = 'rgba(245,158,11,0.45)';
+    ctx.lineWidth = 1;
+    drawRoundRect(ctx, W / 2 - 180, 98, 360, 30, 15, true, true);
+
+    ctx.fillStyle = '#f59e0b';
+    ctx.font = '800 12px Inter, -apple-system, sans-serif';
+    ctx.fillText('✦ SHOPEE SUPER SUMMIT 2026 • VIP CREATOR ✦', W / 2, 118);
+
+    // 4. Ticket Code Box
+    var boxY = 152;
+    var boxH = 152;
+    ctx.fillStyle = '#1c0705';
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.lineWidth = 1.5;
+    drawRoundRect(ctx, 44, boxY, W - 88, boxH, 18, true, true);
+
+    ctx.fillStyle = '#9ca3af';
+    ctx.font = '700 12px Inter, -apple-system, sans-serif';
+    ctx.fillText('KODE PRIORITAS ACC SAMPLE', W / 2, boxY + 34);
+
+    // Kode Monospace Besar
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '900 46px "Courier New", monospace';
+    ctx.fillText(d.kodeKlaim || 'NZH-0000', W / 2, boxY + 86);
+
+    // Status Pill
+    var statusStr = String(d.status || '').trim().toUpperCase();
+    var isApproved = (statusStr === 'SUDAH DI-ACC' || statusStr === 'SUDAH DIAMBIL' || statusStr === 'DISETUJUI');
+    var isRejected = (statusStr === 'DITOLAK' || statusStr === 'TIDAK DI-ACC' || statusStr === 'REJECTED');
+
+    var pillColor = isApproved ? '#059669' : (isRejected ? '#dc2626' : '#d97706');
+    var pillText  = isApproved ? '✓ RESMI DI-ACC SELLER' : (isRejected ? '✕ BELUM DISETUJUI' : '⏳ MENUNGGU ACC SELLER');
+
+    ctx.fillStyle = pillColor;
+    drawRoundRect(ctx, W / 2 - 135, boxY + 106, 270, 32, 16, true, false);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '800 13px Inter, -apple-system, sans-serif';
+    ctx.fillText(pillText, W / 2, boxY + 127);
+
+    // 5. Details Section Box
+    var detY = 326;
+    var detH = 420;
+    ctx.fillStyle = 'rgba(255,255,255,0.03)';
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.lineWidth = 1;
+    drawRoundRect(ctx, 44, detY, W - 88, detH, 16, true, true);
+
+    var fields = [
+      { lbl: '👤 Nama Lengkap', val: d.nama || '—' },
+      { lbl: '🛒 Akun Shopee',   val: d.username ? ('@' + d.username.replace(/^@+/, '')) : '—' },
+      { lbl: '📱 No. WhatsApp',  val: d.phone || '—' },
+      { lbl: '📦 Produk Sample', val: d.produk || '—' },
+      { lbl: '⏰ Waktu Daftar',  val: d.waktu || '—' }
+    ];
+
+    var rowH = 78;
+    fields.forEach(function (f, idx) {
+      var currY = detY + 16 + (idx * rowH);
+
+      // Label
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#9ca3af';
+      ctx.font = '600 13px Inter, -apple-system, sans-serif';
+      ctx.fillText(f.lbl, 68, currY + 22);
+
+      // Value
+      ctx.fillStyle = '#f3f4f6';
+      ctx.font = '700 16px Inter, -apple-system, sans-serif';
+      var valText = String(f.val);
+      if (valText.length > 36) valText = valText.substring(0, 34) + '...';
+      ctx.fillText(valText, 68, currY + 48);
+
+      // Divider line
+      if (idx < fields.length - 1) {
+        ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+        ctx.beginPath();
+        ctx.moveTo(68, currY + 68);
+        ctx.lineTo(W - 68, currY + 68);
+        ctx.stroke();
+      }
+    });
+
+    // 6. Watermark Footer
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#9ca3af';
+    ctx.font = '500 12.5px Inter, -apple-system, sans-serif';
+    ctx.fillText('Tunjukkan tiket ini kepada kru booth NEZHAMAINAN di pameran', W / 2, 778);
+
+    ctx.fillStyle = 'rgba(245,158,11,0.85)';
+    ctx.font = '700 11.5px Inter, -apple-system, sans-serif';
+    ctx.fillText('Official VIP Pass Priority Creator • NEZHAMAINAN', W / 2, 804);
+
+    // Trigger Download
+    try {
+      var dataUrl = canvas.toDataURL('image/png');
+      var a = document.createElement('a');
+      a.download = 'Tiket_NEZHA_' + (d.kodeKlaim || 'Pass') + '.png';
+      a.href = dataUrl;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } catch (_) {
+      alert('Gagal mengunduh gambar otomatis. Silakan screenshot kartu antrean kamu.');
+    }
+
+    function drawRoundRect(c, x, y, w, h, r, fill, stroke) {
+      c.beginPath();
+      c.moveTo(x + r, y);
+      c.arcTo(x + w, y, x + w, y + h, r);
+      c.arcTo(x + w, y + h, x, y + h, r);
+      c.arcTo(x, y + h, x, y, r);
+      c.arcTo(x, y, x + w, y, r);
+      c.closePath();
+      if (fill) c.fill();
+      if (stroke) c.stroke();
+    }
   }
 </script>
 

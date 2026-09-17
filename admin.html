@@ -274,6 +274,49 @@
       background: rgba(239,68,68,.28);
       color: #fff;
     }
+    .btn-nav.auto-active {
+      background: rgba(16,185,129,.2) !important;
+      border-color: rgba(16,185,129,.55) !important;
+      color: #34d399 !important;
+      box-shadow: 0 0 14px rgba(16,185,129,.35);
+    }
+
+    /* Toolbar Actions & Bulk ACC */
+    .toolbar-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .btn-bulk-acc {
+      background: linear-gradient(135deg, #059669, #10b981);
+      color: #fff;
+      border: 1px solid rgba(16,185,129,.4);
+      padding: 9px 18px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: all .2s ease;
+      box-shadow: 0 4px 14px rgba(16,185,129,.25);
+      font-family: inherit;
+    }
+    .btn-bulk-acc:hover:not(:disabled) {
+      transform: translateY(-1.5px);
+      box-shadow: 0 6px 20px rgba(16,185,129,.45);
+      filter: brightness(1.08);
+    }
+    .btn-bulk-acc:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
 
     /* Tabs Bar */
     .tabs-bar {
@@ -927,6 +970,12 @@
       </div>
     </div>
     <div class="nav-right">
+      <button type="button" class="btn-nav" id="btnAutoRefresh" title="Aktifkan Pembaruan Otomatis Tiap 15 Detik">
+        <span>⏱️</span> <span class="d-pc" id="autoRefreshText">Auto (Off)</span>
+      </button>
+      <button type="button" class="btn-nav" id="btnExportCsv" title="Unduh rekap data ke file CSV/Excel">
+        <span>📥</span> <span class="d-pc">Export CSV</span>
+      </button>
       <button type="button" class="btn-nav" id="btnRefreshData" title="Sinkronkan data dari Google Sheet">
         <span>🔄</span> <span class="d-pc">Muat Ulang</span>
       </button>
@@ -985,6 +1034,13 @@
           <button type="button" class="fpill" data-f="approved">Sudah Di-ACC</button>
           <button type="button" class="fpill" data-f="rejected">Ditolak</button>
         </div>
+      </div>
+
+      <!-- Bulk Actions -->
+      <div class="toolbar-actions">
+        <button type="button" class="btn-bulk-acc" id="btnBulkAcc" title="ACC semua pendaftar yang sedang menunggu konfirmasi">
+          ⚡ ACC Semua yang Menunggu (<span id="bulkCount">0</span>)
+        </button>
       </div>
 
       <!-- Applicant List -->
@@ -1144,7 +1200,9 @@
 
     var params = { callback: cb };
     for (var k in data) {
-      if (data.hasOwnProperty(k)) params[k] = data[k] || '';
+      if (data.hasOwnProperty(k)) {
+        params[k] = (data[k] !== undefined && data[k] !== null) ? String(data[k]) : '';
+      }
     }
 
     var s = document.createElement('script');
@@ -1338,9 +1396,134 @@
     showToast('Memperbarui data dari Spreadsheet...');
   });
 
-  function muatDataPendaftar() {
+  /* Auto-Refresh (Live Monitor 15s) */
+  var autoRefreshTimer = null;
+  var autoRefreshCountdown = 15;
+  var autoRefreshInterval = null;
+
+  document.getElementById('btnAutoRefresh').addEventListener('click', function () {
+    var btn = this;
+    var txt = document.getElementById('autoRefreshText');
+    if (autoRefreshTimer) {
+      clearInterval(autoRefreshTimer);
+      clearInterval(autoRefreshInterval);
+      autoRefreshTimer = null;
+      autoRefreshInterval = null;
+      btn.classList.remove('auto-active');
+      txt.textContent = 'Auto (Off)';
+      showToast('Auto-refresh dinonaktifkan.');
+    } else {
+      btn.classList.add('auto-active');
+      autoRefreshCountdown = 15;
+      txt.textContent = 'Auto: 15s';
+      showToast('✓ Auto-refresh aktif (tiap 15 detik).');
+
+      autoRefreshInterval = setInterval(function () {
+        autoRefreshCountdown--;
+        if (autoRefreshCountdown <= 0) autoRefreshCountdown = 15;
+        txt.textContent = 'Auto: ' + autoRefreshCountdown + 's';
+      }, 1000);
+
+      autoRefreshTimer = setInterval(function () {
+        if (document.getElementById('paneApplicants').style.display !== 'none') {
+          muatDataPendaftar(true);
+        }
+      }, 15000);
+    }
+  });
+
+  /* Export ke file CSV / Excel */
+  document.getElementById('btnExportCsv').addEventListener('click', function () {
+    if (!allApplicants || allApplicants.length === 0) {
+      alert('Belum ada data pendaftar untuk diekspor.');
+      return;
+    }
+    var rows = [
+      ['No', 'Kode Antrean', 'Waktu Pendaftaran', 'Nama Lengkap', 'Username Shopee', 'Nomor WhatsApp', 'Produk Sample', 'Status ACC']
+    ];
+    allApplicants.forEach(function (d, i) {
+      rows.push([
+        i + 1,
+        d.kodeKlaim || '',
+        d.waktu || '',
+        d.nama || '',
+        d.username ? ('@' + d.username.replace(/^@+/, '')) : '',
+        d.phone ? ("\t" + d.phone) : '',
+        d.produk || '',
+        d.status || ''
+      ]);
+    });
+    var csvContent = rows.map(function (row) {
+      return row.map(function (val) {
+        var str = String(val == null ? '' : val).replace(/"/g, '""');
+        return '"' + str + '"';
+      }).join(',');
+    }).join('\r\n');
+
+    var blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    var t = new Date();
+    var dateStr = t.getFullYear() + '-' + String(t.getMonth() + 1).padStart(2, '0') + '-' + String(t.getDate()).padStart(2, '0');
+    a.href = url;
+    a.download = 'Rekap_Pendaftar_NEZHA_' + dateStr + '.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('✓ Data ' + allApplicants.length + ' pendaftar berhasil diekspor ke CSV/Excel!');
+  });
+
+  /* Bulk ACC Semua Antrean yang Menunggu */
+  document.getElementById('btnBulkAcc').addEventListener('click', function () {
+    var pending = allApplicants.filter(function (x) { return x.statusCat === 'pending'; });
+    if (pending.length === 0) {
+      showToast('Tidak ada antrean yang berstatus Menunggu ACC saat ini.');
+      return;
+    }
+    if (!confirm('Apakah Anda yakin ingin meng-ACC sekaligus ' + pending.length + ' pendaftar yang sedang menunggu?')) {
+      return;
+    }
+
+    var btn = this;
+    btn.disabled = true;
+    showToast('⏳ Memproses ACC massal (' + pending.length + ' pendaftar)...');
+
+    var idx = 0;
+    function prosesNext() {
+      if (idx >= pending.length) {
+        btn.disabled = false;
+        recalcStats();
+        renderApplicantList();
+        showToast('🎉 Selesai! ' + pending.length + ' kreator berhasil di-ACC.');
+        return;
+      }
+      var item = pending[idx];
+      callApi({
+        action:     'adminUpdateStatus',
+        pin:        currentPin,
+        kodeKlaim:  item.kodeKlaim,
+        statusBaru: 'SUDAH DI-ACC'
+      }, function (res) {
+        if (res && res.success) {
+          item.status = 'SUDAH DI-ACC';
+          item.statusCat = 'approved';
+        }
+        idx++;
+        prosesNext();
+      }, function () {
+        idx++;
+        prosesNext();
+      });
+    }
+    prosesNext();
+  });
+
+  function muatDataPendaftar(isSilent) {
     var container = document.getElementById('appList');
-    container.innerHTML = '<div class="spinner-bar"><div class="spin"></div> Memperbarui data pendaftar dari Spreadsheet...</div>';
+    if (!isSilent) {
+      container.innerHTML = '<div class="spinner-bar"><div class="spin"></div> Memperbarui data pendaftar dari Spreadsheet...</div>';
+    }
 
     callApi({ action: 'adminGetData', pin: currentPin }, function (res) {
       if (res && res.success) {
@@ -1348,23 +1531,37 @@
         updateStatCards(res.stats || {});
         renderApplicantList();
       } else {
-        var errDetail = (res && res.message) ? res.message : 'Gagal memuat data.';
-        if (errDetail.indexOf('field wajib') !== -1) {
-          errDetail = 'Google Apps Script masih versi lama. Silakan salin isi file <code>Code.gs</code> lalu Deploy versi baru di <b>script.google.com</b>.';
+        if (!isSilent) {
+          var errDetail = (res && res.message) ? res.message : 'Gagal memuat data.';
+          if (errDetail.indexOf('field wajib') !== -1) {
+            errDetail = 'Google Apps Script masih versi lama. Silakan salin isi file <code>Code.gs</code> lalu Deploy versi baru di <b>script.google.com</b>.';
+          }
+          container.innerHTML = '<div class="empty-state" style="color:#ef4444;line-height:1.6;">⚠️ ' + errDetail + '</div>';
         }
-        container.innerHTML = '<div class="empty-state" style="color:#ef4444;line-height:1.6;">⚠️ ' + errDetail + '</div>';
       }
     }, function (err) {
-      container.innerHTML = '<div class="empty-state" style="color:#ef4444;line-height:1.6;">⚠️ Gagal terhubung ke Google Apps Script: ' + (err || 'timeout') + '<br><small style="color:var(--text-muted)">Pastikan script sudah di-deploy sebagai Web App dengan akses "Anyone".</small></div>';
+      if (!isSilent) {
+        container.innerHTML = '<div class="empty-state" style="color:#ef4444;line-height:1.6;">⚠️ Gagal terhubung ke Google Apps Script: ' + (err || 'timeout') + '<br><small style="color:var(--text-muted)">Pastikan script sudah di-deploy sebagai Web App dengan akses "Anyone".</small></div>';
+      }
     });
   }
 
   function updateStatCards(stats) {
-    document.getElementById('statTotal').textContent    = stats.total    || allApplicants.length;
-    document.getElementById('statPending').textContent  = stats.pending  || 0;
-    document.getElementById('statApproved').textContent = stats.approved || 0;
-    document.getElementById('statRejected').textContent = stats.rejected || 0;
-    document.getElementById('tabCount').textContent     = stats.total    || allApplicants.length;
+    var total    = stats.total    || allApplicants.length;
+    var pending  = stats.pending  || 0;
+    var approved = stats.approved || 0;
+    var rejected = stats.rejected || 0;
+
+    document.getElementById('statTotal').textContent    = total;
+    document.getElementById('statPending').textContent  = pending;
+    document.getElementById('statApproved').textContent = approved;
+    document.getElementById('statRejected').textContent = rejected;
+    document.getElementById('tabCount').textContent     = total;
+
+    var bulkEl = document.getElementById('bulkCount');
+    if (bulkEl) bulkEl.textContent = pending;
+    var btnBulk = document.getElementById('btnBulkAcc');
+    if (btnBulk) btnBulk.disabled = (pending === 0);
   }
 
   // Filter Buttons & Search
@@ -1589,7 +1786,7 @@
     var payload = {
       action:       'adminSaveSettings',
       pin:          currentPin,
-      isOpen:       isChecked,
+      isOpen:       isChecked ? 'true' : 'false',
       shopeeUrl:    document.getElementById('setShopeeUrl').value.trim(),
       announcement: document.getElementById('setAnnouncement').value.trim(),
       chips:        JSON.stringify(currentChips)
@@ -1648,7 +1845,7 @@
 
   document.getElementById('btnSaveSettings').addEventListener('click', function () {
     var btn = this;
-    var isOpen       = document.getElementById('setIsOpen').checked;
+    var isOpen       = document.getElementById('setIsOpen').checked ? 'true' : 'false';
     var shopeeUrl    = document.getElementById('setShopeeUrl').value.trim();
     var announcement = document.getElementById('setAnnouncement').value.trim();
     var newPin       = document.getElementById('setNewPin').value.trim();
