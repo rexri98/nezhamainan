@@ -298,12 +298,24 @@
       margin-bottom: 24px;
     }
     .spg-station-card {
-      background: linear-gradient(145deg, #18281f, #0d1712);
+      background: linear-gradient(145deg, #18281f 0%, #0d1712 100%);
       border: 2px solid #10b981;
       border-radius: 20px;
-      padding: 24px;
+      padding: 24px 28px;
       box-shadow: 0 16px 36px rgba(0,0,0,0.6), 0 0 30px rgba(16,185,129,0.22);
       text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .spg-station-card::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 160px;
+      height: 160px;
+      background: radial-gradient(circle, rgba(16,185,129,0.22) 0%, transparent 70%);
+      pointer-events: none;
     }
     .spg-station-badge {
       display: inline-block;
@@ -316,25 +328,30 @@
       padding: 4px 14px;
       border-radius: 999px;
       margin-bottom: 12px;
+      box-shadow: 0 2px 10px rgba(16,185,129,0.35);
     }
     .spg-station-header h3 {
-      font-size: 20px;
+      font-size: 21px;
       font-weight: 900;
       color: #fff;
       margin-bottom: 6px;
+      letter-spacing: -.3px;
     }
     .spg-station-header p {
       font-size: 13px;
       color: #a7f3d0;
       margin-bottom: 20px;
+      line-height: 1.45;
     }
     .spg-station-actions {
       display: flex;
       flex-direction: column;
       gap: 14px;
-      max-width: 520px;
+      max-width: 560px;
       margin: 0 auto;
     }
+
+    /* 1. Camera Scan CTA Button */
     .btn-spg-scan {
       display: flex;
       align-items: center;
@@ -349,17 +366,26 @@
       box-shadow: 0 8px 24px rgba(16,185,129,0.45);
       transition: all .25s ease;
       animation: pulseGreen 2.5s infinite;
+      width: 100%;
+      box-sizing: border-box;
     }
     @keyframes pulseGreen {
       0%, 100% { box-shadow: 0 8px 24px rgba(16,185,129,0.45); }
-      50% { box-shadow: 0 12px 36px rgba(16,185,129,0.7); transform: scale(1.02); }
+      50% { box-shadow: 0 12px 36px rgba(16,185,129,0.7); transform: scale(1.015); }
     }
     .btn-spg-scan:hover {
       background: linear-gradient(135deg, #34d399, #10b981);
       transform: translateY(-2px);
     }
+    .btn-spg-scan:active {
+      transform: translateY(0);
+    }
     .btn-spg-icon {
-      font-size: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #fff;
     }
     .btn-spg-text {
       text-align: left;
@@ -369,52 +395,111 @@
       font-size: 16px;
       font-weight: 900;
       letter-spacing: .5px;
+      line-height: 1.2;
     }
     .btn-spg-desc {
       display: block;
       font-size: 11.5px;
       color: #d1fae5;
-      opacity: 0.9;
+      opacity: 0.92;
+      margin-top: 3px;
     }
-    .spg-manual-inline {
+
+    /* 2. Divider */
+    .spg-input-divider {
       display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 2px 0;
+      color: rgba(167, 243, 208, 0.7);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+    .spg-input-divider::before,
+    .spg-input-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.35), transparent);
+    }
+
+    /* 3. Unified Search Bar (PC & Mobile Default) */
+    .spg-search-box {
+      display: flex;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.65);
+      border: 2px solid rgba(16, 185, 129, 0.45);
+      border-radius: 14px;
+      padding: 5px 6px 5px 14px;
+      transition: all .25s ease;
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+      width: 100%;
+      box-sizing: border-box;
       gap: 10px;
     }
-    .spg-input {
+    .spg-search-box:focus-within {
+      border-color: #10b981;
+      background: rgba(0, 0, 0, 0.9);
+      box-shadow: 0 0 0 3.5px rgba(16, 185, 129, 0.3), inset 0 2px 6px rgba(0, 0, 0, 0.6);
+    }
+    .spg-search-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #10b981;
+    }
+    .spg-search-input {
       flex: 1;
-      height: 48px;
-      background: rgba(0,0,0,0.5);
-      border: 1.5px solid rgba(255,255,255,0.25);
-      border-radius: 12px;
-      color: #fff;
+      min-width: 0;
+      height: 44px;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #ffffff;
       font-family: inherit;
       font-size: 15px;
       font-weight: 700;
-      padding: 0 16px;
+      letter-spacing: 0.5px;
+      padding: 0;
       text-transform: uppercase;
-      outline: none;
-      transition: all .2s;
     }
-    .spg-input:focus {
-      border-color: #10b981;
-      box-shadow: 0 0 0 3px rgba(16,185,129,0.25);
+    .spg-search-input::placeholder {
+      color: rgba(255, 255, 255, 0.42);
+      font-size: 13.5px;
+      font-weight: 500;
+      letter-spacing: normal;
+      text-transform: none;
     }
-    .btn-spg-check {
-      height: 48px;
-      padding: 0 22px;
-      background: #1f2937;
-      border: 1.5px solid rgba(255,255,255,0.25);
-      border-radius: 12px;
-      color: #fff;
+    .btn-spg-submit {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      height: 42px;
+      padding: 0 20px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border: 1.5px solid #34d399;
+      border-radius: 10px;
+      color: #ffffff;
       font-family: inherit;
       font-size: 13.5px;
       font-weight: 800;
       cursor: pointer;
-      transition: all .2s;
+      flex-shrink: 0;
+      white-space: nowrap;
+      transition: all .2s ease;
+      box-shadow: 0 3px 12px rgba(16, 185, 129, 0.4);
     }
-    .btn-spg-check:hover {
-      background: #374151;
-      border-color: #34d399;
+    .btn-spg-submit:hover {
+      background: linear-gradient(135deg, #34d399, #10b981);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.6);
+    }
+    .btn-spg-submit:active {
+      transform: translateY(0);
     }
 
     /* Role Selector on Login Card */
@@ -2066,8 +2151,9 @@
         gap: 12px;
         border-radius: 14px;
       }
-      .btn-spg-icon {
-        font-size: 24px;
+      .btn-spg-icon svg {
+        width: 26px;
+        height: 26px;
       }
       .btn-spg-title {
         font-size: 14.5px;
@@ -2075,21 +2161,33 @@
       .btn-spg-desc {
         font-size: 11px;
       }
-      .spg-manual-inline {
-        flex-direction: column;
-        gap: 8px;
+      .spg-input-divider {
+        font-size: 10px;
+        margin: 2px 0;
       }
-      .spg-input {
-        height: 44px;
+
+      /* Unified Search Bar on Mobile */
+      .spg-search-box {
+        padding: 4px 6px 4px 12px;
+        border-radius: 12px;
+        gap: 6px;
+      }
+      .spg-search-icon svg {
+        width: 18px;
+        height: 18px;
+      }
+      .spg-search-input {
+        height: 40px;
         font-size: 14px;
-        text-align: center;
-        border-radius: 10px;
       }
-      .btn-spg-check {
-        height: 44px;
-        width: 100%;
-        font-size: 13px;
-        border-radius: 10px;
+      .spg-search-input::placeholder {
+        font-size: 12px;
+      }
+      .btn-spg-submit {
+        height: 38px;
+        padding: 0 14px;
+        font-size: 12.5px;
+        border-radius: 9px;
       }
 
       /* Stats 2-column on mobile */
@@ -2569,16 +2667,39 @@
             <p>Scan barcode / QR code dari HP pengunjung atau masukkan kode tiket 6 digit langsung</p>
           </div>
           <div class="spg-station-actions">
+            <!-- 1. Tombol Kamera Utama -->
             <button type="button" class="btn-spg-scan" id="btnSpgBigScan" title="Buka Kamera Scanner QR Code">
-              <span class="btn-spg-icon">📷</span>
+              <span class="btn-spg-icon">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+                  <circle cx="12" cy="13" r="4"/>
+                </svg>
+              </span>
               <span class="btn-spg-text">
                 <span class="btn-spg-title">BUKA KAMERA SCAN QR TIKET</span>
-                <span class="btn-spg-desc">Kamera aktif otomatis, scan instan dengan suara bip validasi</span>
+                <span class="btn-spg-desc">Kamera aktif otomatis &bull; Scan instan dengan suara bip validasi</span>
               </span>
             </button>
-            <div class="spg-manual-inline">
-              <input type="text" id="spgManualInput" class="spg-input" placeholder="Ketik NZH-xxxxxx..." maxlength="12" autocomplete="off">
-              <button type="button" id="btnSpgManualCheck" class="btn-spg-check">🔍 Cek Tiket</button>
+
+            <!-- 2. Divider Elegan -->
+            <div class="spg-input-divider">
+              <span>ATAU KETIK KODE TIKET MANUAL</span>
+            </div>
+
+            <!-- 3. Unified Search Bar (Kolom Input & Tombol Cek Terpadu) -->
+            <div class="spg-search-box">
+              <span class="spg-search-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#34d399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/>
+                </svg>
+              </span>
+              <input type="text" id="spgManualInput" class="spg-search-input" placeholder="Ketik kode tiket (misal: NZH-123456)..." maxlength="12" autocomplete="off" spellcheck="false">
+              <button type="button" id="btnSpgManualCheck" class="btn-spg-submit" title="Cek status tiket ini">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+                </svg>
+                <span>Cek Tiket</span>
+              </button>
             </div>
           </div>
         </div>
@@ -3159,8 +3280,13 @@
       var code = spgInp.value.trim();
       if (!code) {
         spgInp.focus();
-        spgInp.style.borderColor = '#ef4444';
-        setTimeout(function () { spgInp.style.borderColor = ''; }, 900);
+        var searchBox = spgInp.closest('.spg-search-box') || spgInp;
+        searchBox.style.borderColor = '#ef4444';
+        searchBox.style.boxShadow = '0 0 0 3px rgba(239, 68, 68, 0.35)';
+        setTimeout(function () {
+          searchBox.style.borderColor = '';
+          searchBox.style.boxShadow = '';
+        }, 900);
         return;
       }
       bukaScannerModal();
