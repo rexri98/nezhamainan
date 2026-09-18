@@ -1872,8 +1872,8 @@
 
     /* ─── RESPONSIVE DESIGN (PC, TABLET, MOBILE) ─── */
 
-    /* 1. Large PC / Ultrawide Monitors (> 1280px) */
-    @media (min-width: 1280px) {
+    /* 1. Large PC / Ultrawide Displays (>= 1101px) */
+    @media (min-width: 1101px) {
       .admin-nav {
         padding: 14px clamp(24px, 4vw, 48px);
       }
@@ -1882,28 +1882,56 @@
       }
       .admin-content {
         max-width: 1320px;
+        margin: 0 auto;
         padding: 28px clamp(24px, 4vw, 48px);
       }
+      .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 22px;
+      }
       .app-card {
-        grid-template-columns: 220px 1fr 240px;
+        grid-template-columns: 210px 1fr 230px;
+        gap: 22px;
+        padding: 20px 24px;
+        border-radius: 20px;
+      }
+      .qr-gen-panel {
+        grid-template-columns: 1fr 1fr;
         gap: 24px;
-        padding: 22px 28px;
       }
     }
 
-    /* 2. Tablet & Medium Laptops (769px - 1040px) */
-    @media (max-width: 1040px) and (min-width: 769px) {
+    /* 2. Medium Laptops & Tablets in Landscape (769px - 1100px) */
+    @media (max-width: 1100px) and (min-width: 769px) {
+      .admin-nav {
+        padding: 12px 20px;
+      }
+      .nav-title span:first-child {
+        font-size: 15px;
+      }
+      .btn-nav {
+        padding: 0 10px;
+        height: 38px;
+        font-size: 12px;
+        gap: 5px;
+      }
       .admin-content {
-        padding: 20px 18px;
+        padding: 22px 20px;
+        max-width: 100%;
       }
       .stats-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 12px;
       }
       .app-card {
-        grid-template-columns: 190px 1fr 200px;
+        grid-template-columns: 180px 1fr 200px;
         gap: 16px;
         padding: 18px 20px;
+      }
+      .qr-gen-panel {
+        grid-template-columns: 1fr;
+        gap: 20px;
       }
     }
 
@@ -1913,32 +1941,61 @@
         display: none !important;
       }
 
-      /* Navbar touch-compact on mobile */
+      /* Navbar touch-compact with native app bar style */
       .admin-nav {
         padding: 10px 14px;
-      }
-      .nav-pill {
-        display: none; /* Hide badge on mobile to prevent overflow */
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
       }
       .nav-left {
-        gap: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+        flex: 1;
       }
       .nav-logo {
-        height: 25px;
+        height: 28px;
+        width: auto;
+        flex-shrink: 0;
       }
       .nav-title {
-        font-size: 14px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+        min-width: 0;
+      }
+      .nav-title > span:first-child {
+        font-size: 13px;
+        font-weight: 800;
+        color: #fff;
+        line-height: 1.1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .nav-pill {
+        display: inline-flex !important;
+        font-size: 9.5px !important;
+        font-weight: 800 !important;
+        padding: 2px 7px !important;
+        border-radius: 999px !important;
+        letter-spacing: 0.3px !important;
+        line-height: 1.2 !important;
       }
       .nav-right {
-        gap: 6px;
+        gap: 5px;
+        flex-shrink: 0;
       }
       .btn-nav {
-        width: 36px;
-        height: 36px;
+        width: 38px;
+        height: 38px;
         padding: 0;
         justify-content: center;
         border-radius: 10px;
-        font-size: 15px;
+        font-size: 16px;
+        flex-shrink: 0;
       }
 
       /* Tabs horizontal scrollable on mobile */
@@ -1957,11 +2014,82 @@
         padding: 8px 14px;
         white-space: nowrap;
         flex-shrink: 0;
+        border-radius: 10px 10px 0 0;
       }
 
       /* Main content */
       .admin-content {
-        padding: 16px 12px;
+        padding: 16px 12px 32px;
+      }
+
+      /* Role Welcome Banner mobile */
+      .role-welcome-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 13px 15px;
+        border-radius: 14px;
+        margin-bottom: 16px;
+      }
+      .role-banner-badge {
+        font-size: 13px;
+      }
+      .role-banner-sub {
+        font-size: 11.5px;
+        line-height: 1.45;
+      }
+
+      /* SPG Quick Station mobile */
+      .spg-quick-station {
+        margin-bottom: 18px;
+      }
+      .spg-station-card {
+        padding: 18px 15px;
+        border-radius: 18px;
+      }
+      .spg-station-badge {
+        font-size: 10px;
+        padding: 3px 10px;
+        margin-bottom: 8px;
+      }
+      .spg-station-header h3 {
+        font-size: 17px;
+        margin-bottom: 4px;
+      }
+      .spg-station-header p {
+        font-size: 12px;
+        margin-bottom: 16px;
+        line-height: 1.4;
+      }
+      .btn-spg-scan {
+        padding: 14px 16px;
+        gap: 12px;
+        border-radius: 14px;
+      }
+      .btn-spg-icon {
+        font-size: 24px;
+      }
+      .btn-spg-title {
+        font-size: 14.5px;
+      }
+      .btn-spg-desc {
+        font-size: 11px;
+      }
+      .spg-manual-inline {
+        flex-direction: column;
+        gap: 8px;
+      }
+      .spg-input {
+        height: 44px;
+        font-size: 14px;
+        text-align: center;
+        border-radius: 10px;
+      }
+      .btn-spg-check {
+        height: 44px;
+        width: 100%;
+        font-size: 13px;
+        border-radius: 10px;
       }
 
       /* Stats 2-column on mobile */
@@ -1970,11 +2098,23 @@
         gap: 10px;
         margin-bottom: 14px;
       }
+      .stat-card {
+        padding: 12px 10px;
+        border-radius: 14px;
+      }
+      .stat-lbl {
+        font-size: 10px;
+        margin-bottom: 4px;
+      }
+      .stat-val {
+        font-size: 22px;
+      }
 
       /* Filter bar stacked on mobile */
       .filter-bar {
-        padding: 12px 14px;
+        padding: 12px 12px;
         gap: 10px;
+        margin-bottom: 14px;
       }
       .search-box {
         width: 100%;
@@ -1982,8 +2122,14 @@
         flex: none;
       }
       .search-input {
-        height: 40px;
+        height: 42px;
         font-size: 13px;
+        padding-left: 38px;
+      }
+      .search-box svg {
+        left: 12px;
+        width: 16px;
+        height: 16px;
       }
       .filter-pills {
         width: 100%;
@@ -1992,6 +2138,7 @@
         padding-bottom: 4px;
         scrollbar-width: none;
         -webkit-overflow-scrolling: touch;
+        gap: 6px;
       }
       .filter-pills::-webkit-scrollbar {
         display: none;
@@ -2003,164 +2150,267 @@
         padding: 6px 13px;
       }
 
-      .btn-scan-qr {
-        width: 100%;
-        justify-content: center;
-        height: 44px;
-        font-size: 13px;
-      }
-      .scanner-box {
-        max-height: 96vh;
-        border-radius: 18px;
-      }
-      .scanner-body {
-        padding: 14px 16px;
-        gap: 12px;
-      }
-      .scanner-viewport-wrap {
-        aspect-ratio: 1/1;
-        max-height: 250px;
-      }
-      .scanner-reticle {
-        width: 160px;
-        height: 160px;
-      }
-
-      /* Bulk ACC prominent full-width CTA */
+      /* Toolbar Actions on Mobile */
       .toolbar-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
         width: 100%;
-        justify-content: stretch;
-        margin-bottom: 14px;
+        margin-bottom: 16px;
       }
-      .btn-bulk-acc {
+      .btn-scan-qr, .btn-bulk-acc {
         width: 100%;
         justify-content: center;
         height: 44px;
         font-size: 13px;
+        border-radius: 12px;
       }
 
       /* Single-column card layout on mobile */
       .app-card {
         grid-template-columns: 1fr;
-        gap: 14px;
-        padding: 16px;
+        gap: 12px;
+        padding: 16px 14px;
         border-radius: 18px;
+        background: #15151e;
+        border: 1px solid rgba(255,255,255,0.08);
       }
       .app-head {
-        flex-direction: row;
+        display: flex;
         justify-content: space-between;
         align-items: center;
-        flex-wrap: wrap;
-        gap: 6px;
+        flex-wrap: nowrap;
+        gap: 8px;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        padding-bottom: 10px;
       }
       .app-code {
-        font-size: 18px;
+        font-size: 17px;
+        font-weight: 900;
+        letter-spacing: 0.5px;
       }
       .app-time {
-        width: 100%;
         font-size: 11px;
+        color: var(--text-muted);
       }
       .app-details {
-        gap: 5px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
       }
       .app-name {
         font-size: 16px;
+        font-weight: 800;
+        color: #fff;
       }
       .app-sub-info {
+        display: flex;
+        flex-wrap: wrap;
         gap: 6px;
         font-size: 12px;
       }
+      .meta-tag {
+        padding: 3px 8px;
+        font-size: 11px;
+        border-radius: 6px;
+      }
       .app-actions {
-        align-items: stretch;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding-top: 6px;
+        border-top: 1px solid rgba(255,255,255,0.06);
       }
       .btn-wa {
         width: 100%;
         height: 42px;
-        font-size: 12.5px;
+        font-size: 13px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
       }
       .btn-row {
-        justify-content: stretch;
+        display: flex;
         width: 100%;
         gap: 8px;
       }
       .btn-action {
+        flex: 1;
         height: 40px;
         font-size: 12px;
-        flex: 1;
+        border-radius: 10px;
       }
 
       /* Settings panel mobile */
       .settings-panel {
-        padding: 20px 16px;
+        padding: 18px 14px;
         border-radius: 18px;
       }
+      .set-group {
+        padding-bottom: 16px;
+        margin-bottom: 16px;
+      }
+      .set-title {
+        font-size: 14px;
+      }
+      .set-desc {
+        font-size: 12px;
+      }
+      .set-input {
+        font-size: 14px;
+        height: 44px;
+      }
       .add-chip-row {
-        flex-wrap: wrap;
+        flex-direction: column;
         gap: 8px;
       }
       .add-chip-row .set-input {
         width: 100%;
-        min-width: 100%;
       }
       .btn-add-chip {
         width: 100%;
         height: 44px;
       }
       .btn-save-settings {
+        width: 100%;
         height: 48px;
-        font-size: 14px;
+        font-size: 14.5px;
+        border-radius: 14px;
+      }
+
+      /* QR Gen Poster mobile */
+      .qr-gen-panel {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .qr-card, .qr-preview-card {
+        padding: 16px 14px;
+        border-radius: 18px;
+      }
+      .qr-actions-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      .btn-qr-action {
+        width: 100%;
+        height: 44px;
+        font-size: 13px;
+      }
+      .canvas-container {
+        max-width: 100%;
+        overflow-x: hidden;
+        padding: 8px;
+      }
+      #posterCanvas {
+        max-width: 100%;
+        height: auto !important;
+      }
+
+      /* Scanner Modal mobile */
+      .scanner-box {
+        width: 96%;
+        max-width: 440px;
+        max-height: 92vh;
+        border-radius: 20px;
+      }
+      .scanner-header {
+        padding: 12px 16px;
+      }
+      .scanner-body {
+        padding: 14px 14px;
+        gap: 12px;
+      }
+      .scanner-viewport-wrap {
+        aspect-ratio: 1/1;
+        max-height: 240px;
+        border-radius: 14px;
+      }
+      .scanner-reticle {
+        width: 150px;
+        height: 150px;
+      }
+      .v-claim-code {
+        font-size: 22px;
+        letter-spacing: 2px;
+      }
+      .v-name {
+        font-size: 18px;
+      }
+      .v-actions-wrap {
+        flex-direction: column;
+        gap: 8px;
+      }
+      .btn-v-acc, .btn-v-reject {
+        width: 100%;
+        height: 46px;
+        font-size: 13.5px;
       }
     }
 
     /* 4. Small Mobile Phones (<= 480px) */
     @media (max-width: 480px) {
       .login-card {
-        padding: 28px 18px;
-        border-radius: 20px;
+        width: calc(100% - 24px);
+        max-width: 400px;
+        padding: 26px 16px;
+        border-radius: 22px;
       }
       .login-logo {
-        width: 125px;
-        margin-bottom: 12px;
+        width: 120px;
+        margin-bottom: 10px;
       }
       .login-title {
-        font-size: 18.5px;
+        font-size: 19px;
       }
       .login-sub {
         font-size: 12px;
-        margin-bottom: 20px;
+        margin-bottom: 16px;
+      }
+      .login-role-selector {
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+      .btn-role-tab {
+        width: 100%;
+        padding: 10px 14px;
+        border-radius: 12px;
       }
       .pin-input {
         height: 48px;
         font-size: 22px;
         letter-spacing: 6px;
+        border-radius: 14px;
       }
       .btn-login {
         height: 46px;
         font-size: 13.5px;
+        border-radius: 14px;
       }
 
       .admin-content {
-        padding: 12px 10px;
+        padding: 12px 10px 24px;
       }
-
       .stats-grid {
         gap: 8px;
         margin-bottom: 12px;
       }
       .stat-card {
-        padding: 12px 10px;
-        border-radius: 14px;
+        padding: 10px 8px;
+        border-radius: 12px;
       }
       .stat-lbl {
         font-size: 9.5px;
-        margin-bottom: 4px;
+        margin-bottom: 3px;
       }
       .stat-val {
-        font-size: 22px;
+        font-size: 20px;
       }
 
       .filter-bar {
-        padding: 10px 12px;
+        padding: 10px 10px;
         gap: 8px;
         margin-bottom: 12px;
       }
@@ -2172,54 +2422,36 @@
       .search-box svg {
         width: 15px;
         height: 15px;
-        left: 12px;
+        left: 11px;
       }
 
       .app-card {
         padding: 14px 12px;
         border-radius: 16px;
-        gap: 12px;
+        gap: 10px;
       }
       .app-code {
-        font-size: 16.5px;
+        font-size: 16px;
       }
       .app-name {
         font-size: 15px;
       }
       .meta-tag {
-        padding: 3px 8px;
-        font-size: 11px;
+        padding: 2px 7px;
+        font-size: 10.5px;
       }
       .btn-action {
         font-size: 11.5px;
-        padding: 8px 8px;
+        padding: 8px;
       }
 
       .toast {
-        left: 14px;
-        right: 14px;
-        bottom: 16px;
+        left: 12px;
+        right: 12px;
+        bottom: 14px;
         justify-content: center;
         text-align: center;
-      }
-
-      .qr-gen-panel {
-        grid-template-columns: 1fr;
-        gap: 16px;
-      }
-      .qr-card, .qr-preview-card {
-        padding: 16px 14px;
-        border-radius: 16px;
-      }
-      .canvas-container {
-        max-width: 100%;
-        padding: 8px;
-      }
-      #posterCanvas {
-        max-width: 100%;
-      }
-      .qr-actions-grid {
-        max-width: 100%;
+        font-size: 12.5px;
       }
     }
   </style>
