@@ -111,6 +111,12 @@
       outline: none;
       transition: all .25s ease;
     }
+    .pin-input::placeholder {
+      font-size: 14px;
+      letter-spacing: normal;
+      color: rgba(255, 255, 255, 0.4);
+      font-weight: 500;
+    }
     .pin-input:focus {
       border-color: var(--red);
       box-shadow: 0 0 0 4px rgba(239,43,28,.28);
@@ -2731,30 +2737,9 @@
     <img src="logo-transparent.png" alt="NEZHAMAINAN" class="login-logo">
     <div><span class="login-badge">✦ Shopee Super Summit 2026</span></div>
     <h1 class="login-title">Portal Kru & Admin</h1>
-    <p class="login-sub">Pilih peran akun atau masukkan PIN otorisasi kru.</p>
+    <p class="login-sub">Masukkan PIN otorisasi untuk mengakses panel sistem.</p>
 
-    <!-- Role Switcher Tabs for 1-Click Login -->
-    <div class="login-role-selector" id="loginRoleTabs">
-      <button type="button" class="btn-role-tab role-tab-spg active" id="btnRoleTabSpg" title="Pilih peran Petugas Booth">
-        <span style="font-size: 20px;">🟢</span>
-        <div style="text-align: left;">
-          <strong style="display:block; font-size:12.5px; color:#34d399; font-weight:800;">Petugas Booth (SPG)</strong>
-          <small style="color:var(--text-muted); font-size:10.5px;">Scan QR & Validasi (PIN 1234)</small>
-        </div>
-      </button>
-      <button type="button" class="btn-role-tab role-tab-supervisor" id="btnRoleTabSupervisor" title="Pilih peran Supervisor / Owner">
-        <span style="font-size: 20px;">👑</span>
-        <div style="text-align: left;">
-          <strong style="display:block; font-size:12.5px; color:var(--gold); font-weight:800;">Supervisor / Owner</strong>
-          <small style="color:var(--text-muted); font-size:10.5px;">Akses Penuh (PIN 2026)</small>
-        </div>
-      </button>
-    </div>
-
-    <input type="password" id="pinInput" class="pin-input" placeholder="••••" maxlength="10" autocomplete="off" inputmode="numeric" value="1234">
-    <div style="font-size: 11.5px; color: var(--text-muted); margin-top: -10px; margin-bottom: 20px; line-height: 1.45;">
-      💡 PIN Default: 🟢 <b>SPG = 1234</b> &bull; 👑 <b>Supervisor = 2026</b>
-    </div>
+    <input type="password" id="pinInput" class="pin-input" placeholder="Masukkan 4 Digit PIN" maxlength="10" autocomplete="off" inputmode="numeric" value="">
     <button type="button" id="btnLogin" class="btn-login">
       <span>Masuk ke Dashboard</span>
     </button>
@@ -3461,23 +3446,9 @@
       verifikasiDanMasuk(savedPin, false);
     }
 
-    // Role switcher tabs di Login Card
-    var tabSpg = document.getElementById('btnRoleTabSpg');
-    var tabSup = document.getElementById('btnRoleTabSupervisor');
-    var pInp   = document.getElementById('pinInput');
-    if (tabSpg && tabSup && pInp) {
-      tabSpg.addEventListener('click', function () {
-        tabSpg.classList.add('active');
-        tabSup.classList.remove('active');
-        pInp.value = '1234';
-        pInp.focus();
-      });
-      tabSup.addEventListener('click', function () {
-        tabSup.classList.add('active');
-        tabSpg.classList.remove('active');
-        pInp.value = '2026';
-        pInp.focus();
-      });
+    var pInp = document.getElementById('pinInput');
+    if (pInp && !savedPin) {
+      pInp.value = '';
     }
 
     // SPG Quick Station Buttons
@@ -3543,7 +3514,7 @@
           dash.style.display = 'none';
           logn.style.display = 'flex';
           logn.style.opacity = '1';
-          document.getElementById('pinInput').value = '1234';
+          document.getElementById('pinInput').value = '';
           var msg = document.getElementById('loginMsg');
           if (msg) {
             msg.className = 'login-msg info';
@@ -3649,7 +3620,7 @@
               '<div style="margin-top:6px;font-size:11.5px;line-height:1.5;">Script di Google Sheet masih versi lama yang belum mengenal akun admin.<br>👉 Buka <b>script.google.com</b>, paste file <code>Code.gs</code> terbaru, lalu klik <b>Deploy &gt; Manage Deployments &gt; New version</b>.</div>';
           } else {
             msg.innerHTML = '❌ <b>PIN Tidak Sesuai</b><br>' +
-              '<div style="margin-top:4px;font-size:11.5px;">Kombinasi angka keliru. PIN Default: <b>1234</b> (Petugas Booth SPG) atau <b>2026</b> (Supervisor).</div>';
+              '<div style="margin-top:4px;font-size:11.5px;">Kombinasi angka keliru. Silakan periksa kembali PIN otorisasi Anda.</div>';
           }
         }
       }
@@ -3709,7 +3680,7 @@
         msg.style.display = 'block';
         msg.className = 'login-msg err';
         msg.innerHTML = '⚡ <b>Mode Booth Siaga (Lokal)</b><br>' +
-          '<div style="margin-top:4px;font-size:11.5px;">Gunakan PIN Booth: <b>1234</b> (Kru/SPG) atau <b>2026</b> (Supervisor) untuk akses langsung tanpa internet.</div>';
+          '<div style="margin-top:4px;font-size:11.5px;">Koneksi cloud offline. Masukkan PIN otorisasi kru untuk verifikasi lokal.</div>';
       }
     });
   }
