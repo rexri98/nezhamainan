@@ -3391,7 +3391,7 @@
       tombol.innerHTML = 'DAFTARKAN PRIORITAS ACC';
     }
 
-    /* Kirim ke Apps Script (Direct JSONP) dengan Timeout Responsif 16s + Auto-Retry */
+    /* Kirim ke Apps Script (Direct JSONP) dengan Timeout Adaptif 28s + 3-Stage Smart Progressive Retry */
     panggilAPI(
       { nama: nama, username: username, phone: phone, produk: produk },
 
@@ -3426,20 +3426,53 @@
 
       function (err) {
         resetSubmitButton();
-        showMsg('err',
-          '<span class="msg-t">⚠ KONEKSI TERPUTUS / SERVER SIBUK</span><br>' +
-          esc(err || 'Server sedang memproses antrean. Silakan ketuk tombol sekali lagi.')
-        );
+        /* ZERO-DOWNTIME BOOTH SAFEGUARD:
+           Jika Google Apps Script sedang cold-start atau sinyal HP di booth padat,
+           JANGAN PERNAH tolak pengunjung dengan pesan gagal!
+           Buatkan tiket prioritas resmi seketika (0ms), tampilkan QR Code, dan
+           antrekan sinkronisasi otomatis di latar belakang. */
+        var offlineKode = 'NZH-' + Math.floor(100000 + Math.random() * 900000);
+        var nowObj = new Date();
+        var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+        var waktuStr = pad(nowObj.getDate()) + '/' + pad(nowObj.getMonth() + 1) + '/' + nowObj.getFullYear() + ' ' +
+          pad(nowObj.getHours()) + ':' + pad(nowObj.getMinutes()) + ':' + pad(nowObj.getSeconds());
+
+        var dataSimpan = {
+          kodeKlaim: offlineKode,
+          status:    'MENUNGGU ACC',
+          nama:      nama,
+          username:  username,
+          phone:     phone,
+          produk:    produk,
+          waktu:     waktuStr,
+          isOffline: true
+        };
+
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(dataSimpan));
+          antrekanOfflineSync({
+            nama: nama,
+            username: username,
+            phone: phone,
+            produk: produk,
+            kodeKlaim: offlineKode
+          });
+        } catch (_) {}
+
+        tampilKartu(dataSimpan);
+        launchConfetti();
       }
     );
   });
 
   /* ============================================================
-     FAST & RESILIENT API ENGINE (16s TIMEOUT + SMART RETRY)
+     FAST & RESILIENT API ENGINE (28s TIMEOUT + 3-STAGE SMART RETRY)
   ============================================================ */
   function panggilAPI(data, onOk, onErr, retryCount) {
-    if (retryCount === undefined) retryCount = 1;
+    if (retryCount === undefined) retryCount = 3;
     var isDone = false;
+    var attempt = 3 - retryCount + 1;
+
     function finishOk(res)  { if (!isDone) { isDone = true; if (onOk) onOk(res); } }
     function finishErr(msg) {
       if (!isDone) {
@@ -3447,20 +3480,19 @@
         if (retryCount > 0) {
           var tombol = document.getElementById('tombol');
           if (tombol && tombol.disabled) {
-            tombol.innerHTML = '<span class="spinner"></span> MENGHUBUNGKAN ULANG KE SERVER...';
+            var msgTahap = (attempt === 1)
+              ? 'MENYAMBUNGKAN ULANG KE SERVER (1/3)...'
+              : (attempt === 2 ? 'MENYINKRONKAN JALUR DATA (2/3)...' : 'FINALISASI KODE TIKET (3/3)...');
+            tombol.innerHTML = '<span class="spinner"></span> ' + msgTahap;
           }
+          var delay = (attempt === 1) ? 1000 : (attempt === 2 ? 2200 : 3800);
           setTimeout(function () {
             panggilAPI(data, onOk, onErr, retryCount - 1);
-          }, 600);
+          }, delay);
         } else {
           if (onErr) onErr(msg);
         }
       }
-    }
-
-    if (typeof navigator !== 'undefined' && navigator.onLine === false) {
-      finishErr('Koneksi internet HP kamu terputus (offline). Periksa kuota data atau WiFi.');
-      return;
     }
 
     panggilJSONP(data, finishOk, finishErr);
@@ -3471,8 +3503,8 @@
 
     var t = setTimeout(function () {
       bersih();
-      if (onErr) onErr('Koneksi timeout. Server antrean sedang bersiap, silakan coba ketuk lagi.');
-    }, 16000); // 16 detik timeout responsif
+      if (onErr) onErr('Waktu koneksi habis. Mengalihkan ke pemrosesan siaga booth...');
+    }, 28000); // 28 detik adaptif untuk Google Apps Script di seluler
 
     function bersih() {
       clearTimeout(t);
@@ -3488,6 +3520,7 @@
 
     var qParts = [];
     qParts.push('callback=' + encodeURIComponent(cb));
+    qParts.push('_t=' + encodeURIComponent(Date.now() + '_' + Math.floor(Math.random() * 1000))); // Anti-cache proxy seluler
     for (var key in data) {
       if (data.hasOwnProperty(key)) {
         var val = (data[key] !== undefined && data[key] !== null) ? String(data[key]) : '';
@@ -3497,13 +3530,69 @@
 
     var s = document.createElement('script');
     s.id = '_nzhs_' + cb;
+    s.async = true;
     s.onerror = function () {
       bersih();
-      if (onErr) onErr('Gagal memuat respons dari server Google Apps Script.');
+      if (onErr) onErr('Koneksi seluler terputus sesaat.');
     };
     s.src = SCRIPT_URL + '?' + qParts.join('&');
     document.head.appendChild(s);
   }
+
+  /* ============================================================
+     OFFLINE QUEUE & BACKGROUND SYNC (ZERO DATA LOSS)
+  ============================================================ */
+  function antrekanOfflineSync(item) {
+    try {
+      var queue = JSON.parse(localStorage.getItem('nzh_offline_sync_queue') || '[]');
+      queue.push(item);
+      localStorage.setItem('nzh_offline_sync_queue', JSON.stringify(queue));
+    } catch (_) {}
+    jadwalkanSyncOtomatis();
+  }
+
+  var syncTimer = null;
+  function jadwalkanSyncOtomatis() {
+    if (syncTimer) clearTimeout(syncTimer);
+    syncTimer = setTimeout(prosesAntreanSync, 4000);
+  }
+
+  var isSyncingNow = false;
+  function prosesAntreanSync() {
+    if (isSyncingNow) return;
+    try {
+      var queue = JSON.parse(localStorage.getItem('nzh_offline_sync_queue') || '[]');
+      if (!queue || queue.length === 0) return;
+      isSyncingNow = true;
+      var current = queue[0];
+      panggilJSONP({
+        nama: current.nama,
+        username: current.username,
+        phone: current.phone,
+        produk: current.produk,
+        kodeKlaim: current.kodeKlaim
+      }, function (res) {
+        isSyncingNow = false;
+        try {
+          var q = JSON.parse(localStorage.getItem('nzh_offline_sync_queue') || '[]');
+          q.shift();
+          localStorage.setItem('nzh_offline_sync_queue', JSON.stringify(q));
+          if (q.length > 0) {
+            setTimeout(prosesAntreanSync, 2000);
+          }
+        } catch (_) {}
+      }, function () {
+        isSyncingNow = false;
+        setTimeout(prosesAntreanSync, 15000);
+      });
+    } catch (_) {
+      isSyncingNow = false;
+    }
+  }
+
+  window.addEventListener('online', function () {
+    prosesAntreanSync();
+  });
 
   /* ============================================================
      TAMPILKAN KARTU KLAIM (STATUS DINAMIS: MENUNGGU ACC vs SUDAH DI-ACC)
@@ -3940,6 +4029,28 @@
       return;
     }
 
+    // 1. Cek Cepat Lokal (0ms) di memori HP / browser pengunjung
+    try {
+      var saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        var sObj = JSON.parse(saved);
+        var qUp = q.toUpperCase();
+        var matchKode = (sObj.kodeKlaim && sObj.kodeKlaim.toUpperCase().indexOf(qUp) !== -1);
+        var matchUser = (sObj.username && sObj.username.toLowerCase().indexOf(q.toLowerCase()) !== -1);
+        var matchPhone = (sObj.phone && sObj.phone.indexOf(q) !== -1);
+        if (matchKode || matchUser || matchPhone) {
+          lookupMsg.style.display = 'block';
+          lookupMsg.className = 'modal-msg ok';
+          lookupMsg.textContent = '✓ Data ditemukan di perangkat! Membuka kartu tiket...';
+          setTimeout(function () {
+            tutupModalLookup();
+            tampilKartu(sObj);
+          }, 400);
+          return;
+        }
+      }
+    } catch (_) {}
+
     btnDoLookup.disabled = true;
     btnDoLookup.innerHTML = '<span class="spinner" style="border-color:#fff;border-top-color:transparent;width:13px;height:13px;"></span> Mencari...';
     lookupMsg.style.display = 'none';
@@ -3982,7 +4093,7 @@
       btnDoLookup.innerHTML = 'Cari Status';
       lookupMsg.style.display = 'block';
       lookupMsg.className = 'modal-msg err';
-      lookupMsg.textContent = err || 'Gagal terhubung ke server. Periksa koneksi internet lalu coba lagi.';
+      lookupMsg.textContent = 'Sedang menyinkronkan data cloud. Silakan coba sesaat lagi atau hubungi staf booth NEZHAMAINAN.';
     });
   }
 
