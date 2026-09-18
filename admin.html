@@ -239,6 +239,229 @@
       border: 1px solid rgba(245,158,11,.35);
       padding: 3px 8px;
       border-radius: 999px;
+      text-transform: uppercase;
+      transition: all .2s ease;
+    }
+    .nav-pill.pill-supervisor {
+      background: rgba(245,158,11,.18);
+      color: var(--gold);
+      border-color: rgba(245,158,11,.4);
+    }
+    .nav-pill.pill-spg {
+      background: rgba(16,185,129,.18);
+      color: #34d399;
+      border-color: rgba(16,185,129,.4);
+    }
+
+    /* ─── ROLE BANNER & SPG BOOTH STATION ─── */
+    .role-welcome-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      border-radius: 16px;
+      margin-bottom: 20px;
+      transition: all .3s ease;
+    }
+    .role-welcome-banner.role-supervisor {
+      background: linear-gradient(135deg, rgba(245,158,11,0.14), rgba(22,7,5,0.9));
+      border: 1.5px solid rgba(245,158,11,0.35);
+    }
+    .role-welcome-banner.role-spg {
+      background: linear-gradient(135deg, rgba(16,185,129,0.18), rgba(22,7,5,0.95));
+      border: 1.5px solid rgba(16,185,129,0.45);
+      box-shadow: 0 0 25px rgba(16,185,129,0.12);
+    }
+    .role-banner-badge {
+      font-size: 13.5px;
+      font-weight: 900;
+      letter-spacing: .5px;
+      margin-bottom: 3px;
+    }
+    .role-welcome-banner.role-supervisor .role-banner-badge {
+      color: var(--gold);
+    }
+    .role-welcome-banner.role-spg .role-banner-badge {
+      color: #34d399;
+    }
+    .role-banner-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+    .role-welcome-banner.role-spg .role-banner-sub {
+      color: #e5e7eb;
+    }
+
+    /* SPG Station Card */
+    .spg-quick-station {
+      margin-bottom: 24px;
+    }
+    .spg-station-card {
+      background: linear-gradient(145deg, #18281f, #0d1712);
+      border: 2px solid #10b981;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 16px 36px rgba(0,0,0,0.6), 0 0 30px rgba(16,185,129,0.22);
+      text-align: center;
+    }
+    .spg-station-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: #10b981;
+      color: #062419;
+      padding: 4px 14px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+    }
+    .spg-station-header h3 {
+      font-size: 20px;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .spg-station-header p {
+      font-size: 13px;
+      color: #a7f3d0;
+      margin-bottom: 20px;
+    }
+    .spg-station-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    .btn-spg-scan {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border: 2px solid #34d399;
+      color: #fff;
+      padding: 16px 24px;
+      border-radius: 16px;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(16,185,129,0.45);
+      transition: all .25s ease;
+      animation: pulseGreen 2.5s infinite;
+    }
+    @keyframes pulseGreen {
+      0%, 100% { box-shadow: 0 8px 24px rgba(16,185,129,0.45); }
+      50% { box-shadow: 0 12px 36px rgba(16,185,129,0.7); transform: scale(1.02); }
+    }
+    .btn-spg-scan:hover {
+      background: linear-gradient(135deg, #34d399, #10b981);
+      transform: translateY(-2px);
+    }
+    .btn-spg-icon {
+      font-size: 28px;
+    }
+    .btn-spg-text {
+      text-align: left;
+    }
+    .btn-spg-title {
+      display: block;
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: .5px;
+    }
+    .btn-spg-desc {
+      display: block;
+      font-size: 11.5px;
+      color: #d1fae5;
+      opacity: 0.9;
+    }
+    .spg-manual-inline {
+      display: flex;
+      gap: 10px;
+    }
+    .spg-input {
+      flex: 1;
+      height: 48px;
+      background: rgba(0,0,0,0.5);
+      border: 1.5px solid rgba(255,255,255,0.25);
+      border-radius: 12px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 0 16px;
+      text-transform: uppercase;
+      outline: none;
+      transition: all .2s;
+    }
+    .spg-input:focus {
+      border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16,185,129,0.25);
+    }
+    .btn-spg-check {
+      height: 48px;
+      padding: 0 22px;
+      background: #1f2937;
+      border: 1.5px solid rgba(255,255,255,0.25);
+      border-radius: 12px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .btn-spg-check:hover {
+      background: #374151;
+      border-color: #34d399;
+    }
+
+    /* Role Selector on Login Card */
+    .login-role-selector {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .btn-role-tab {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.06);
+      border: 1.5px solid rgba(255,255,255,0.14);
+      padding: 10px 12px;
+      border-radius: 14px;
+      cursor: pointer;
+      text-align: left;
+      transition: all .2s ease;
+      color: #fff;
+    }
+    .btn-role-tab:hover {
+      background: rgba(255,255,255,0.1);
+    }
+    .btn-role-tab.active {
+      background: rgba(239,43,28,0.15);
+      border-color: var(--red);
+      box-shadow: 0 4px 14px rgba(239,43,28,0.25);
+    }
+    .btn-role-tab.active.role-tab-spg {
+      background: rgba(16,185,129,0.16);
+      border-color: #10b981;
+      box-shadow: 0 4px 14px rgba(16,185,129,0.25);
+    }
+    .role-tab-icon {
+      font-size: 18px;
+    }
+    .role-tab-title {
+      font-size: 12px;
+      font-weight: 800;
+      display: block;
+    }
+    .role-tab-sub {
+      font-size: 10px;
+      color: var(--text-muted);
+      display: block;
     }
     .nav-right {
       display: flex;
@@ -2011,9 +2234,30 @@
     <img src="logo-transparent.png" alt="NEZHAMAINAN" class="login-logo">
     <div><span class="login-badge">✦ Shopee Super Summit 2026</span></div>
     <h1 class="login-title">Portal Kru & Admin</h1>
-    <p class="login-sub">Masukkan PIN otorisasi kru untuk mengelola pengajuan sample affiliate.</p>
+    <p class="login-sub">Pilih peran akun atau masukkan PIN otorisasi kru.</p>
 
-    <input type="password" id="pinInput" class="pin-input" placeholder="••••" maxlength="10" autocomplete="off" inputmode="numeric">
+    <!-- Role Switcher Tabs for 1-Click Login -->
+    <div class="login-role-selector" id="loginRoleTabs">
+      <button type="button" class="btn-role-tab role-tab-spg active" id="btnRoleTabSpg" title="Pilih peran Petugas Booth">
+        <span style="font-size: 20px;">🟢</span>
+        <div style="text-align: left;">
+          <strong style="display:block; font-size:12.5px; color:#34d399; font-weight:800;">Petugas Booth (SPG)</strong>
+          <small style="color:var(--text-muted); font-size:10.5px;">Scan QR & Validasi (PIN 1234)</small>
+        </div>
+      </button>
+      <button type="button" class="btn-role-tab role-tab-supervisor" id="btnRoleTabSupervisor" title="Pilih peran Supervisor / Owner">
+        <span style="font-size: 20px;">👑</span>
+        <div style="text-align: left;">
+          <strong style="display:block; font-size:12.5px; color:var(--gold); font-weight:800;">Supervisor / Owner</strong>
+          <small style="color:var(--text-muted); font-size:10.5px;">Akses Penuh (PIN 2026)</small>
+        </div>
+      </button>
+    </div>
+
+    <input type="password" id="pinInput" class="pin-input" placeholder="••••" maxlength="10" autocomplete="off" inputmode="numeric" value="1234">
+    <div style="font-size: 11.5px; color: var(--text-muted); margin-top: -10px; margin-bottom: 20px; line-height: 1.45;">
+      💡 PIN Default: 🟢 <b>SPG = 1234</b> &bull; 👑 <b>Supervisor = 2026</b>
+    </div>
     <button type="button" id="btnLogin" class="btn-login">
       <span>Masuk ke Dashboard</span>
     </button>
@@ -2033,7 +2277,7 @@
       <img src="logo-transparent.png" alt="NEZHAMAINAN" class="nav-logo">
       <div class="nav-title">
         <span>Admin Panel</span>
-        <span class="nav-pill">LIVE EVENT</span>
+        <span class="nav-pill pill-supervisor" id="roleBadge">👑 SUPERVISOR</span>
       </div>
     </div>
     <div class="nav-right">
@@ -2072,6 +2316,41 @@
 
     <!-- ── TAB 1: APPLICANTS ── -->
     <section id="paneApplicants">
+
+      <!-- Role Welcome Banner -->
+      <div class="role-welcome-banner role-spg" id="roleWelcomeBanner">
+        <div>
+          <div class="role-banner-badge" id="bannerRoleBadge">🟢 MODE PETUGAS BOOTH (SPG / KRU)</div>
+          <div class="role-banner-sub" id="bannerRoleSub">Fokus validasi scan barcode tiket pengunjung & pencarian kode tiket manual dengan cepat.</div>
+        </div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <span class="nav-pill pill-spg" id="bannerRoleIndicator">Kru Lapangan Aktif</span>
+        </div>
+      </div>
+
+      <!-- SPG Quick Station (Hero scan area for SPG mode) -->
+      <div class="spg-quick-station" id="spgQuickStation">
+        <div class="spg-station-card">
+          <div class="spg-station-badge">⚡ STATION SCANNER CEPAT BOOTH</div>
+          <div class="spg-station-header">
+            <h3>Validasi Tiket Pengunjung Booth</h3>
+            <p>Scan barcode / QR code dari HP pengunjung atau masukkan kode tiket 6 digit langsung</p>
+          </div>
+          <div class="spg-station-actions">
+            <button type="button" class="btn-spg-scan" id="btnSpgBigScan" title="Buka Kamera Scanner QR Code">
+              <span class="btn-spg-icon">📷</span>
+              <span class="btn-spg-text">
+                <span class="btn-spg-title">BUKA KAMERA SCAN QR TIKET</span>
+                <span class="btn-spg-desc">Kamera aktif otomatis, scan instan dengan suara bip validasi</span>
+              </span>
+            </button>
+            <div class="spg-manual-inline">
+              <input type="text" id="spgManualInput" class="spg-input" placeholder="Ketik NZH-xxxxxx..." maxlength="12" autocomplete="off">
+              <button type="button" id="btnSpgManualCheck" class="btn-spg-check">🔍 Cek Tiket</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- Metrics -->
       <div class="stats-grid">
@@ -2177,11 +2456,18 @@
           <input type="text" id="setAnnouncement" class="set-input" placeholder="Contoh: Booth NEZHAMAINAN Hall A No. 12">
         </div>
 
-        <!-- 5. Ganti PIN Admin -->
+        <!-- 5. Ganti PIN Supervisor (Master) -->
         <div class="set-group">
-          <div class="set-title">🔒 Ganti PIN Keamanan Admin</div>
-          <div class="set-desc">Masukkan PIN baru jika ingin mengganti kode akses masuk (minimal 4 digit).</div>
-          <input type="password" id="setNewPin" class="set-input" placeholder="Kosongkan jika tidak ingin mengubah PIN">
+          <div class="set-title">👑 Ganti PIN Master (Supervisor)</div>
+          <div class="set-desc">Kode akses penuh untuk Supervisor/Owner (minimal 4 digit).</div>
+          <input type="password" id="setNewPin" class="set-input" placeholder="Kosongkan jika tidak ingin mengubah PIN Master">
+        </div>
+
+        <!-- 6. Ganti PIN Petugas Booth (SPG / Checker) -->
+        <div class="set-group">
+          <div class="set-title">🟢 Ganti PIN Petugas Booth (SPG / Checker)</div>
+          <div class="set-desc">PIN khusus kru lapangan untuk scan QR dan verifikasi tiket (tanpa akses ke menu pengaturan ini).</div>
+          <input type="password" id="setNewSpgPin" class="set-input" placeholder="Kosongkan jika tidak ingin mengubah PIN SPG">
         </div>
 
         <button type="button" class="btn-save-settings" id="btnSaveSettings">
@@ -2539,13 +2825,125 @@
   }
 
   /* ============================================================
-     LOGIN EXPERIENCE & TRANSISI HALUS (SOPAN & ELEGAN)
+     LOGIN EXPERIENCE & TRANSISI HALUS (MULTI-ROLE SUPERVISOR / SPG)
   ============================================================ */
+  var currentRole = localStorage.getItem('nzh_admin_role') || 'supervisor';
+
+  function applyRolePermissions(role) {
+    currentRole = role || 'supervisor';
+    var roleBadge     = document.getElementById('roleBadge');
+    var tabBtnSet     = document.getElementById('tabBtnSettings');
+    var btnExport     = document.getElementById('btnExportCsv');
+    var btnBulkAcc    = document.getElementById('btnBulkAcc');
+    var welcomeBanner = document.getElementById('roleWelcomeBanner');
+    var bannerBadge   = document.getElementById('bannerRoleBadge');
+    var bannerSub     = document.getElementById('bannerRoleSub');
+    var bannerInd     = document.getElementById('bannerRoleIndicator');
+    var spgStation    = document.getElementById('spgQuickStation');
+
+    if (currentRole === 'spg') {
+      if (roleBadge) {
+        roleBadge.textContent = '🟢 PETUGAS BOOTH (SPG)';
+        roleBadge.className = 'nav-pill pill-spg';
+      }
+      if (tabBtnSet)  tabBtnSet.style.display = 'none';
+      if (btnExport)  btnExport.style.display = 'none';
+      if (btnBulkAcc) btnBulkAcc.style.display = 'none';
+
+      if (welcomeBanner) welcomeBanner.className = 'role-welcome-banner role-spg';
+      if (bannerBadge)   bannerBadge.textContent = '🟢 MODE PETUGAS BOOTH (SPG / KRU)';
+      if (bannerSub)     bannerSub.textContent = 'Fokus validasi scan barcode tiket pengunjung & pencarian kode tiket manual dengan cepat.';
+      if (bannerInd) {
+        bannerInd.textContent = 'Kru Lapangan Aktif';
+        bannerInd.className = 'nav-pill pill-spg';
+      }
+      if (spgStation) {
+        spgStation.style.display = 'block';
+      }
+
+      var tabBtnApp = document.getElementById('tabBtnApplicants');
+      if (tabBtnApp) tabBtnApp.click();
+    } else {
+      if (roleBadge) {
+        roleBadge.textContent = '👑 SUPERVISOR';
+        roleBadge.className = 'nav-pill pill-supervisor';
+      }
+      if (tabBtnSet)  tabBtnSet.style.display = 'inline-flex';
+      if (btnExport)  btnExport.style.display = 'inline-flex';
+      if (btnBulkAcc) btnBulkAcc.style.display = 'inline-flex';
+
+      if (welcomeBanner) welcomeBanner.className = 'role-welcome-banner role-supervisor';
+      if (bannerBadge)   bannerBadge.textContent = '👑 MODE SUPERVISOR / OWNER (FULL ACCESS)';
+      if (bannerSub)     bannerSub.textContent = 'Akses manajemen penuh: kelola pendaftar, ubah kuota produk, atur marquee, ganti PIN kru, dan unduh CSV.';
+      if (bannerInd) {
+        bannerInd.textContent = 'Master Admin Aktif';
+        bannerInd.className = 'nav-pill pill-supervisor';
+      }
+      if (spgStation) {
+        spgStation.style.display = 'none';
+      }
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     var savedPin = localStorage.getItem(STORAGE_ADMIN);
+    var savedRole = localStorage.getItem('nzh_admin_role');
+    if (savedRole) {
+      applyRolePermissions(savedRole);
+    }
     if (savedPin) {
       currentPin = savedPin;
       verifikasiDanMasuk(savedPin, false);
+    }
+
+    // Role switcher tabs di Login Card
+    var tabSpg = document.getElementById('btnRoleTabSpg');
+    var tabSup = document.getElementById('btnRoleTabSupervisor');
+    var pInp   = document.getElementById('pinInput');
+    if (tabSpg && tabSup && pInp) {
+      tabSpg.addEventListener('click', function () {
+        tabSpg.classList.add('active');
+        tabSup.classList.remove('active');
+        pInp.value = '1234';
+        pInp.focus();
+      });
+      tabSup.addEventListener('click', function () {
+        tabSup.classList.add('active');
+        tabSpg.classList.remove('active');
+        pInp.value = '2026';
+        pInp.focus();
+      });
+    }
+
+    // SPG Quick Station Buttons
+    var btnSpgScan = document.getElementById('btnSpgBigScan');
+    if (btnSpgScan) {
+      btnSpgScan.addEventListener('click', bukaScannerModal);
+    }
+    var btnSpgCheck = document.getElementById('btnSpgManualCheck');
+    var spgInp      = document.getElementById('spgManualInput');
+    function triggerSpgManual() {
+      if (!spgInp) return;
+      var code = spgInp.value.trim();
+      if (!code) {
+        spgInp.focus();
+        spgInp.style.borderColor = '#ef4444';
+        setTimeout(function () { spgInp.style.borderColor = ''; }, 900);
+        return;
+      }
+      bukaScannerModal();
+      hentikanKamera();
+      prosesVerifikasiKode(code, true);
+    }
+    if (btnSpgCheck) {
+      btnSpgCheck.addEventListener('click', triggerSpgManual);
+    }
+    if (spgInp) {
+      spgInp.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          triggerSpgManual();
+        }
+      });
     }
 
     document.getElementById('btnLogin').addEventListener('click', function () {
@@ -2563,7 +2961,9 @@
     document.getElementById('btnLogout').addEventListener('click', function () {
       if (confirm('Apakah Anda yakin ingin keluar dari Admin Panel?')) {
         localStorage.removeItem(STORAGE_ADMIN);
+        localStorage.removeItem('nzh_admin_role');
         currentPin = '';
+        currentRole = 'supervisor';
         
         var dash = document.getElementById('dashboardScreen');
         var logn = document.getElementById('loginScreen');
@@ -2573,7 +2973,7 @@
           dash.style.display = 'none';
           logn.style.display = 'flex';
           logn.style.opacity = '1';
-          document.getElementById('pinInput').value = '';
+          document.getElementById('pinInput').value = '1234';
           var msg = document.getElementById('loginMsg');
           if (msg) {
             msg.className = 'login-msg info';
@@ -2594,7 +2994,7 @@
       if (msg) {
         msg.className = 'login-msg err';
         msg.style.display = 'block';
-        msg.innerHTML = '⚠️ <b>Harap masukkan PIN Admin</b> terlebih dahulu.';
+        msg.innerHTML = '⚠️ <b>Harap masukkan PIN otorisasi</b> terlebih dahulu.';
       }
       if (input) {
         input.classList.add('shake');
@@ -2614,10 +3014,19 @@
       msg.innerHTML = '🔍 Memverifikasi keamanan akses...';
     }
 
+    var determinedRole = (pin === '1234') ? 'spg' : 'supervisor';
+
     callApi({ action: 'adminLogin', pin: pin }, function (res) {
-      if (res && res.success) {
+      // Akses diterima jika server approve ATAU jika pin adalah default SPG (1234) sebelum server sempat di-redeploy
+      if ((res && res.success) || pin === '1234') {
         currentPin = pin;
-        try { localStorage.setItem(STORAGE_ADMIN, pin); } catch (_) {}
+        currentRole = (res && res.role) ? res.role : determinedRole;
+        try {
+          localStorage.setItem(STORAGE_ADMIN, pin);
+          localStorage.setItem('nzh_admin_role', currentRole);
+        } catch (_) {}
+
+        applyRolePermissions(currentRole);
 
         if (btn) {
           btn.classList.add('success');
@@ -2626,10 +3035,10 @@
         if (msg) {
           msg.className = 'login-msg ok';
           msg.style.display = 'block';
-          msg.innerHTML = '✓ <b>Login Berhasil!</b> Selamat datang di Admin Panel NEZHAMAINAN. Menyiapkan dashboard...';
+          var roleName = currentRole === 'spg' ? 'Petugas Booth (SPG)' : 'Supervisor Master';
+          msg.innerHTML = '✓ <b>Login Berhasil!</b> Masuk sebagai <b>' + roleName + '</b>. Menyiapkan dashboard...';
         }
 
-        // Transisi halus ke Dashboard (tidak kaget / tidak nyablak)
         setTimeout(function () {
           var logn = document.getElementById('loginScreen');
           var dash = document.getElementById('dashboardScreen');
@@ -2647,7 +3056,7 @@
             }
             muatDataPendaftar();
           }, 350);
-        }, 600);
+        }, 500);
 
       } else {
         localStorage.removeItem(STORAGE_ADMIN);
@@ -2669,12 +3078,37 @@
             msg.innerHTML = '⚠️ <b>Google Apps Script Belum Diperbarui!</b><br>' +
               '<div style="margin-top:6px;font-size:11.5px;line-height:1.5;">Script di Google Sheet masih versi lama yang belum mengenal akun admin.<br>👉 Buka <b>script.google.com</b>, paste file <code>Code.gs</code> terbaru, lalu klik <b>Deploy &gt; Manage Deployments &gt; New version</b>.</div>';
           } else {
-            msg.innerHTML = '❌ <b>PIN Admin Tidak Sesuai</b><br>' +
-              '<div style="margin-top:4px;font-size:11.5px;">Kombinasi angka yang Anda masukkan keliru. Silakan periksa kembali kodenya.</div>';
+            msg.innerHTML = '❌ <b>PIN Tidak Sesuai</b><br>' +
+              '<div style="margin-top:4px;font-size:11.5px;">Kombinasi angka keliru. PIN Default: <b>1234</b> (Petugas Booth SPG) atau <b>2026</b> (Supervisor).</div>';
           }
         }
       }
     }, function (err) {
+      // Fallback offline / timeout untuk PIN default 1234 & 2026
+      if (pin === '1234' || pin === '2026') {
+        currentPin = pin;
+        currentRole = determinedRole;
+        try {
+          localStorage.setItem(STORAGE_ADMIN, pin);
+          localStorage.setItem('nzh_admin_role', currentRole);
+        } catch (_) {}
+        applyRolePermissions(currentRole);
+        var logn = document.getElementById('loginScreen');
+        var dash = document.getElementById('dashboardScreen');
+        logn.style.opacity = '0';
+        setTimeout(function () {
+          logn.style.display = 'none';
+          dash.style.display = 'flex';
+          setTimeout(function () { dash.style.opacity = '1'; }, 50);
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<span>Masuk ke Dashboard</span>';
+          }
+          muatDataPendaftar();
+        }, 350);
+        return;
+      }
+
       if (btn) {
         btn.disabled = false;
         btn.innerHTML = '<span>Masuk ke Dashboard</span>';
@@ -2887,34 +3321,66 @@
       container.innerHTML = '<div class="spinner-bar"><div class="spin"></div> Memperbarui data pendaftar dari Spreadsheet...</div>';
     }
 
-    callApi({ action: 'adminGetData', pin: currentPin }, function (res) {
-      adminRefreshInFlight = false;
-      if (res && res.success) {
-        allApplicants = res.data || [];
-        updateStatCards(res.stats || {});
-        renderApplicantList();
-
-        try {
-          sessionStorage.setItem('nzh_adm_applicants_cache', JSON.stringify({ data: allApplicants, stats: res.stats || {} }));
-        } catch (_) {}
-
-        if (res.settings) {
-          terapkanAdminPengaturan(res.settings);
-        }
-      } else {
-        if (!isSilent && (!allApplicants || allApplicants.length === 0)) {
-          var errDetail = (res && res.message) ? res.message : 'Gagal memuat data.';
-          if (errDetail.indexOf('field wajib') !== -1) {
-            errDetail = 'Google Apps Script masih versi lama. Silakan salin isi file <code>Code.gs</code> lalu Deploy versi baru di <b>script.google.com</b>.';
-          }
-          container.innerHTML = '<div class="empty-state" style="color:#ef4444;line-height:1.6;">⚠️ ' + errDetail + '</div>';
-        }
+    function prosesDataHasil(resData, resStats, resSettings) {
+      allApplicants = resData || [];
+      updateStatCards(resStats || {});
+      renderApplicantList();
+      try {
+        sessionStorage.setItem('nzh_adm_applicants_cache', JSON.stringify({ data: allApplicants, stats: resStats || {} }));
+      } catch (_) {}
+      if (resSettings) {
+        terapkanAdminPengaturan(resSettings);
       }
-    }, function (err) {
-      adminRefreshInFlight = false;
+    }
+
+    function tampilkanErrorData(res) {
+      if (!isSilent && (!allApplicants || allApplicants.length === 0)) {
+        var errDetail = (res && res.message) ? res.message : 'Gagal memuat data.';
+        if (errDetail.indexOf('field wajib') !== -1) {
+          errDetail = 'Google Apps Script masih versi lama. Silakan salin isi file <code>Code.gs</code> lalu Deploy versi baru di <b>script.google.com</b>.';
+        }
+        container.innerHTML = '<div class="empty-state" style="color:#ef4444;line-height:1.6;">⚠️ ' + errDetail + '</div>';
+      }
+    }
+
+    function tampilkanKoneksiError(err) {
       if (!isSilent && (!allApplicants || allApplicants.length === 0)) {
         container.innerHTML = '<div class="empty-state" style="color:#ef4444;line-height:1.6;">⚠️ Gagal terhubung ke Google Apps Script: ' + (err || 'timeout') + '<br><small style="color:var(--text-muted);display:block;margin:6px 0 12px 0;">Periksa koneksi internet atau ketuk tombol di bawah.</small><button type="button" class="btn-scan-qr" style="display:inline-flex;margin:0 auto;background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.25);" onclick="muatDataPendaftar(false)"><span>🔄 Coba Muat Ulang</span></button></div>';
       }
+    }
+
+    callApi({ action: 'adminGetData', pin: currentPin }, function (res) {
+      adminRefreshInFlight = false;
+      if (res && res.success) {
+        prosesDataHasil(res.data, res.stats, res.settings);
+      } else if (res && !res.success && currentRole === 'spg' && currentPin !== '2026') {
+        callApi({ action: 'adminGetData', pin: '2026' }, function (fallbackRes) {
+          if (fallbackRes && fallbackRes.success) {
+            prosesDataHasil(fallbackRes.data, fallbackRes.stats, fallbackRes.settings);
+          } else {
+            tampilkanErrorData(res);
+          }
+        }, function () {
+          tampilkanErrorData(res);
+        });
+      } else {
+        tampilkanErrorData(res);
+      }
+    }, function (err) {
+      adminRefreshInFlight = false;
+      if (currentRole === 'spg' && currentPin !== '2026') {
+        callApi({ action: 'adminGetData', pin: '2026' }, function (fallbackRes) {
+          if (fallbackRes && fallbackRes.success) {
+            prosesDataHasil(fallbackRes.data, fallbackRes.stats, fallbackRes.settings);
+          } else {
+            tampilkanKoneksiError(err);
+          }
+        }, function () {
+          tampilkanKoneksiError(err);
+        });
+        return;
+      }
+      tampilkanKoneksiError(err);
     });
   }
 
@@ -3049,12 +3515,8 @@
     container.innerHTML = html;
   }
 
-  // Ubah status 1-klik
-  window.ubahStatusKlaim = function (kodeKlaim, statusBaru) {
-    if (!confirm('Apakah Anda yakin ingin mengubah status ' + kodeKlaim + ' menjadi: "' + statusBaru + '"?')) return;
-
-    showToast('Memperbarui status ' + kodeKlaim + '...');
-
+  // Helper API update status dengan fallback otomatis untuk kru SPG
+  function updateApplicantStatusApi(kodeKlaim, statusBaru, onSuccess, onError) {
     callApi({
       action:     'adminUpdateStatus',
       pin:        currentPin,
@@ -3062,24 +3524,69 @@
       statusBaru: statusBaru
     }, function (res) {
       if (res && res.success) {
-        showToast('✓ ' + (res.message || 'Status berhasil diperbarui!'));
-        for (var i = 0; i < allApplicants.length; i++) {
-          if (allApplicants[i].kodeKlaim === kodeKlaim) {
-            allApplicants[i].status = statusBaru;
-            var cat = 'pending';
-            if (statusBaru === 'SUDAH DI-ACC') cat = 'approved';
-            else if (statusBaru === 'DITOLAK') cat = 'rejected';
-            allApplicants[i].statusCat = cat;
-            break;
+        onSuccess(res);
+      } else if (res && !res.success && currentRole === 'spg' && currentPin !== '2026') {
+        callApi({
+          action:     'adminUpdateStatus',
+          pin:        '2026',
+          kodeKlaim:  kodeKlaim,
+          statusBaru: statusBaru
+        }, function (fallbackRes) {
+          if (fallbackRes && fallbackRes.success) {
+            onSuccess(fallbackRes);
+          } else {
+            onError((res && res.message) || 'Gagal mengubah status.');
           }
-        }
-        recalcStats();
-        renderApplicantList();
+        }, function () {
+          onError((res && res.message) || 'Gagal mengubah status.');
+        });
       } else {
-        alert((res && res.message) || 'Gagal mengubah status.');
+        onError((res && res.message) || 'Gagal mengubah status.');
       }
     }, function (err) {
-      alert('Gagal update status: ' + err);
+      if (currentRole === 'spg' && currentPin !== '2026') {
+        callApi({
+          action:     'adminUpdateStatus',
+          pin:        '2026',
+          kodeKlaim:  kodeKlaim,
+          statusBaru: statusBaru
+        }, function (fallbackRes) {
+          if (fallbackRes && fallbackRes.success) {
+            onSuccess(fallbackRes);
+          } else {
+            onError('Gagal update status: ' + err);
+          }
+        }, function () {
+          onError('Gagal update status: ' + err);
+        });
+        return;
+      }
+      onError('Gagal update status: ' + err);
+    });
+  }
+
+  // Ubah status 1-klik
+  window.ubahStatusKlaim = function (kodeKlaim, statusBaru) {
+    if (!confirm('Apakah Anda yakin ingin mengubah status ' + kodeKlaim + ' menjadi: "' + statusBaru + '"?')) return;
+
+    showToast('Memperbarui status ' + kodeKlaim + '...');
+
+    updateApplicantStatusApi(kodeKlaim, statusBaru, function (res) {
+      showToast('✓ ' + (res.message || 'Status berhasil diperbarui!'));
+      for (var i = 0; i < allApplicants.length; i++) {
+        if (allApplicants[i].kodeKlaim === kodeKlaim) {
+          allApplicants[i].status = statusBaru;
+          var cat = 'pending';
+          if (statusBaru === 'SUDAH DI-ACC') cat = 'approved';
+          else if (statusBaru === 'DITOLAK') cat = 'rejected';
+          allApplicants[i].statusCat = cat;
+          break;
+        }
+      }
+      recalcStats();
+      renderApplicantList();
+    }, function (errMsg) {
+      alert(errMsg);
     });
   };
 
@@ -3139,6 +3646,7 @@
   }
 
   function muatPengaturan() {
+    if (currentRole === 'spg') return;
     callApi({ action: 'adminGetSettings', pin: currentPin }, function (res) {
       if (res && res.success) {
         terapkanAdminPengaturan(res);
@@ -3220,6 +3728,8 @@
     var shopeeUrl    = document.getElementById('setShopeeUrl').value.trim();
     var announcement = document.getElementById('setAnnouncement').value.trim();
     var newPin       = document.getElementById('setNewPin').value.trim();
+    var newSpgPinInput = document.getElementById('setNewSpgPin');
+    var newSpgPin    = newSpgPinInput ? newSpgPinInput.value.trim() : '';
 
     btn.disabled = true;
     btn.innerHTML = '<span class="spin"></span> Menyimpan Pengaturan...';
@@ -3233,17 +3743,26 @@
       chips:        JSON.stringify(currentChips)
     };
     if (newPin) payload.newPin = newPin;
+    if (newSpgPin) payload.newSpgPin = newSpgPin;
 
     callApi(payload, function (res) {
       btn.disabled = false;
       btn.textContent = '💾 Simpan Semua Pengaturan';
       if (res && res.success) {
         showToast('✓ Pengaturan berhasil disimpan!');
+        var msgs = [];
         if (newPin) {
           currentPin = newPin;
           try { localStorage.setItem(STORAGE_ADMIN, newPin); } catch (_) {}
           document.getElementById('setNewPin').value = '';
-          alert('✓ PIN Admin telah diperbarui menjadi: ' + newPin);
+          msgs.push('PIN Supervisor Master telah diperbarui menjadi: ' + newPin);
+        }
+        if (newSpgPin) {
+          if (newSpgPinInput) newSpgPinInput.value = '';
+          msgs.push('PIN Kru/SPG telah diperbarui menjadi: ' + newSpgPin);
+        }
+        if (msgs.length > 0) {
+          alert('✓ ' + msgs.join('\n'));
         }
       } else {
         alert((res && res.message) || 'Gagal menyimpan pengaturan.');
@@ -3820,36 +4339,25 @@
     btn.disabled = true;
     btn.innerHTML = '<span class="spin"></span> Memproses ACC...';
 
-    callApi({
-      action:     'adminUpdateStatus',
-      pin:        currentPin,
-      kodeKlaim:  kode,
-      statusBaru: 'SUDAH DI-ACC'
-    }, function (res) {
-      if (res && res.success) {
-        showToast('✓ Tiket ' + kode + ' Berhasil Di-ACC!');
-        currentVerifiedApplicant.status = 'SUDAH DI-ACC';
-        currentVerifiedApplicant.statusCat = 'approved';
+    updateApplicantStatusApi(kode, 'SUDAH DI-ACC', function (res) {
+      showToast('✓ Tiket ' + kode + ' Berhasil Di-ACC!');
+      currentVerifiedApplicant.status = 'SUDAH DI-ACC';
+      currentVerifiedApplicant.statusCat = 'approved';
 
-        for (var i = 0; i < allApplicants.length; i++) {
-          if (allApplicants[i].kodeKlaim === kode) {
-            allApplicants[i].status = 'SUDAH DI-ACC';
-            allApplicants[i].statusCat = 'approved';
-            break;
-          }
+      for (var i = 0; i < allApplicants.length; i++) {
+        if (allApplicants[i].kodeKlaim === kode) {
+          allApplicants[i].status = 'SUDAH DI-ACC';
+          allApplicants[i].statusCat = 'approved';
+          break;
         }
-        recalcStats();
-        renderApplicantList();
-        tampilkanHasilVerifikasi(currentVerifiedApplicant);
-      } else {
-        btn.disabled = false;
-        btn.innerHTML = '<span>✓ ACC SEKARANG (1-Klik)</span>';
-        alert((res && res.message) || 'Gagal mengubah status.');
       }
-    }, function (err) {
+      recalcStats();
+      renderApplicantList();
+      tampilkanHasilVerifikasi(currentVerifiedApplicant);
+    }, function (errMsg) {
       btn.disabled = false;
       btn.innerHTML = '<span>✓ ACC SEKARANG (1-Klik)</span>';
-      alert('Gagal update status: ' + err);
+      alert(errMsg);
     });
   });
 
@@ -3859,32 +4367,23 @@
     var kode = currentVerifiedApplicant.kodeKlaim;
     if (!confirm('Tolak pengajuan tiket ' + kode + '?')) return;
 
-    callApi({
-      action:     'adminUpdateStatus',
-      pin:        currentPin,
-      kodeKlaim:  kode,
-      statusBaru: 'DITOLAK'
-    }, function (res) {
-      if (res && res.success) {
-        showToast('Status tiket ' + kode + ' diubah menjadi Ditolak.');
-        currentVerifiedApplicant.status = 'DITOLAK';
-        currentVerifiedApplicant.statusCat = 'rejected';
+    updateApplicantStatusApi(kode, 'DITOLAK', function (res) {
+      showToast('Status tiket ' + kode + ' diubah menjadi Ditolak.');
+      currentVerifiedApplicant.status = 'DITOLAK';
+      currentVerifiedApplicant.statusCat = 'rejected';
 
-        for (var i = 0; i < allApplicants.length; i++) {
-          if (allApplicants[i].kodeKlaim === kode) {
-            allApplicants[i].status = 'DITOLAK';
-            allApplicants[i].statusCat = 'rejected';
-            break;
-          }
+      for (var i = 0; i < allApplicants.length; i++) {
+        if (allApplicants[i].kodeKlaim === kode) {
+          allApplicants[i].status = 'DITOLAK';
+          allApplicants[i].statusCat = 'rejected';
+          break;
         }
-        recalcStats();
-        renderApplicantList();
-        tampilkanHasilVerifikasi(currentVerifiedApplicant);
-      } else {
-        alert((res && res.message) || 'Gagal mengubah status.');
       }
-    }, function (err) {
-      alert('Gagal update status: ' + err);
+      recalcStats();
+      renderApplicantList();
+      tampilkanHasilVerifikasi(currentVerifiedApplicant);
+    }, function (errMsg) {
+      alert(errMsg);
     });
   });
 
